@@ -1,6 +1,6 @@
 ﻿namespace Gu.Xml.Tests
 {
-    using System.Xml;
+    using System.Text;
     using NUnit.Framework;
 
     public class XmlTests
@@ -15,10 +15,12 @@
             public void WithInt(int value)
             {
                 var with = new WithMutableInt { Value = value };
-                var expected = $@"<?xml version=""1.0"" encoding=""utf-8""?>
-<WithMutableInt>
-  <Value>{XmlConvert.ToString(value)}</Value>
-</WithMutableInt>";
+                var expected = new StringBuilder().AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>")
+                                                  .AppendLine("<WithMutableInt>")
+                                                  .AppendLine("  <Value>{XmlConvert.ToString(value)}</Value>")
+                                                  .AppendLine("</WithMutableInt>")
+                                                  .ToString();
+
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
             }
