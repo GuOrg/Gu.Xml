@@ -1,7 +1,6 @@
-﻿using System.Globalization;
-
-namespace Gu.Xml
+﻿namespace Gu.Xml
 {
+    using System.Globalization;
     using System.Text;
 
     public static partial class Xml
