@@ -5,3 +5,8 @@ group Analyzers
   source https://api.nuget.org/v3/index.json
   nuget StyleCop.Analyzers prerelease
   nuget Gu.Analyzers
+
+group Test
+  storaget: none
+  source https://api.nuget.org/v3/index.json
+  nuget NUnit
