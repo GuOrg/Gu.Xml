@@ -2,11 +2,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
+    <CodeAnalysisRuleSet>Gu.Xml.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-
-  <Import Project="..\.paket\Paket.Restore.targets" />
 
   <ItemGroup>
     <ProjectReference Include="..\Gu.Xml\Gu.Xml.csproj" />
   </ItemGroup>
+
+  <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
