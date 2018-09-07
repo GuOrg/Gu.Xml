@@ -10,3 +10,8 @@ group Test
   storaget: none
   source https://api.nuget.org/v3/index.json
   nuget NUnit
+
+group Benchmark
+  storaget: none
+  source https://api.nuget.org/v3/index.json
+  nuget BenchmarkDotNet.Diagnostics.Windows
