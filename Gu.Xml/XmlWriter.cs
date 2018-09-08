@@ -6,14 +6,12 @@
 
     public sealed class XmlWriter : IDisposable
     {
-#pragma warning disable IDISP008 // Don't assign member with injected and created disposables.
-        private readonly StringWriter writer;
-#pragma warning restore IDISP008 // Don't assign member with injected and created disposables.
+        private readonly TextWriter writer;
 
         private int indentLevel;
         private bool disposed;
 
-        public XmlWriter(StringWriter writer)
+        public XmlWriter(TextWriter writer)
         {
             this.writer = writer;
         }
@@ -58,6 +56,11 @@
 
             this.indentLevel--;
             this.WriteEndElement(name);
+        }
+
+        public void Write(string text)
+        {
+            this.writer.Write(text);
         }
 
         public void WriteStartElement(string name)
