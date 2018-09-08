@@ -3,8 +3,9 @@ source https://api.nuget.org/v3/index.json
 group Analyzers
   storaget: none
   source https://api.nuget.org/v3/index.json
-  nuget StyleCop.Analyzers prerelease
   nuget Gu.Analyzers
+  nuget IDisposableAnalyzers
+  nuget StyleCop.Analyzers prerelease
 
 group Test
   storaget: none

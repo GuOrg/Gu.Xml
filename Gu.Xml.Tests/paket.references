@@ -1,6 +1,7 @@
 group Analyzers
-  StyleCop.Analyzers
   Gu.Analyzers
+  nuget IDisposableAnalyzers
+  StyleCop.Analyzers
 
 group Test
   NUnit
