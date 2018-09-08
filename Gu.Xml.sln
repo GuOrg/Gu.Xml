@@ -12,11 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{11F7E1
 		.paket\Readme.paket.md = .paket\Readme.paket.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Xml", "Gu.Xml\Gu.Xml.csproj", "{3D727659-3365-4ED4-B8AA-E853DFE8177B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Xml", "Gu.Xml\Gu.Xml.csproj", "{3D727659-3365-4ED4-B8AA-E853DFE8177B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Xml.Tests", "Gu.Xml.Tests\Gu.Xml.Tests.csproj", "{F4E1E8D1-04ED-4CFA-A0A7-D664ABAD280F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Xml.Tests", "Gu.Xml.Tests\Gu.Xml.Tests.csproj", "{F4E1E8D1-04ED-4CFA-A0A7-D664ABAD280F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Xml.Benchmarks", "Gu.Xml.Benchmarks\Gu.Xml.Benchmarks.csproj", "{BCAAF91E-D6D5-44FF-9696-38A7EF4B43C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Xml.Benchmarks", "Gu.Xml.Benchmarks\Gu.Xml.Benchmarks.csproj", "{BCAAF91E-D6D5-44FF-9696-38A7EF4B43C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
