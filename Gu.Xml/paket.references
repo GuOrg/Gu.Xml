@@ -1,4 +1,4 @@
 group Analyzers
   Gu.Analyzers
-  nuget IDisposableAnalyzers
+  IDisposableAnalyzers
   StyleCop.Analyzers

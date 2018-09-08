@@ -1,6 +1,6 @@
 group Analyzers
   Gu.Analyzers
-  nuget IDisposableAnalyzers
+  IDisposableAnalyzers
   StyleCop.Analyzers
 
 group Test
