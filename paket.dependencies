@@ -16,3 +16,4 @@ group Benchmark
   storaget: none
   source https://api.nuget.org/v3/index.json
   nuget BenchmarkDotNet.Diagnostics.Windows
+  nuget Newtonsoft.Json

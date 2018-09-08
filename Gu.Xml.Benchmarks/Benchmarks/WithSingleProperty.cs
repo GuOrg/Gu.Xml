@@ -4,6 +4,7 @@
     using System.Text;
     using System.Xml.Serialization;
     using BenchmarkDotNet.Attributes;
+    using Newtonsoft.Json;
 
     public class WithSingleProperty
     {
@@ -26,6 +27,12 @@
             }
 
             return sb.ToString();
+        }
+
+        [Benchmark]
+        public string JsonConvertSerializeObject()
+        {
+            return JsonConvert.SerializeObject(Value);
         }
 
         public class WithInt

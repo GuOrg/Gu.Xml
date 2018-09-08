@@ -5,3 +5,4 @@ group Analyzers
 
 group Benchmark
   BenchmarkDotNet.Diagnostics.Windows
+  Newtonsoft.Json
