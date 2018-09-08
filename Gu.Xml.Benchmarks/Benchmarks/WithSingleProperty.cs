@@ -23,7 +23,7 @@
             var sb = new StringBuilder();
             using (var writer = new StringWriter(sb))
             {
-                XmlSerializer.Serialize(writer, sb);
+                XmlSerializer.Serialize(writer, Value);
             }
 
             return sb.ToString();
