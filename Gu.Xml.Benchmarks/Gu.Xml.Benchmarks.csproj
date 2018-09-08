@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
     <CodeAnalysisRuleSet>Gu.Xml.Benchmarks.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 

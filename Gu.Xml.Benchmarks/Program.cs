@@ -35,7 +35,7 @@
         {
             var sourceFileName = Directory.EnumerateFiles(summary.ResultsDirectoryPath, $"*{summary.Title}-report-github.md")
                                           .Single();
-            var destinationFileName = Path.Combine(summary.ResultsDirectoryPath.Split("\\bin\\").First(), "Benchmarks", summary.Title.Split('.').Last() + ".md");
+            var destinationFileName = Path.Combine(summary.ResultsDirectoryPath.Split(new[] { "\\bin\\" }, StringSplitOptions.RemoveEmptyEntries).First(), "Benchmarks", summary.Title.Split('.').Last() + ".md");
             Console.WriteLine($"Copy: {sourceFileName} -> {destinationFileName}");
             File.Copy(sourceFileName, destinationFileName, overwrite: true);
         }
