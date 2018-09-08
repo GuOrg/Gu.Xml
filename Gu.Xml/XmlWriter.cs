@@ -23,6 +23,11 @@
             this.writer.WriteLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         }
 
+        public void WriteRootElement<T>(T value)
+        {
+            this.WriteElement(value.GetType().Name, value);
+        }
+
         public void WriteElement<T>(string name, T value)
         {
             if (value == null)
@@ -60,6 +65,20 @@
             this.WriteEndElement(name);
         }
 
+        public void WriteStartElement(string name)
+        {
+            this.writer.Write("<");
+            this.writer.Write(name);
+            this.writer.Write(">");
+        }
+
+        public void WriteEndElement(string name)
+        {
+            this.writer.Write("</");
+            this.writer.Write(name);
+            this.writer.Write(">");
+        }
+
         public void WriteInt(int i)
         {
             this.writer.Write(i.ToString(NumberFormatInfo.InvariantInfo));
@@ -88,20 +107,6 @@
             }
 
             this.writer.Write(d.ToString("R", NumberFormatInfo.InvariantInfo));
-        }
-
-        public void WriteStartElement(string name)
-        {
-            this.writer.Write("<");
-            this.writer.Write(name);
-            this.writer.Write(">");
-        }
-
-        public void WriteEndElement(string name)
-        {
-            this.writer.Write("</");
-            this.writer.Write(name);
-            this.writer.Write(">");
         }
 
         private void WriteIndentation()
