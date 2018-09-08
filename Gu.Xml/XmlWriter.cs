@@ -11,7 +11,7 @@
         private readonly StringWriter writer;
 #pragma warning restore IDISP008 // Don't assign member with injected and created disposables.
 
-        private int indentLevel = 0;
+        private int indentLevel;
         private bool disposed;
 
         public XmlWriter(StringWriter writer)
