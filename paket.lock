@@ -3,7 +3,7 @@
 GROUP Analyzers
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    Gu.Analyzers (1.2.18-dev)
+    Gu.Analyzers (1.2.18.1-dev)
     IDisposableAnalyzers (2.0.3.3)
     StyleCop.Analyzers (1.1.0-beta009)
 
