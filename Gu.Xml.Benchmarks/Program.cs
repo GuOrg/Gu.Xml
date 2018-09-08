@@ -6,12 +6,13 @@
     using System.Linq;
     using BenchmarkDotNet.Reports;
     using BenchmarkDotNet.Running;
+    using Gu.Xml.Benchmarks.Benchmarks;
 
     public class Program
     {
         public static void Main()
         {
-            foreach (var summary in RunAll())
+            foreach (var summary in RunSingle<WithSingleProperty>())
             {
                 CopyResult(summary);
             }
@@ -34,7 +35,7 @@
         {
             var sourceFileName = Directory.EnumerateFiles(summary.ResultsDirectoryPath, $"*{summary.Title}-report-github.md")
                                           .Single();
-            var destinationFileName = Path.Combine(summary.ResultsDirectoryPath, "..\\..\\..\\..\\..\\", summary.Title.Split('.').Last() + ".md");
+            var destinationFileName = Path.Combine(summary.ResultsDirectoryPath.Split("\\bin\\").First(), "Benchmarks", summary.Title.Split('.').Last() + ".md");
             Console.WriteLine($"Copy: {sourceFileName} -> {destinationFileName}");
             File.Copy(sourceFileName, destinationFileName, overwrite: true);
         }

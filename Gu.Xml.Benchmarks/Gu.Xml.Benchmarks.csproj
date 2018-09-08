@@ -2,9 +2,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <CodeAnalysisRuleSet>Gu.Xml.Benchmarks.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gu.Xml\Gu.Xml.csproj" />
+  </ItemGroup>
 
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
