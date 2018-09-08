@@ -8,12 +8,9 @@
     {
         public class Serialize
         {
-            [TestCase(int.MinValue)]
-            [TestCase(-1)]
-            [TestCase(-0)]
-            [TestCase(0)]
-            [TestCase(1)]
-            [TestCase(int.MaxValue)]
+            private static readonly int[] IntSource = { int.MinValue, -1, -0, 0, 1, int.MaxValue };
+
+            [TestCaseSource(nameof(IntSource))]
             public void WithInt(int value)
             {
                 var with = new WithMutableInt { Value = value };
@@ -21,6 +18,19 @@
                                "<WithMutableInt>" + Environment.NewLine +
                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
                                "</WithMutableInt>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCaseSource(nameof(IntSource))]
+            public void WithBoxedInt(int value)
+            {
+                var with = new WithMutableBoxed { Value = value };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableBoxed>" + Environment.NewLine +
+                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
+                               "</WithMutableBoxed>";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
@@ -53,6 +63,11 @@
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
+            }
+
+            public class WithMutableBoxed
+            {
+                public object Value { get; set; }
             }
 
             public class WithMutableInt
