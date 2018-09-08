@@ -1,5 +1,6 @@
 ﻿namespace Gu.Xml
 {
+    using System;
     using System.Globalization;
     using System.Text;
 
@@ -52,6 +53,12 @@
             if (double.IsPositiveInfinity(d))
             {
                 return sb.Append("INF");
+            }
+
+            if (d == 0 &&
+                BitConverter.DoubleToInt64Bits(d) != BitConverter.DoubleToInt64Bits(0.0))
+            {
+                return sb.Append("-0");
             }
 
             return sb.Append(d.ToString("R", NumberFormatInfo.InvariantInfo));
