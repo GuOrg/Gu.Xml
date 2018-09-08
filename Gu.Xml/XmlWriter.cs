@@ -23,11 +23,6 @@
             this.writer.WriteLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         }
 
-        public void WriteRootElement<T>(T value)
-        {
-            this.WriteElement(value.GetType().Name, value);
-        }
-
         public void WriteElement<T>(string name, T value)
         {
             if (value == null)

@@ -6,7 +6,7 @@
         {
             var borrowed = StringWriterPool.Borrow();
             borrowed.Writer.WriteXmlDeclaration();
-            borrowed.Writer.WriteRootElement(value);
+            borrowed.Writer.WriteElement(value.GetType().Name, value);
             var xml = borrowed.Builder.ToString();
             StringWriterPool.Return(borrowed);
             return xml;
