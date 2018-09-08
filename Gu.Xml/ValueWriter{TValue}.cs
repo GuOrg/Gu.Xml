@@ -20,7 +20,7 @@
                 return;
             }
 
-            throw new InvalidOperationException();
+            throw new InvalidOperationException($"ValueWriter{typeof(TValue)} was called with value of type {typeof(T)}. Bug in Gu.Xml.");
         }
     }
 }
