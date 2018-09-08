@@ -10,6 +10,34 @@
         {
             private static readonly int[] IntSource = { int.MinValue, -1, -0, 0, 1, int.MaxValue };
 
+            [TestCase(true)]
+            [TestCase(false)]
+            public void WithBool(bool value)
+            {
+                var with = new WithMutableBool { Value = value };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableBool>" + Environment.NewLine +
+                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
+                               "</WithMutableBool>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(true)]
+            [TestCase(false)]
+            public void WithBoxedBool(bool value)
+            {
+                var with = new WithMutableBoxed { Value = value };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableBoxed>" + Environment.NewLine +
+                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
+                               "</WithMutableBoxed>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
             [TestCaseSource(nameof(IntSource))]
             public void WithInt(int value)
             {
@@ -68,6 +96,11 @@
             public class WithMutableBoxed
             {
                 public object Value { get; set; }
+            }
+
+            public class WithMutableBool
+            {
+                public bool Value { get; set; }
             }
 
             public class WithMutableInt

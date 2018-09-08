@@ -8,14 +8,14 @@
 
     public abstract class ValueWriter
     {
-        private static readonly Dictionary<Type, ValueWriter> ValueWriters = CreateWriters(
+        private static readonly Dictionary<Type, ValueWriter> SimpleValueWriters = CreateWriters(
             Create<bool>((writer, value) => writer.Write(value ? "true" : "false")),
             Create<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo))),
             Create<double>(WriteDouble));
 
-        public static bool TryGet<T>(T value, out ValueWriter writer)
+        public static bool TryGetSimple<T>(T value, out ValueWriter writer)
         {
-            return ValueWriters.TryGetValue(value.GetType(), out writer);
+            return SimpleValueWriters.TryGetValue(value.GetType(), out writer);
         }
 
         public abstract void Write<T>(TextWriter writer, T value);

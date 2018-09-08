@@ -34,7 +34,7 @@
                 return;
             }
 
-            if (ValueWriter.TryGet(value, out var valueWriter))
+            if (ValueWriter.TryGetSimple(value, out var valueWriter))
             {
                 this.WriteIndentation();
                 this.WriteStartElement(name);
