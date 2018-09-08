@@ -107,14 +107,6 @@
             this.writer.Write(d.ToString("R", NumberFormatInfo.InvariantInfo));
         }
 
-        private void WriteIndentation()
-        {
-            for (var i = 0; i < this.indentLevel; i++)
-            {
-                this.writer.Write("  ");
-            }
-        }
-
         public void Dispose()
         {
             if (this.disposed)
@@ -126,6 +118,14 @@
 #pragma warning disable IDISP007 // Don't dispose injected.
             this.writer.Dispose();
 #pragma warning restore IDISP007 // Don't dispose injected.
+        }
+
+        private void WriteIndentation()
+        {
+            for (var i = 0; i < this.indentLevel; i++)
+            {
+                this.writer.Write("  ");
+            }
         }
 
         private void ThrowIfDisposed()
