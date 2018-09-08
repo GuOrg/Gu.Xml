@@ -19,22 +19,10 @@
             switch (value)
             {
                 case int i:
-                    sb.Append(i.ToString(NumberFormatInfo.InvariantInfo)).AppendEndElement(name);
+                    sb.WriteInt(i).AppendEndElement(name);
                     return;
                 case double d:
-                    if (double.IsNegativeInfinity(d))
-                    {
-                        sb.Append("-INF").AppendEndElement(name);
-                    }
-                    else if (double.IsPositiveInfinity(d))
-                    {
-                        sb.Append("INF").AppendEndElement(name);
-                    }
-                    else
-                    {
-                        sb.Append(d.ToString("R", NumberFormatInfo.InvariantInfo)).AppendEndElement(name);
-                    }
-
+                    sb.WriteDouble(d).AppendEndElement(name);
                     return;
             }
 
@@ -46,6 +34,27 @@
             }
 
             sb.AppendIndentation(indentLevel).AppendEndElement(name);
+        }
+
+        private static StringBuilder WriteInt(this StringBuilder sb, int i)
+        {
+            return sb.Append(i.ToString(NumberFormatInfo.InvariantInfo));
+        }
+
+        private static StringBuilder WriteDouble(this StringBuilder sb, double d)
+        {
+            // https://www.w3.org/TR/xmlschema-2/#double
+            if (double.IsNegativeInfinity(d))
+            {
+                return sb.Append("-INF");
+            }
+
+            if (double.IsPositiveInfinity(d))
+            {
+                return sb.Append("INF");
+            }
+
+            return sb.Append(d.ToString("R", NumberFormatInfo.InvariantInfo));
         }
 
         private static void AppendStartElement(this StringBuilder sb, string name, int indentLevel)
