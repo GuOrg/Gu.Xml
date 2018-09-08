@@ -10,6 +10,7 @@
     {
         private static readonly Dictionary<Type, ValueWriter> SimpleValueWriters = CreateWriters(
             Create<bool>((writer, value) => writer.Write(value ? "true" : "false")),
+            Create<bool?>((writer, value) => writer.Write(value.Value ? "true" : "false")),
             Create<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo))),
             Create<double>(WriteDouble));
 

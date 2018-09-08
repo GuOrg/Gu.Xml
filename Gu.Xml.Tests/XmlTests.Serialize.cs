@@ -17,8 +17,46 @@
                 var with = new WithMutableBool { Value = value };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<WithMutableBool>" + Environment.NewLine +
-                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
+                              $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
                                "</WithMutableBool>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(true)]
+            [TestCase(false)]
+            [TestCase(null)]
+            public void WithNullableBool(bool? value)
+            {
+                var with = new WithMutableNullableBool { Value = value };
+                var expected = value.HasValue
+                    ? "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                      "<WithMutableNullableBool>" + Environment.NewLine +
+                     $"  <Value>{XmlConvert.ToString(value.Value)}</Value>" + Environment.NewLine +
+                      "</WithMutableNullableBool>"
+                    : "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                      "<WithMutableNullableBool>" + Environment.NewLine +
+                      "</WithMutableNullableBool>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(true)]
+            [TestCase(false)]
+            [TestCase(null)]
+            public void WithBoxedNullableBool(bool? value)
+            {
+                var with = new WithMutableBoxed { Value = value };
+                var expected = value.HasValue
+                    ? "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                      "<WithMutableBoxed>" + Environment.NewLine +
+                      $"  <Value>{XmlConvert.ToString(value.Value)}</Value>" + Environment.NewLine +
+                      "</WithMutableBoxed>"
+                    : "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                      "<WithMutableBoxed>" + Environment.NewLine +
+                      "</WithMutableBoxed>";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
@@ -31,7 +69,7 @@
                 var with = new WithMutableBoxed { Value = value };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<WithMutableBoxed>" + Environment.NewLine +
-                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
+                              $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
                                "</WithMutableBoxed>";
 
                 var actual = Xml.Serialize(with);
@@ -101,6 +139,11 @@
             public class WithMutableBool
             {
                 public bool Value { get; set; }
+            }
+
+            public class WithMutableNullableBool
+            {
+                public bool? Value { get; set; }
             }
 
             public class WithMutableInt

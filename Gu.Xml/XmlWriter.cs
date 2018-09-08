@@ -46,14 +46,16 @@
             this.WriteIndentation();
             this.WriteStartElement(name);
             this.writer.WriteLine();
-            this.indentLevel++;
             foreach (var property in value.GetType().GetProperties())
             {
-                this.WriteElement(property.Name, property.GetValue(value));
-                this.writer.WriteLine();
+                var o = property.GetValue(value);
+                if (o != null)
+                {
+                    this.WriteElement(property.Name, o);
+                    this.writer.WriteLine();
+                }
             }
 
-            this.indentLevel--;
             this.WriteEndElement(name);
         }
 
@@ -67,6 +69,7 @@
             this.writer.Write("<");
             this.writer.Write(name);
             this.writer.Write(">");
+            this.indentLevel++;
         }
 
         public void WriteEndElement(string name)
@@ -74,6 +77,7 @@
             this.writer.Write("</");
             this.writer.Write(name);
             this.writer.Write(">");
+            this.indentLevel--;
         }
 
         public void Dispose()
