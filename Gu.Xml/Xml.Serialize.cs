@@ -1,19 +1,15 @@
 ﻿namespace Gu.Xml
 {
-    using System.Text;
-
     public static partial class Xml
     {
         public static string Serialize<T>(T value)
         {
-            var sb = new StringBuilder();
-            using (var writer = new XmlWriter(sb))
-            {
-                writer.WriteXmlDeclaration();
-                writer.WriteElement(value.GetType().Name, value);
-            }
-
-            return sb.ToString();
+            var borrowed = StringWriterPool.Borrow();
+            borrowed.Writer.WriteXmlDeclaration();
+            borrowed.Writer.WriteElement(value.GetType().Name, value);
+            var xml = borrowed.Builder.ToString();
+            StringWriterPool.Return(borrowed);
+            return xml;
         }
     }
 }

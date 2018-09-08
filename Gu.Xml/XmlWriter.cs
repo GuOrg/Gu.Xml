@@ -3,7 +3,6 @@
     using System;
     using System.Globalization;
     using System.IO;
-    using System.Text;
 
     public sealed class XmlWriter : IDisposable
     {
@@ -17,11 +16,6 @@
         public XmlWriter(StringWriter writer)
         {
             this.writer = writer;
-        }
-
-        public XmlWriter(StringBuilder stringBuilder)
-            : this(new StringWriter(stringBuilder))
-        {
         }
 
         public void WriteXmlDeclaration()

@@ -9,11 +9,11 @@ Frequency=3410073 Hz, Resolution=293.2489 ns, Timer=TSC
 
 
 ```
-|                     Method |     Mean |     Error |    StdDev | Scaled | ScaledSD |  Gen 0 | Allocated |
-|--------------------------- |---------:|----------:|----------:|-------:|---------:|-------:|----------:|
-|             GuXmlSerialize | 638.9 ns |  6.393 ns |  5.980 ns |   1.00 |     0.00 | 0.1535 |     968 B |
-|     XmlSerializerSerialize |       NA |        NA |        NA |      ? |        ? |    N/A |       N/A |
-| JsonConvertSerializeObject | 539.3 ns | 10.704 ns | 26.258 ns |   0.84 |     0.04 | 0.2012 |    1272 B |
+|                     Method |     Mean |     Error |     StdDev | Scaled | ScaledSD |  Gen 0 | Allocated |
+|--------------------------- |---------:|----------:|-----------:|-------:|---------:|-------:|----------:|
+|             GuXmlSerialize | 472.7 ns |  1.018 ns |  0.7950 ns |   1.00 |     0.00 | 0.0439 |     280 B |
+|     XmlSerializerSerialize |       NA |        NA |         NA |      ? |        ? |    N/A |       N/A |
+| JsonConvertSerializeObject | 521.4 ns | 10.352 ns | 22.5043 ns |   1.10 |     0.05 | 0.2012 |    1272 B |
 
 Benchmarks with issues:
   WithSingleProperty.XmlSerializerSerialize: DefaultJob
