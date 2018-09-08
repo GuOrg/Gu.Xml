@@ -5,11 +5,11 @@
     using System.Globalization;
     using System.IO;
 
-    public abstract class ValueWriter
+    public abstract class SimpleValueWriter
     {
-        private static readonly Dictionary<Type, ValueWriter> SimpleValueWriters = new Dictionary<Type, ValueWriter>();
+        private static readonly Dictionary<Type, SimpleValueWriter> Default = new Dictionary<Type, SimpleValueWriter>();
 
-        static ValueWriter()
+        static SimpleValueWriter()
         {
             Add<bool>((writer, value) => writer.Write(value ? "true" : "false"));
             Add<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
@@ -18,15 +18,15 @@
             void Add<T>(Action<TextWriter, T> write)
                 where T : struct
             {
-                var valueWriter = new ValueWriter<T>(write);
-                SimpleValueWriters.Add(typeof(T), valueWriter);
-                SimpleValueWriters.Add(typeof(T?), valueWriter);
+                var valueWriter = new SimpleValueWriter<T>(write);
+                Default.Add(typeof(T), valueWriter);
+                Default.Add(typeof(T?), valueWriter);
             }
         }
 
-        public static bool TryGetSimple<T>(T value, out ValueWriter writer)
+        public static bool TryGet<T>(T value, out SimpleValueWriter writer)
         {
-            return SimpleValueWriters.TryGetValue(value.GetType(), out writer);
+            return Default.TryGetValue(value.GetType(), out writer);
         }
 
         public abstract void Write<T>(TextWriter writer, T value);

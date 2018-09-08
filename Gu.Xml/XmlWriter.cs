@@ -31,32 +31,28 @@
         {
             if (value == null)
             {
-                return;
             }
-
-            if (ValueWriter.TryGetSimple(value, out var valueWriter))
+            else if (SimpleValueWriter.TryGet(value, out var simple))
             {
-                this.WriteIndentation();
                 this.WriteStartElement(name);
-                valueWriter.Write(this.writer, value);
+                simple.Write(this.writer, value);
                 this.WriteEndElement(name);
-                return;
             }
-
-            this.WriteIndentation();
-            this.WriteStartElement(name);
-            this.writer.WriteLine();
-            foreach (var property in value.GetType().GetProperties())
+            else if (ComplexValueWriter.GetOrCreate(value) is ComplexValueWriter complex)
             {
-                var o = property.GetValue(value);
-                if (o != null)
+                this.WriteStartElement(name);
+                this.writer.WriteLine();
+                foreach (var elementWriter in complex.Elements)
                 {
-                    this.WriteElement(property.Name, o);
-                    this.writer.WriteLine();
+                    elementWriter.Write(this, value);
                 }
-            }
 
-            this.WriteEndElement(name);
+                this.WriteEndElement(name);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Failed getting a value writer for {value}");
+            }
         }
 
         public void Write(string text)
@@ -66,6 +62,7 @@
 
         public void WriteStartElement(string name)
         {
+            this.WriteIndentation();
             this.writer.Write("<");
             this.writer.Write(name);
             this.writer.Write(">");
@@ -78,6 +75,11 @@
             this.writer.Write(name);
             this.writer.Write(">");
             this.indentLevel--;
+        }
+
+        public void WriteLine()
+        {
+            this.writer.WriteLine();
         }
 
         public void Dispose()

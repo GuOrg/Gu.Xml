@@ -3,11 +3,11 @@
     using System;
     using System.IO;
 
-    public class ValueWriter<TValue> : ValueWriter
+    public class SimpleValueWriter<TValue> : SimpleValueWriter
     {
         private readonly Action<TextWriter, TValue> write;
 
-        public ValueWriter(Action<TextWriter, TValue> write)
+        public SimpleValueWriter(Action<TextWriter, TValue> write)
         {
             this.write = write;
         }
@@ -20,7 +20,7 @@
                 return;
             }
 
-            throw new InvalidOperationException($"ValueWriter{typeof(TValue)} was called with value of type {typeof(T)}. Bug in Gu.Xml.");
+            throw new InvalidOperationException($"SimpleValueWriter{typeof(TValue)} was called with value of type {typeof(T)}. Bug in Gu.Xml.");
         }
     }
 }
