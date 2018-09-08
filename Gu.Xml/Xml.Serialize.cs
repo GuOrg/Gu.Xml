@@ -19,7 +19,22 @@
             switch (value)
             {
                 case int i:
-                    sb.Append(i.ToString(CultureInfo.InvariantCulture)).AppendEndElement(name);
+                    sb.Append(i.ToString(NumberFormatInfo.InvariantInfo)).AppendEndElement(name);
+                    return;
+                case double d:
+                    if (double.IsNegativeInfinity(d))
+                    {
+                        sb.Append("-INF").AppendEndElement(name);
+                    }
+                    else if (double.IsPositiveInfinity(d))
+                    {
+                        sb.Append("INF").AppendEndElement(name);
+                    }
+                    else
+                    {
+                        sb.Append(d.ToString("R", NumberFormatInfo.InvariantInfo)).AppendEndElement(name);
+                    }
+
                     return;
             }
 
