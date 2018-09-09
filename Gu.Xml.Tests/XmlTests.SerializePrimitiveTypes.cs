@@ -6,13 +6,13 @@
 
     public class XmlTests
     {
-        public class Serialize
+        public class SerializePrimitiveTypes
         {
             private static readonly int[] IntSource = { int.MinValue, -1, -0, 0, 1, int.MaxValue };
 
             [TestCase(true)]
             [TestCase(false)]
-            public void WithBool(bool value)
+            public void Boolean(bool value)
             {
                 var with = new WithMutableBool { Value = value };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
@@ -27,7 +27,7 @@
             [TestCase(true)]
             [TestCase(false)]
             [TestCase(null)]
-            public void WithNullableBool(bool? value)
+            public void NullableBoolean(bool? value)
             {
                 var with = new WithMutableNullableBool { Value = value };
                 var expected = value.HasValue
@@ -45,8 +45,22 @@
 
             [TestCase(true)]
             [TestCase(false)]
+            public void BoxedBoolean(bool value)
+            {
+                var with = new WithMutableBoxed { Value = value };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableBoxed>" + Environment.NewLine +
+                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
+                               "</WithMutableBoxed>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(true)]
+            [TestCase(false)]
             [TestCase(null)]
-            public void WithBoxedNullableBool(bool? value)
+            public void BoxedNullableBoolean(bool? value)
             {
                 var with = new WithMutableBoxed { Value = value };
                 var expected = value.HasValue
@@ -62,22 +76,8 @@
                 Assert.AreEqual(expected, actual);
             }
 
-            [TestCase(true)]
-            [TestCase(false)]
-            public void WithBoxedBool(bool value)
-            {
-                var with = new WithMutableBoxed { Value = value };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableBoxed>" + Environment.NewLine +
-                              $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableBoxed>";
-
-                var actual = Xml.Serialize(with);
-                Assert.AreEqual(expected, actual);
-            }
-
             [TestCaseSource(nameof(IntSource))]
-            public void WithInt(int value)
+            public void Int32(int value)
             {
                 var with = new WithMutableInt { Value = value };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
@@ -90,7 +90,7 @@
             }
 
             [TestCaseSource(nameof(IntSource))]
-            public void WithBoxedInt(int value)
+            public void BoxedInt32(int value)
             {
                 var with = new WithMutableBoxed { Value = value };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
@@ -119,7 +119,7 @@
             [TestCase(int.MaxValue)]
             [TestCase(double.MaxValue)]
             [TestCase(double.NaN)]
-            public void WithDouble(double value)
+            public void Double(double value)
             {
                 var with = new WithMutableDouble { Value = value };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
