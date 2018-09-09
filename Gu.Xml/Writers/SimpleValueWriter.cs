@@ -11,6 +11,8 @@
 
         static SimpleValueWriter()
         {
+            Default.Add(typeof(string), new SimpleValueWriter<string>((writer, value) => writer.Write(value)));
+
             Add<bool>((writer, value) => writer.Write(value ? "true" : "false"));
             Add<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
             Add<double>((writer, value) => writer.Write(ToString(value)));

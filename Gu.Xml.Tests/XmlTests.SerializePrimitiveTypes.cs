@@ -10,6 +10,21 @@
         {
             private static readonly int[] IntSource = { int.MinValue, -1, -0, 0, 1, int.MaxValue };
 
+            [TestCase(null)]
+            [TestCase("abc")]
+            [TestCase(" abc")]
+            [TestCase("abc ")]
+            [TestCase("1\u00A0mm")]
+            [TestCase("1\u00B0")]
+            [TestCase("abc\r\ncde")]
+            public void String(string value)
+            {
+                var with = new WithMutable<string> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
             [TestCase(true)]
             [TestCase(false)]
             public void Boolean(bool value)
