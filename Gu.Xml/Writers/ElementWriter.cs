@@ -14,9 +14,10 @@
 
         public static ElementWriter Create(string name, PropertyInfo property)
         {
-            return (ElementWriter)typeof(ElementWriter).GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
-                                                       .MakeGenericMethod(property.ReflectedType, property.PropertyType)
-                                                       .Invoke(null, new object[] { name, property });
+            return (ElementWriter)typeof(ElementWriter)
+                                   .GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
+                                   .MakeGenericMethod(property.ReflectedType, property.PropertyType)
+                                   .Invoke(null, new object[] { name, property });
         }
 
         public abstract void Write<T>(XmlWriter writer, T source);

@@ -14,11 +14,17 @@
 
         public override void Write<T>(XmlWriter writer, T source)
         {
-            if (source is TSource typedSource &&
-                this.getter(typedSource) is TValue value)
+            if (source is TSource typedSource)
             {
-                writer.WriteElement(this.Name, value);
-                writer.WriteLine();
+                if (this.getter(typedSource) is TValue value)
+                {
+                    writer.WriteElement(this.Name, value);
+                    writer.WriteLine();
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Source is null. Should not get here. Bug in Gu.Xml.");
             }
         }
     }
