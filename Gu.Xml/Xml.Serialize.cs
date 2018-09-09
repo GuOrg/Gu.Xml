@@ -15,7 +15,7 @@
         {
             var borrowed = StringWriterPool.Borrow();
             borrowed.Writer.WriteXmlDeclaration();
-            borrowed.Writer.WriteElement(value.GetType().Name, value);
+            borrowed.Writer.WriteRootElement(value);
             var xml = borrowed.Builder.ToString();
             StringWriterPool.Return(borrowed);
             return xml;

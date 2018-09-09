@@ -1,5 +1,6 @@
 ﻿namespace Gu.Xml.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
@@ -8,7 +9,7 @@
 
     public partial class XmlTests
     {
-        public class SerializeComplextTypes
+        public class SerializeComplexTypes
         {
             private static readonly TestCaseData[] Values =
             {
@@ -20,8 +21,31 @@
             public void SerializeValue(object value)
             {
                 var expected = ReferenceXml(value);
-                var actual = Xml.Serialize(value);
-                Assert.AreEqual(expected, actual);
+                try
+                {
+                    var actual = Xml.Serialize(value);
+                    if (actual == expected)
+                    {
+                        return;
+                    }
+
+                    Console.WriteLine("Expected:");
+                    Console.Write(expected);
+                    Console.WriteLine();
+                    Console.WriteLine();
+
+                    Console.WriteLine("Actual:");
+                    Console.Write(actual);
+                    Console.WriteLine();
+                    Console.WriteLine();
+
+                    Assert.AreEqual(expected, actual);
+                }
+                catch
+                {
+                    Console.WriteLine(expected);
+                    throw;
+                }
             }
 
             private static string ReferenceXml(object value)
@@ -41,6 +65,11 @@
             public class Foo
             {
                 public int Value { get; set; } = 1;
+            }
+
+            public class Foo<T>
+            {
+                public T Value { get; set; } = default(T);
             }
         }
     }

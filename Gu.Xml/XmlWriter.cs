@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Text;
 
     /// <summary>
     /// Wraps a <see cref="TextWriter"/> and exposes methods for writing XML.
@@ -26,6 +27,11 @@
         public void WriteXmlDeclaration()
         {
             this.writer.WriteLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+        }
+
+        public void WriteRootElement<T>(T value)
+        {
+            this.WriteElement(RootName.Get(value.GetType()), value);
         }
 
         public void WriteElement<T>(string name, T value)

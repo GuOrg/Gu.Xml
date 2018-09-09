@@ -24,6 +24,7 @@
         public static bool TryCreate(PropertyInfo property, out ElementWriter writer)
         {
             if (property.GetMethod is MethodInfo getMethod &&
+                property.GetIndexParameters().Length == 0 &&
                 !getMethod.IsStatic &&
                 !getMethod.IsPrivate &&
                 !getMethod.IsFamily &&
@@ -31,11 +32,11 @@
                 Attribute.GetCustomAttribute(property, typeof(XmlIgnoreAttribute)) == null &&
                 Attribute.GetCustomAttribute(property, typeof(XmlAttributeAttribute)) == null)
             {
-                writer = (ElementWriter) typeof(ElementWriter)
+                writer = (ElementWriter)typeof(ElementWriter)
                                                 .GetMethod(nameof(CreateWriter),
                                                     BindingFlags.Static | BindingFlags.NonPublic)
                                                 .MakeGenericMethod(property.ReflectedType, property.PropertyType)
-                                                .Invoke(null, new object[] {Name(), property});
+                                                .Invoke(null, new object[] { Name(), property });
                 return true;
             }
 
