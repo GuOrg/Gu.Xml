@@ -9,8 +9,27 @@
     {
         public class SerializePrimitiveTypes
         {
-            private static readonly int[] IntSource = { int.MinValue, -1, -0, 0, 1, int.MaxValue };
-            private static readonly decimal[] DecimalSource = { decimal.MinValue, -1, decimal.MinusOne, -0M, 0M, decimal.Zero, 1, decimal.MaxValue };
+            private static readonly decimal[] DecimalSource =
+            {
+                decimal.MinValue,
+                -1,
+                decimal.MinusOne,
+                -0M,
+                0M,
+                decimal.Zero,
+                1,
+                decimal.MaxValue,
+            };
+
+            private static readonly int[] IntSource =
+            {
+                int.MinValue,
+                -1,
+                -0,
+                0,
+                1,
+                int.MaxValue,
+            };
 
             [TestCase(byte.MinValue)]
             [TestCase(0)]
@@ -97,6 +116,15 @@
                 Assert.AreEqual(expected, actual);
             }
 
+            [TestCaseSource(nameof(DecimalSource))]
+            public void Decimal(decimal value)
+            {
+                var with = new WithMutable<decimal> { Value = value };
+                var expected = Reference.Xml(with);
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
             [TestCase(double.NegativeInfinity)]
             [TestCase(double.MinValue)]
             [TestCase(int.MinValue)]
@@ -117,24 +145,7 @@
             public void Double(double value)
             {
                 var with = new WithMutable<double> { Value = value };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableOfDouble>" + Environment.NewLine +
-                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableOfDouble>";
-
-                var actual = Xml.Serialize(with);
-                Assert.AreEqual(expected, actual);
-            }
-
-            [TestCaseSource(nameof(DecimalSource))]
-            public void Decimal(decimal value)
-            {
-                var with = new WithMutable<decimal> { Value = value };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableOfDecimal>" + Environment.NewLine +
-                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableOfDecimal>";
-
+                var expected = Reference.Xml(with);
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
             }
@@ -181,11 +192,7 @@
             public void Float(float value)
             {
                 var with = new WithMutable<float> { Value = value };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableOfSingle>" + Environment.NewLine +
-                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableOfSingle>";
-
+                var expected = Reference.Xml(with);
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
             }
