@@ -10,6 +10,7 @@
         public class SerializePrimitiveTypes
         {
             private static readonly int[] IntSource = { int.MinValue, -1, -0, 0, 1, int.MaxValue };
+            private static readonly decimal[] DecimalSource = { decimal.MinValue, -1, decimal.MinusOne, -0M, 0M, decimal.Zero, 1, decimal.MaxValue };
 
             [TestCase(null)]
             [TestCase("abc")]
@@ -174,6 +175,19 @@
                                "<WithMutableOfDouble>" + Environment.NewLine +
                                $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
                                "</WithMutableOfDouble>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCaseSource(nameof(DecimalSource))]
+            public void Decimal(decimal value)
+            {
+                var with = new WithMutable<decimal> { Value = value };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableOfDecimal>" + Environment.NewLine +
+                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
+                               "</WithMutableOfDecimal>";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);

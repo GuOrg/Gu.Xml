@@ -15,6 +15,7 @@
 
             Add<bool>((writer, value) => writer.Write(value ? "true" : "false"));
             Add<char>((writer, value) => writer.Write((int)value));
+            Add<decimal>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
             Add<double>((writer, value) => writer.Write(ToString(value)));
             Add<float>((writer, value) => writer.Write(ToString(value)));
             Add<long>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
