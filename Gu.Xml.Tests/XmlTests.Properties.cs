@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml.Tests
 {
     using System;
+    using System.Xml.Serialization;
     using NUnit.Framework;
 
     public partial class XmlTests
@@ -59,6 +60,19 @@
                 Assert.AreEqual(expected, actual);
             }
 
+            [Test]
+            public void XmlElementAttribute()
+            {
+                var with = new WithXmlElement { Value = 1 };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithXmlElement>" + Environment.NewLine +
+                               "  <Name>1</Name>" + Environment.NewLine +
+                               "</WithXmlElement>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
             public class WithGetSet
             {
                 public int Value { get; set; }
@@ -94,6 +108,12 @@
                 public int Value { get; }
 
                 public int Negated => -this.Value;
+            }
+
+            public class WithXmlElement
+            {
+                [XmlElement("Name")]
+                public int Value { get; set; }
             }
         }
     }

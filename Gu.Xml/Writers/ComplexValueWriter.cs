@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Xml.Serialization;
 
     public class ComplexValueWriter
     {
@@ -29,8 +30,26 @@
         {
             return new ComplexValueWriter(
                 Array.Empty<AttributeWriter>(),
-                type.GetProperties().Where(x => x.SetMethod != null || Attribute.GetCustomAttribute(x.GetMethod, typeof(CompilerGeneratedAttribute)) != null)
-                                    .Select(x => ElementWriter.Create(x.Name, x)).ToArray());
+                Elements().ToArray());
+
+            IEnumerable<ElementWriter> Elements()
+            {
+                foreach (var property in type.GetProperties())
+                {
+                    if (property.SetMethod != null ||
+                        Attribute.GetCustomAttribute(property.GetMethod, typeof(CompilerGeneratedAttribute)) != null)
+                    {
+                        if (Attribute.GetCustomAttribute(property, typeof(XmlElementAttribute)) is XmlElementAttribute xmlElement)
+                        {
+                            yield return ElementWriter.Create(xmlElement.ElementName, property);
+                        }
+                        else
+                        {
+                            yield return ElementWriter.Create(property.Name, property);
+                        }
+                    }
+                }
+            }
         }
     }
 }
