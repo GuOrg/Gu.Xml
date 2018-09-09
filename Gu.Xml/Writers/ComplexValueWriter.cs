@@ -36,7 +36,7 @@
 
             IEnumerable<AttributeWriter> Attributes()
             {
-                foreach (var property in type.GetProperties())
+                foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
                 {
                     if (AttributeWriter.TryCreate(property, out var writer))
                     {
@@ -47,7 +47,7 @@
 
             IEnumerable<ElementWriter> Elements()
             {
-                foreach (var property in type.GetProperties())
+                foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
                 {
                     if (ElementWriter.TryCreate(property, out var writer))
                     {

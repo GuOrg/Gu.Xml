@@ -23,7 +23,9 @@
 
         public static bool TryCreate(PropertyInfo property, out ElementWriter writer)
         {
-            if (property.GetMethod != null &&
+            if (property.GetMethod is MethodInfo getMethod &&
+                !getMethod.IsStatic &&
+                getMethod.IsPublic &&
                 !IsIgnoredCalculated() &&
                 Attribute.GetCustomAttribute(property, typeof(XmlIgnoreAttribute)) == null &&
                 Attribute.GetCustomAttribute(property, typeof(XmlAttributeAttribute)) == null)

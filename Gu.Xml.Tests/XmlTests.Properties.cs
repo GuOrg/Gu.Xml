@@ -61,6 +61,18 @@
             }
 
             [Test]
+            public void ExcludePrivateProtectedAndStatic()
+            {
+                var with = new WithPrivateProtectedStatic();
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithPrivateProtectedStatic>" + Environment.NewLine +
+                               "</WithPrivateProtectedStatic>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
             public void XmlElementAttribute()
             {
                 var with = new WithXmlElement { Value = 1 };
@@ -168,6 +180,15 @@
             {
                 [XmlIgnore]
                 public int Value { get; set; }
+            }
+
+            public class WithPrivateProtectedStatic
+            {
+                public static int StaticValue { get; set; } = 1;
+
+                private int PrivateValue { get; set; } = 2;
+
+                protected int ProtectedValue { get; set; } = 3;
             }
         }
     }
