@@ -73,6 +73,18 @@
                 Assert.AreEqual(expected, actual);
             }
 
+            [Test]
+            public void XmlIgnoreAttribute()
+            {
+                var with = new WithXmlIgnore { Value = 1 };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithXmlIgnore>" + Environment.NewLine +
+                               "</WithXmlIgnore>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
             public class WithGetSet
             {
                 public int Value { get; set; }
@@ -113,6 +125,12 @@
             public class WithXmlElement
             {
                 [XmlElement("Name")]
+                public int Value { get; set; }
+            }
+
+            public class WithXmlIgnore
+            {
+                [XmlIgnore]
                 public int Value { get; set; }
             }
         }
