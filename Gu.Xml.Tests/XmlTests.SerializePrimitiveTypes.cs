@@ -112,6 +112,48 @@
                 Assert.AreEqual(expected, actual);
             }
 
+            [TestCase(double.NegativeInfinity)]
+            [TestCase(double.MinValue)]
+            [TestCase(int.MinValue)]
+            [TestCase(-1.2)]
+            [TestCase(-1)]
+            [TestCase(-0.1)]
+            [TestCase(-1.2E-123)]
+            [TestCase(-0.0)]
+            [TestCase(0.0)]
+            [TestCase(1.2E-123)]
+            [TestCase(0.1)]
+            [TestCase(1)]
+            [TestCase(1.2)]
+            [TestCase(1.2E123)]
+            [TestCase(int.MaxValue)]
+            [TestCase(double.MaxValue)]
+            [TestCase(double.NaN)]
+            public void Double(double value)
+            {
+                var with = new WithMutable<double> { Value = value };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableOfDouble>" + Environment.NewLine +
+                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
+                               "</WithMutableOfDouble>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCaseSource(nameof(DecimalSource))]
+            public void Decimal(decimal value)
+            {
+                var with = new WithMutable<decimal> { Value = value };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableOfDecimal>" + Environment.NewLine +
+                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
+                               "</WithMutableOfDecimal>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
             [TestCase(StringComparison.InvariantCulture)]
             [TestCase(StringComparison.CurrentCultureIgnoreCase)]
             public void EnumStringComparison(StringComparison value)
@@ -131,6 +173,35 @@
                 var with = new WithMutable<CultureTypes> { Value = value };
                 var actual = Xml.Serialize(with);
                 var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(float.NegativeInfinity)]
+            [TestCase(float.MinValue)]
+            [TestCase(int.MinValue)]
+            [TestCase(-1.2f)]
+            [TestCase(-1)]
+            [TestCase(-0.1f)]
+            [TestCase(-1.2E-34f)]
+            [TestCase(-0.0f)]
+            [TestCase(0.0f)]
+            [TestCase(1.2E-123f)]
+            [TestCase(0.1f)]
+            [TestCase(1)]
+            [TestCase(1.2f)]
+            [TestCase(1.2E34f)]
+            [TestCase(int.MaxValue)]
+            [TestCase(float.MaxValue)]
+            [TestCase(float.NaN)]
+            public void Float(float value)
+            {
+                var with = new WithMutable<float> { Value = value };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableOfSingle>" + Environment.NewLine +
+                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
+                               "</WithMutableOfSingle>";
+
+                var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -174,77 +245,6 @@
                 var with = new WithMutable<long> { Value = value };
                 var actual = Xml.Serialize(with);
                 var expected = Reference.Xml(with);
-                Assert.AreEqual(expected, actual);
-            }
-
-            [TestCase(double.NegativeInfinity)]
-            [TestCase(double.MinValue)]
-            [TestCase(int.MinValue)]
-            [TestCase(-1.2)]
-            [TestCase(-1)]
-            [TestCase(-0.1)]
-            [TestCase(-1.2E-123)]
-            [TestCase(-0.0)]
-            [TestCase(0.0)]
-            [TestCase(1.2E-123)]
-            [TestCase(0.1)]
-            [TestCase(1)]
-            [TestCase(1.2)]
-            [TestCase(1.2E123)]
-            [TestCase(int.MaxValue)]
-            [TestCase(double.MaxValue)]
-            [TestCase(double.NaN)]
-            public void Double(double value)
-            {
-                var with = new WithMutable<double> { Value = value };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableOfDouble>" + Environment.NewLine +
-                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableOfDouble>";
-
-                var actual = Xml.Serialize(with);
-                Assert.AreEqual(expected, actual);
-            }
-
-            [TestCaseSource(nameof(DecimalSource))]
-            public void Decimal(decimal value)
-            {
-                var with = new WithMutable<decimal> { Value = value };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableOfDecimal>" + Environment.NewLine +
-                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableOfDecimal>";
-
-                var actual = Xml.Serialize(with);
-                Assert.AreEqual(expected, actual);
-            }
-
-            [TestCase(float.NegativeInfinity)]
-            [TestCase(float.MinValue)]
-            [TestCase(int.MinValue)]
-            [TestCase(-1.2f)]
-            [TestCase(-1)]
-            [TestCase(-0.1f)]
-            [TestCase(-1.2E-34f)]
-            [TestCase(-0.0f)]
-            [TestCase(0.0f)]
-            [TestCase(1.2E-123f)]
-            [TestCase(0.1f)]
-            [TestCase(1)]
-            [TestCase(1.2f)]
-            [TestCase(1.2E34f)]
-            [TestCase(int.MaxValue)]
-            [TestCase(float.MaxValue)]
-            [TestCase(float.NaN)]
-            public void Float(float value)
-            {
-                var with = new WithMutable<float> { Value = value };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableOfSingle>" + Environment.NewLine +
-                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableOfSingle>";
-
-                var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
             }
 
