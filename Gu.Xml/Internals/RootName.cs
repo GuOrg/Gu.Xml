@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Text;
+    using System.Xml.Serialization;
 
     internal static class RootName
     {
@@ -15,6 +16,13 @@
 
         private static string Create(Type type)
         {
+            if (Attribute.GetCustomAttribute(type, typeof(XmlRootAttribute)) is XmlRootAttribute xmlRoot &&
+                xmlRoot.ElementName is string elementName &&
+                !string.IsNullOrEmpty(elementName))
+            {
+                return elementName;
+            }
+
             if (!type.IsGenericType &&
                 !type.HasElementType)
             {

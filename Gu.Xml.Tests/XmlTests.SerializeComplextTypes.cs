@@ -4,6 +4,7 @@ namespace Gu.Xml.Tests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Xml.Serialization;
     using NUnit.Framework;
 
     public partial class XmlTests
@@ -13,6 +14,7 @@ namespace Gu.Xml.Tests
             private static readonly TestCaseData[] Values =
             {
                 new TestCaseData(new WithPublicMutableProperty { Value = 1 }),
+                new TestCaseData(new WithXmlRoot { Value = 1 }),
                 new TestCaseData(new WithPublicMutableFieldXmlElementExplicitName { Value = 1 }),
                 new TestCaseData(new WithPublicMutableField { Value = 1 }),
                 new TestCaseData(new WithPublicMutableFieldXmlElementExplicitName { Value = 1 }),
@@ -97,6 +99,12 @@ namespace Gu.Xml.Tests
             }
 
             public class WithPublicMutableProperty
+            {
+                public int Value { get; set; } = 1;
+            }
+
+            [XmlRoot("Name")]
+            public class WithXmlRoot
             {
                 public int Value { get; set; } = 1;
             }
