@@ -12,21 +12,6 @@
             private static readonly int[] IntSource = { int.MinValue, -1, -0, 0, 1, int.MaxValue };
             private static readonly decimal[] DecimalSource = { decimal.MinValue, -1, decimal.MinusOne, -0M, 0M, decimal.Zero, 1, decimal.MaxValue };
 
-            [TestCase(null)]
-            [TestCase("abc")]
-            [TestCase(" abc")]
-            [TestCase("abc ")]
-            [TestCase("1\u00A0mm")]
-            [TestCase("1\u00B0")]
-            [TestCase("abc\r\ncde")]
-            public void String(string value)
-            {
-                var with = new WithMutable<string> { Value = value };
-                var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
-                Assert.AreEqual(expected, actual);
-            }
-
             [TestCase(byte.MinValue)]
             [TestCase(0)]
             [TestCase(1)]
@@ -243,6 +228,66 @@
             public void Int64(long value)
             {
                 var with = new WithMutable<long> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(short.MinValue)]
+            [TestCase(-1)]
+            [TestCase(0)]
+            [TestCase(1)]
+            [TestCase(short.MaxValue)]
+            public void Int16(short value)
+            {
+                var with = new WithMutable<short> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(null)]
+            [TestCase("abc")]
+            [TestCase(" abc")]
+            [TestCase("abc ")]
+            [TestCase("1\u00A0mm")]
+            [TestCase("1\u00B0")]
+            [TestCase("abc\r\ncde")]
+            public void String(string value)
+            {
+                var with = new WithMutable<string> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(ushort.MinValue)]
+            [TestCase(ushort.MaxValue)]
+            public void UInt16(ushort value)
+            {
+                var with = new WithMutable<ushort> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(uint.MinValue)]
+            [TestCase(0u)]
+            [TestCase(1u)]
+            [TestCase(uint.MaxValue)]
+            public void UInt32(uint value)
+            {
+                var with = new WithMutable<uint> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(ulong.MinValue)]
+            [TestCase(ulong.MaxValue)]
+            public void UInt64(ulong value)
+            {
+                var with = new WithMutable<ulong> { Value = value };
                 var actual = Xml.Serialize(with);
                 var expected = Reference.Xml(with);
                 Assert.AreEqual(expected, actual);

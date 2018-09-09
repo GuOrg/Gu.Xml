@@ -21,7 +21,11 @@
             Add<float>((writer, value) => writer.Write(ToString(value)));
             Add<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
             Add<long>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
+            Add<short>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
             Add<sbyte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
+            Add<ulong>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
+            Add<uint>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
+            Add<ushort>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
 
             void Add<T>(Action<TextWriter, T> write)
                 where T : struct
