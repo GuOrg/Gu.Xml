@@ -30,11 +30,35 @@
             return false;
         }
 
+        public static bool TryCreate(FieldInfo field, out AttributeWriter writer)
+        {
+            if (Attribute.GetCustomAttribute(field, typeof(XmlAttributeAttribute)) is XmlAttributeAttribute attribute)
+            {
+                var name = string.IsNullOrEmpty(attribute.AttributeName) ? field.Name : attribute.AttributeName;
+                writer = (AttributeWriter)typeof(AttributeWriter)
+                                          .GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
+                                          .MakeGenericMethod(field.ReflectedType, field.FieldType)
+                                          .Invoke(null, new object[] { name, field });
+                return true;
+            }
+
+            writer = null;
+            return false;
+        }
+
         public abstract void Write<T>(TextWriter writer, T source);
 
-        private static AttributeWriter<TSource, TValue> CreateWriter<TSource, TValue>(string name, PropertyInfo property)
+        private static AttributeWriter<TSource, TValue> CreateWriter<TSource, TValue>(string name, MemberInfo member)
         {
-            return new AttributeWriter<TSource, TValue>(name, property.CreateGetter<TSource, TValue>());
+            switch (member)
+            {
+                case PropertyInfo property:
+                    return new AttributeWriter<TSource, TValue>(name, property.CreateGetter<TSource, TValue>());
+                case FieldInfo field:
+                    return new AttributeWriter<TSource, TValue>(name, x => (TValue)field.GetValue(x));
+                default:
+                    throw new InvalidOperationException($"Not handling {member}. Bug in Gu.Xml.");
+            }
         }
     }
 }

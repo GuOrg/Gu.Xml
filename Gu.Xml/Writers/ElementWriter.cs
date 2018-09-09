@@ -14,13 +14,6 @@
 
         public string Name { get; }
 
-        public abstract void Write<T>(XmlWriter writer, T source);
-
-        private static ElementWriter<TSource, TValue> CreateWriter<TSource, TValue>(string name, PropertyInfo property)
-        {
-            return new ElementWriter<TSource, TValue>(name, property.CreateGetter<TSource,TValue>());
-        }
-
         public static bool TryCreate(PropertyInfo property, out ElementWriter writer)
         {
             if (property.GetMethod is MethodInfo getMethod &&
@@ -33,7 +26,7 @@
                 Attribute.GetCustomAttribute(property, typeof(XmlAttributeAttribute)) == null)
             {
                 writer = (ElementWriter)typeof(ElementWriter)
-                                                .GetMethod(nameof(CreateWriter),BindingFlags.Static | BindingFlags.NonPublic)
+                                                .GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
                                                 .MakeGenericMethod(property.ReflectedType, property.PropertyType)
                                                 .Invoke(null, new object[] { Name(), property });
                 return true;
@@ -58,6 +51,51 @@
                 }
 
                 return property.Name;
+            }
+        }
+
+        public static bool TryCreate(FieldInfo field, out ElementWriter writer)
+        {
+            if (!field.IsStatic &&
+                !field.IsPrivate &&
+                !field.IsFamily &&
+                Attribute.GetCustomAttribute(field, typeof(XmlIgnoreAttribute)) == null &&
+                Attribute.GetCustomAttribute(field, typeof(XmlAttributeAttribute)) == null)
+            {
+                writer = (ElementWriter)typeof(ElementWriter)
+                                        .GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
+                                        .MakeGenericMethod(field.ReflectedType, field.FieldType)
+                                        .Invoke(null, new object[] { Name(), field });
+                return true;
+            }
+
+            writer = null;
+            return false;
+
+            string Name()
+            {
+                if (Attribute.GetCustomAttribute(field, typeof(XmlElementAttribute)) is XmlElementAttribute xmlElement &&
+                    xmlElement.ElementName is string name)
+                {
+                    return name;
+                }
+
+                return field.Name;
+            }
+        }
+
+        public abstract void Write<T>(XmlWriter writer, T source);
+
+        private static ElementWriter<TSource, TValue> CreateWriter<TSource, TValue>(string name, MemberInfo member)
+        {
+            switch (member)
+            {
+                case PropertyInfo property:
+                    return new ElementWriter<TSource, TValue>(name, property.CreateGetter<TSource, TValue>());
+                case FieldInfo field:
+                    return new ElementWriter<TSource, TValue>(name, x => (TValue)field.GetValue(x));
+                default:
+                    throw new InvalidOperationException($"Not handling {member}. Bug in Gu.Xml.");
             }
         }
     }

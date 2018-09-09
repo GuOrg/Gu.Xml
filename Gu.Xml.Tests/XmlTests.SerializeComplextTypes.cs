@@ -11,14 +11,17 @@
         {
             private static readonly TestCaseData[] Values =
             {
-                new TestCaseData(new Foo()),
-                new TestCaseData(new Bar()),
-                new TestCaseData(new Foo<int>()),
-                new TestCaseData(new Foo<string>()),
-                new TestCaseData(new Foo<Foo<double>> { Value = new Foo<double>() }),
-                new TestCaseData(new Foo<Bar>()),
+                new TestCaseData(new WithPublicMutableProperty()),
+                new TestCaseData(new WithPublicMutableFieldXmlElementExplicitName()),
+                new TestCaseData(new WithPublicMutableField()),
+                new TestCaseData(new WithPublicMutableFieldXmlElementExplicitName()),
+                new TestCaseData(new WithTwoPublicMutableProperties()),
+                new TestCaseData(new GenericWithPublicMutableProperty<int>()),
+                new TestCaseData(new GenericWithPublicMutableProperty<string>()),
+                new TestCaseData(new GenericWithPublicMutableProperty<GenericWithPublicMutableProperty<double>> { Value = new GenericWithPublicMutableProperty<double>() }),
+                new TestCaseData(new GenericWithPublicMutableProperty<WithTwoPublicMutableProperties>()),
                 new TestCaseData(new KeyValuePair<int, double>(1, 2)),
-                new TestCaseData(new Foo<KeyValuePair<int, double>> { Value = new KeyValuePair<int, double>(1, 2) }),
+                new TestCaseData(new GenericWithPublicMutableProperty<KeyValuePair<int, double>> { Value = new KeyValuePair<int, double>(1, 2) }),
             };
 
             [TestCaseSource(nameof(Values))]
@@ -65,11 +68,11 @@
             [Test]
             public void Struct()
             {
-                var value = new MyStruct(1);
+                var value = new StructWithGetOnlyProperty(1);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<MyStruct>" + Environment.NewLine +
+                               "<StructWithGetOnlyProperty>" + Environment.NewLine +
                                "  <Value>1</Value>" + Environment.NewLine +
-                               "</MyStruct>";
+                               "</StructWithGetOnlyProperty>";
 
                 var actual = Xml.Serialize(value);
                 Assert.AreEqual(expected, actual);
@@ -85,26 +88,43 @@
                 public int Value { get; }
             }
 
-            public class Foo
+            public class WithPublicMutableProperty
             {
                 public int Value { get; set; } = 1;
             }
 
-            public class Foo<T>
+            public class WithPublicMutablePropertyXmlElementExplicitName
+            {
+                [System.Xml.Serialization.XmlElement("Name")]
+                public int Value { get; set; } = 1;
+            }
+
+            public class WithPublicMutableField
+            {
+                public int Value = 1;
+            }
+
+            public class WithPublicMutableFieldXmlElementExplicitName
+            {
+                [System.Xml.Serialization.XmlElement("Name")]
+                public int Value = 1;
+            }
+
+            public class GenericWithPublicMutableProperty<T>
             {
                 public T Value { get; set; } = default(T);
             }
 
-            public class Bar
+            public class WithTwoPublicMutableProperties
             {
                 public int Value1 { get; set; } = 1;
 
                 public int Value2 { get; set; } = 2;
             }
 
-            public struct MyStruct
+            public struct StructWithGetOnlyProperty
             {
-                public MyStruct(int value)
+                public StructWithGetOnlyProperty(int value)
                 {
                     this.Value = value;
                 }
