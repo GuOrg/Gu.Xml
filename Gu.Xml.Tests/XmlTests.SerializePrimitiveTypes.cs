@@ -38,7 +38,7 @@
             [TestCase(true)]
             [TestCase(false)]
             [TestCase(null)]
-            public void NullableBoolean(bool? value)
+            public void BooleanNullable(bool? value)
             {
                 var with = new WithMutableNullable<bool> { Value = value };
                 var expected = value.HasValue
@@ -55,7 +55,7 @@
 
             [TestCase(true)]
             [TestCase(false)]
-            public void BoxedBoolean(bool value)
+            public void BooleanBoxed(bool value)
             {
                 var with = new WithMutableBoxed { Value = value };
                 var actual = Xml.Serialize(with);
@@ -69,6 +69,16 @@
             public void BoxedNullableBoolean(bool? value)
             {
                 var with = new WithMutableBoxed { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase('a')]
+            [TestCase('\t')]
+            public void Char(char value)
+            {
+                var with = new WithMutable<char> { Value = value };
                 var actual = Xml.Serialize(with);
                 var expected = Reference.Xml(with);
                 Assert.AreEqual(expected, actual);
@@ -131,8 +141,8 @@
                 public T Value { get; set; }
             }
 
-            public class WithMutableNullable<T> 
-                where T : struct 
+            public class WithMutableNullable<T>
+                where T : struct
             {
                 public T? Value { get; set; }
             }
