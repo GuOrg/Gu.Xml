@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
 
     /// <summary>
@@ -40,7 +41,7 @@
             }
             else if (ComplexValueWriter.GetOrCreate(value) is ComplexValueWriter complex)
             {
-                this.WriteStartElement(name);
+                this.WriteStartElement(name, value, complex.Attributes);
                 this.writer.WriteLine();
                 foreach (var elementWriter in complex.Elements)
                 {
@@ -65,6 +66,20 @@
             this.WriteIndentation();
             this.writer.Write("<");
             this.writer.Write(name);
+            this.writer.Write(">");
+            this.indentLevel++;
+        }
+
+        public void WriteStartElement<T>(string name, T source, IReadOnlyList<AttributeWriter> attributeWriters)
+        {
+            this.WriteIndentation();
+            this.writer.Write("<");
+            this.writer.Write(name);
+            foreach (var attributeWriter in attributeWriters)
+            {
+                attributeWriter.Write(this.writer, source);
+            }
+
             this.writer.Write(">");
             this.indentLevel++;
         }

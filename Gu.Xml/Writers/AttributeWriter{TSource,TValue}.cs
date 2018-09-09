@@ -21,6 +21,7 @@
                 {
                     if (SimpleValueWriter.TryGet(value, out var valueWriter))
                     {
+                        writer.Write(" ");
                         writer.Write(this.Name);
                         writer.Write("=\"");
                         valueWriter.Write(writer, value);

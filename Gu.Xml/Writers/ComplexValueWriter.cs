@@ -31,8 +31,19 @@
         private static ComplexValueWriter Create(Type type)
         {
             return new ComplexValueWriter(
-                Array.Empty<AttributeWriter>(),
+                Attributes().ToArray(),
                 Elements().ToArray());
+
+            IEnumerable<AttributeWriter> Attributes()
+            {
+                foreach (var property in type.GetProperties())
+                {
+                    if (AttributeWriter.TryCreate(property, out var writer))
+                    {
+                        yield return writer;
+                    }
+                }
+            }
 
             IEnumerable<ElementWriter> Elements()
             {

@@ -85,6 +85,30 @@
                 Assert.AreEqual(expected, actual);
             }
 
+            [Test]
+            public void XmlAttributeAttribute()
+            {
+                var with = new WithXmlAttribute { Value = 1 };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithXmlAttribute Value=\"1\">" + Environment.NewLine +
+                               "</WithXmlAttribute>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void XmlAttributeAttributeExplicitName()
+            {
+                var with = new WithXmlAttributeExplicitName { Value = 1 };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithXmlAttributeExplicitName Name=\"1\">" + Environment.NewLine +
+                               "</WithXmlAttributeExplicitName>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
             public class WithGetSet
             {
                 public int Value { get; set; }
@@ -125,6 +149,18 @@
             public class WithXmlElement
             {
                 [XmlElement("Name")]
+                public int Value { get; set; }
+            }
+
+            public class WithXmlAttribute
+            {
+                [XmlAttribute]
+                public int Value { get; set; }
+            }
+
+            public class WithXmlAttributeExplicitName
+            {
+                [XmlAttribute("Name")]
                 public int Value { get; set; }
             }
 
