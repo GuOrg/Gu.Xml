@@ -44,7 +44,8 @@
                 return "INF";
             }
 
-            if (value == 0 && BitConverter.DoubleToInt64Bits(value) != BitConverter.DoubleToInt64Bits(0.0))
+            if (value == 0 &&
+                BitConverter.DoubleToInt64Bits(value) != BitConverter.DoubleToInt64Bits(0.0))
             {
                 return "-0";
             }

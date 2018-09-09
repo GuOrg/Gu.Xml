@@ -6,7 +6,7 @@
 
     public partial class XmlTests
     {
-        public class Properties
+        public class SerializeProperties
         {
             [Test]
             public void GetSet()
