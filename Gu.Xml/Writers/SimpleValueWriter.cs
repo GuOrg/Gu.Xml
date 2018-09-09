@@ -13,7 +13,7 @@
         {
             Add<bool>((writer, value) => writer.Write(value ? "true" : "false"));
             Add<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
-            Add<double>(WriteDouble);
+            Add<double>((writer, value) => writer.Write(ToString(value)));
 
             void Add<T>(Action<TextWriter, T> write)
                 where T : struct
@@ -31,28 +31,25 @@
 
         public abstract void Write<T>(TextWriter writer, T value);
 
-        private static void WriteDouble(TextWriter writer, double value)
+        private static string ToString(double value)
         {
             // https://www.w3.org/TR/xmlschema-2/#double
             if (double.IsNegativeInfinity(value))
             {
-                writer.Write("-INF");
-                return;
+                return "-INF";
             }
 
             if (double.IsPositiveInfinity(value))
             {
-                writer.Write("INF");
-                return;
+                return "INF";
             }
 
             if (value == 0 && BitConverter.DoubleToInt64Bits(value) != BitConverter.DoubleToInt64Bits(0.0))
             {
-                writer.Write("-0");
-                return;
+                return "-0";
             }
 
-            writer.Write(value.ToString("R", NumberFormatInfo.InvariantInfo));
+            return value.ToString("R", NumberFormatInfo.InvariantInfo);
         }
     }
 }
