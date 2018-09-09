@@ -16,7 +16,9 @@
             }
 
             return sb.Replace("utf-16", "utf-8")
-                     .Replace(" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "")
+                     .Replace(" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", string.Empty)
+                     .Replace(" xsi:type=\"xsd:boolean\"", string.Empty)
+                     .Replace(" xsi:type=\"xsd:int\"", string.Empty)
                      .ToString();
         }
     }

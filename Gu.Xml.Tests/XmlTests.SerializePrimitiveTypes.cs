@@ -15,12 +15,8 @@
             public void Boolean(bool value)
             {
                 var with = new WithMutable<bool> { Value = value };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableOfBoolean>" + Environment.NewLine +
-                              $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableOfBoolean>";
-
                 var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -47,12 +43,8 @@
             public void BoxedBoolean(bool value)
             {
                 var with = new WithMutableBoxed { Value = value };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableBoxed>" + Environment.NewLine +
-                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableBoxed>";
-
                 var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -62,15 +54,8 @@
             public void BoxedNullableBoolean(bool? value)
             {
                 var with = new WithMutableBoxed { Value = value };
-                var expected = value.HasValue
-                    ? "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                      "<WithMutableBoxed>" + Environment.NewLine +
-                      $"  <Value>{XmlConvert.ToString(value.Value)}</Value>" + Environment.NewLine +
-                      "</WithMutableBoxed>"
-                    : "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                      "<WithMutableBoxed />";
-
                 var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -78,12 +63,8 @@
             public void Int32(int value)
             {
                 var with = new WithMutable<int> { Value = value };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableOfInt32>" + Environment.NewLine +
-                              $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableOfInt32>";
-
                 var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -91,12 +72,8 @@
             public void BoxedInt32(int value)
             {
                 var with = new WithMutableBoxed { Value = value };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableBoxed>" + Environment.NewLine +
-                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableBoxed>";
-
                 var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
                 Assert.AreEqual(expected, actual);
             }
 
