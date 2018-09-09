@@ -30,13 +30,14 @@
 
         private static ComplexValueWriter Create(Type type)
         {
+            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             return new ComplexValueWriter(
                 Attributes().ToArray(),
                 Elements().ToArray());
 
             IEnumerable<AttributeWriter> Attributes()
             {
-                foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                foreach (var property in properties)
                 {
                     if (AttributeWriter.TryCreate(property, out var writer))
                     {
@@ -47,7 +48,7 @@
 
             IEnumerable<ElementWriter> Elements()
             {
-                foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                foreach (var property in properties)
                 {
                     if (ElementWriter.TryCreate(property, out var writer))
                     {

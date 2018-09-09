@@ -25,7 +25,8 @@
         {
             if (property.GetMethod is MethodInfo getMethod &&
                 !getMethod.IsStatic &&
-                getMethod.IsPublic &&
+                !getMethod.IsPrivate &&
+                !getMethod.IsFamily &&
                 !IsIgnoredCalculated() &&
                 Attribute.GetCustomAttribute(property, typeof(XmlIgnoreAttribute)) == null &&
                 Attribute.GetCustomAttribute(property, typeof(XmlAttributeAttribute)) == null)

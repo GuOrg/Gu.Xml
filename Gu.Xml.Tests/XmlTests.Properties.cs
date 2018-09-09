@@ -22,6 +22,19 @@
             }
 
             [Test]
+            public void InternalGetSet()
+            {
+                var with = new InternalWithGetSet { Value = 1 };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<InternalWithGetSet>" + Environment.NewLine +
+                               "  <Value>1</Value>" + Environment.NewLine +
+                               "</InternalWithGetSet>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
             public void GetPrivateSet()
             {
                 var with = new WithGetPrivateSet(1);
@@ -124,6 +137,11 @@
             public class WithGetSet
             {
                 public int Value { get; set; }
+            }
+
+            internal class InternalWithGetSet
+            {
+                internal int Value { get; set; }
             }
 
             public class WithGetPrivateSet
