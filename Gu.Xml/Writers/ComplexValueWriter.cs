@@ -2,21 +2,22 @@
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Linq;
 
     public class ComplexValueWriter
     {
         private static readonly ConcurrentDictionary<Type, ComplexValueWriter> Default = new ConcurrentDictionary<Type, ComplexValueWriter>();
 
-        public ComplexValueWriter(AttributeWriter[] attributes, ElementWriter[] elements)
+        public ComplexValueWriter(IReadOnlyList<AttributeWriter> attributes, IReadOnlyList<ElementWriter> elements)
         {
             this.Attributes = attributes;
             this.Elements = elements;
         }
 
-        public AttributeWriter[] Attributes { get; }
+        public IReadOnlyList<AttributeWriter> Attributes { get; }
 
-        public ElementWriter[] Elements { get; }
+        public IReadOnlyList<ElementWriter> Elements { get; }
 
         public static ComplexValueWriter GetOrCreate<T>(T value)
         {
