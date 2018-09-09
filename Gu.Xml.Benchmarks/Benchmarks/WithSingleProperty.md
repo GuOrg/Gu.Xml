@@ -9,8 +9,9 @@ Frequency=2835943 Hz, Resolution=352.6164 ns, Timer=TSC
 
 
 ```
-|                     Method |       Mean |     Error |    StdDev | Scaled | ScaledSD |  Gen 0 | Allocated |
-|--------------------------- |-----------:|----------:|----------:|-------:|---------:|-------:|----------:|
-|             GuXmlSerialize |   447.5 ns |  5.822 ns |  5.446 ns |   1.00 |     0.00 | 0.1216 |     256 B |
-|     XmlSerializerSerialize | 2,772.4 ns | 52.402 ns | 49.016 ns |   6.20 |     0.13 | 1.8768 |    3944 B |
-| JsonConvertSerializeObject |   555.9 ns |  9.116 ns |  8.528 ns |   1.24 |     0.02 | 0.6056 |    1272 B |
+|                     Method |        Mean |      Error |     StdDev | Scaled | ScaledSD |  Gen 0 | Allocated |
+|--------------------------- |------------:|-----------:|-----------:|-------:|---------:|-------:|----------:|
+|             GuXmlSerialize |   435.97 ns |  8.6378 ns |  9.9473 ns |   1.00 |     0.00 | 0.1216 |     256 B |
+|                  XmlString |    29.60 ns |  0.5751 ns |  0.8430 ns |   0.07 |     0.00 | 0.0915 |     192 B |
+|     XmlSerializerSerialize | 2,882.35 ns | 56.1762 ns | 52.5472 ns |   6.61 |     0.19 | 1.8768 |    3944 B |
+| JsonConvertSerializeObject |   567.11 ns |  9.6379 ns | 12.1889 ns |   1.30 |     0.04 | 0.6056 |    1272 B |

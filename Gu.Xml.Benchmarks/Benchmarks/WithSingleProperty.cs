@@ -10,12 +10,16 @@
     {
         private static readonly WithInt Value = new WithInt { Value = 1 };
         private static readonly XmlSerializer XmlSerializer = new XmlSerializer(Value.GetType());
+        private static readonly StringBuilder StringBuilder = new StringBuilder(Xml.Serialize(Value));
 
         [Benchmark(Baseline = true)]
         public string GuXmlSerialize()
         {
             return Xml.Serialize(Value);
         }
+
+        [Benchmark]
+        public string XmlString() => StringBuilder.ToString();
 
         [Benchmark]
         public string XmlSerializerSerialize()
