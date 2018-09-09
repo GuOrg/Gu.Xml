@@ -75,19 +75,6 @@ namespace Gu.Xml.Tests
                 Assert.AreEqual(expected, actual);
             }
 
-            [Test]
-            public void Struct()
-            {
-                var value = new StructWithGetOnlyProperty(1);
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<StructWithGetOnlyProperty>" + Environment.NewLine +
-                               "  <Value>1</Value>" + Environment.NewLine +
-                               "</StructWithGetOnlyProperty>";
-
-                var actual = Xml.Serialize(value);
-                Assert.AreEqual(expected, actual);
-            }
-
             public class WithoutDefaultCtor
             {
                 public WithoutDefaultCtor(int value)
@@ -150,16 +137,6 @@ namespace Gu.Xml.Tests
                 public int Value2 { get; set; } = 2;
 
                 public int Value1 = 1;
-            }
-
-            public struct StructWithGetOnlyProperty
-            {
-                public StructWithGetOnlyProperty(int value)
-                {
-                    this.Value = value;
-                }
-
-                public int Value { get; }
             }
 
             public abstract class AbstractWithProperty
