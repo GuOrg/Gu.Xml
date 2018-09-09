@@ -1,4 +1,5 @@
-﻿namespace Gu.Xml.Tests
+﻿#pragma warning disable SA1201 // Elements should appear in the correct order
+namespace Gu.Xml.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -15,9 +16,11 @@
                 new TestCaseData(new WithPublicMutableFieldXmlElementExplicitName { Value = 1 }),
                 new TestCaseData(new WithPublicMutableField { Value = 1 }),
                 new TestCaseData(new WithPublicMutableFieldXmlElementExplicitName { Value = 1 }),
-                new TestCaseData(new WithTwoPublicMutableProperties { Value1 = 1, Value2 = 1 }),
-                new TestCaseData(new WithFieldBeforeProperty { Value1 = 1, Value2 = 1 }),
-                new TestCaseData(new WithPropertyBeforeField { Value1 = 1, Value2 = 1 }),
+                new TestCaseData(new WithTwoPublicMutableProperties { Value1 = 1, Value2 = 2 }),
+                new TestCaseData(new WithFieldBeforeProperty { Value1 = 1, Value2 = 2 }),
+                new TestCaseData(new WithPropertyBeforeField { Value1 = 1, Value2 = 2 }),
+                new TestCaseData(new ConcreteWithProperties { Value1 = 1, Value2 = 2, Value3 = 3, Value4 = 4 }),
+                new TestCaseData(new ConcreteWithFields { Value1 = 1, Value2 = 2, Value3 = 3, Value4 = 4 }),
                 new TestCaseData(new Virtual { Value = 3 }),
                 new TestCaseData(new Override { Value = 3 }),
                 new TestCaseData(new GenericWithPublicMutableProperty<int> { Value = 1 }),
@@ -151,14 +154,30 @@
                 public int Value { get; }
             }
 
-            public abstract class Abstract
+            public abstract class AbstractWithProperty
             {
                 public int Value1 { get; set; } = 1;
+
+                public int Value2 { get; set; } = 2;
             }
 
-            public class Concrete : Abstract
+            public class ConcreteWithProperties : AbstractWithProperty
             {
-                public int Value2 { get; set; } = 2;
+                public int Value3 { get; set; } = 3;
+
+                public int Value4 { get; set; } = 3;
+            }
+
+            public abstract class AbstractWithField
+            {
+                public int Value1 = 1;
+                public int Value2 = 2;
+            }
+
+            public class ConcreteWithFields : AbstractWithField
+            {
+                public int Value3 = 3;
+                public int Value4 = 4;
             }
 
             public class Virtual

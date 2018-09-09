@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml
 {
     using System;
+    using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
@@ -25,10 +26,17 @@
             return Default.GetOrAdd(value.GetType(), x => Create(x));
         }
 
-        private static ComplexValueWriter Create(Type type)
+        public static ComplexValueWriter Create(Type type)
         {
-            var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.FlattenHierarchy);
+            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetProperty | BindingFlags.FlattenHierarchy);
+            if (!type.IsValueType &&
+                type.BaseType != typeof(object))
+            {
+                Array.Sort(fields, BaseTypeCountComparer.Default);
+                Array.Sort(properties, BaseTypeCountComparer.Default);
+            }
+
             return new ComplexValueWriter(
                 Attributes().ToArray(),
                 Elements().ToArray());
@@ -69,6 +77,52 @@
                         yield return writer;
                     }
                 }
+            }
+        }
+
+        private sealed class BaseTypeCountComparer : IComparer<Type>, IComparer<MemberInfo>, IComparer
+        {
+            public static readonly BaseTypeCountComparer Default = new BaseTypeCountComparer();
+
+            public int Compare(MemberInfo x, MemberInfo y) => this.Compare(x.DeclaringType, y.DeclaringType);
+
+            public int Compare(Type x, Type y)
+            {
+                if (x == y)
+                {
+                    return 0;
+                }
+
+                return Count(x).CompareTo(Count(y));
+            }
+
+            int IComparer.Compare(object x, object y)
+            {
+                if (x is PropertyInfo xp &&
+                    y is PropertyInfo yp)
+                {
+                    return this.Compare(xp, yp);
+                }
+
+                if (x is Type xt &&
+                    y is Type yt)
+                {
+                    return this.Compare(xt, yt);
+                }
+
+                return 0;
+            }
+
+            private static int Count(Type type)
+            {
+                var count = 0;
+                while (type.BaseType != null)
+                {
+                    count++;
+                    type = type.BaseType;
+                }
+
+                return count;
             }
         }
     }
