@@ -5,9 +5,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
-    using System.Xml;
-    using System.Xml.Serialization;
 
     public class ComplexValueWriter
     {

@@ -2,9 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-    using System.Xml.Serialization;
     using NUnit.Framework;
 
     public partial class XmlTests
@@ -43,6 +40,29 @@
                 Console.WriteLine();
 
                 Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void WithoutDefaultConstructor()
+            {
+                var with = new WithoutDefaultCtor(1);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithoutDefaultCtor>" + Environment.NewLine +
+                               $"  <Value>1</Value>" + Environment.NewLine +
+                               "</WithoutDefaultCtor>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            public class WithoutDefaultCtor
+            {
+                public WithoutDefaultCtor(int value)
+                {
+                    this.Value = value;
+                }
+
+                public int Value { get; }
             }
 
             public class Foo
