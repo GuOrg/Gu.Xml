@@ -34,7 +34,7 @@
 
         private static AttributeWriter<TSource, TValue> CreateWriter<TSource, TValue>(string name, PropertyInfo property)
         {
-            return new AttributeWriter<TSource, TValue>(name, (Func<TSource, TValue>)Delegate.CreateDelegate(typeof(Func<TSource, TValue>), property.GetMethod));
+            return new AttributeWriter<TSource, TValue>(name, property.CreateGetter<TSource, TValue>());
         }
     }
 }

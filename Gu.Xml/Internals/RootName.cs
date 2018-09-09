@@ -15,7 +15,8 @@
 
         private static string Create(Type type)
         {
-            if (!type.IsGenericType)
+            if (!type.IsGenericType &&
+                !type.HasElementType)
             {
                 return type.Name;
             }
@@ -33,6 +34,18 @@
                     foreach (var argument in current.GenericTypeArguments)
                     {
                         Append(argument);
+                    }
+                }
+                else if (current.IsArray)
+                {
+                    if (current.HasElementType)
+                    {
+                        builder.Append("ArrayOf");
+                        Append(current.GetElementType());
+                    }
+                    else
+                    {
+                        builder.Append("Array");
                     }
                 }
                 else

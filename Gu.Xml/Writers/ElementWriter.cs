@@ -18,7 +18,7 @@
 
         private static ElementWriter<TSource, TValue> CreateWriter<TSource, TValue>(string name, PropertyInfo property)
         {
-            return new ElementWriter<TSource, TValue>(name, (Func<TSource, TValue>)Delegate.CreateDelegate(typeof(Func<TSource, TValue>), property.GetMethod));
+            return new ElementWriter<TSource, TValue>(name, property.CreateGetter<TSource,TValue>());
         }
 
         public static bool TryCreate(PropertyInfo property, out ElementWriter writer)
@@ -33,8 +33,7 @@
                 Attribute.GetCustomAttribute(property, typeof(XmlAttributeAttribute)) == null)
             {
                 writer = (ElementWriter)typeof(ElementWriter)
-                                                .GetMethod(nameof(CreateWriter),
-                                                    BindingFlags.Static | BindingFlags.NonPublic)
+                                                .GetMethod(nameof(CreateWriter),BindingFlags.Static | BindingFlags.NonPublic)
                                                 .MakeGenericMethod(property.ReflectedType, property.PropertyType)
                                                 .Invoke(null, new object[] { Name(), property });
                 return true;
