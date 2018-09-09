@@ -190,6 +190,29 @@
                 Assert.AreEqual(expected, actual);
             }
 
+            [TestCase("00000000-0000-0000-0000-000000000000")]
+            [TestCase("9fef4efa-262b-4b4a-a754-446c0a85fd72")]
+            public void Guid(string value)
+            {
+                var with = new WithMutable<Guid> { Value = System.Guid.Parse(value) };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(short.MinValue)]
+            [TestCase(-1)]
+            [TestCase(0)]
+            [TestCase(1)]
+            [TestCase(short.MaxValue)]
+            public void Int16(short value)
+            {
+                var with = new WithMutable<short> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
             [TestCaseSource(nameof(IntSource))]
             public void Int32(int value)
             {
@@ -228,19 +251,6 @@
             public void Int64(long value)
             {
                 var with = new WithMutable<long> { Value = value };
-                var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
-                Assert.AreEqual(expected, actual);
-            }
-
-            [TestCase(short.MinValue)]
-            [TestCase(-1)]
-            [TestCase(0)]
-            [TestCase(1)]
-            [TestCase(short.MaxValue)]
-            public void Int16(short value)
-            {
-                var with = new WithMutable<short> { Value = value };
                 var actual = Xml.Serialize(with);
                 var expected = Reference.Xml(with);
                 Assert.AreEqual(expected, actual);

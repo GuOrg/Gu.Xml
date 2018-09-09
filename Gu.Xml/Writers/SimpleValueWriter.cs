@@ -19,6 +19,7 @@
             Add<decimal>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
             Add<double>((writer, value) => writer.Write(ToString(value)));
             Add<float>((writer, value) => writer.Write(ToString(value)));
+            Add<Guid>((writer, value) => writer.Write(value.ToString()));
             Add<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
             Add<long>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
             Add<short>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
