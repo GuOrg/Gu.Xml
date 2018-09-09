@@ -12,7 +12,6 @@
 
         private int indentLevel;
         private bool pendingCloseStartElement = false;
-        private bool disposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlWriter"/> class.
@@ -111,12 +110,6 @@
 
         public void Dispose()
         {
-            if (this.disposed)
-            {
-                return;
-            }
-
-            this.disposed = true;
 #pragma warning disable IDISP007 // Don't dispose injected.
             this.writer.Dispose();
 #pragma warning restore IDISP007 // Don't dispose injected.
@@ -135,14 +128,6 @@
             for (var i = 0; i < this.indentLevel; i++)
             {
                 this.writer.Write("  ");
-            }
-        }
-
-        private void ThrowIfDisposed()
-        {
-            if (this.disposed)
-            {
-                throw new ObjectDisposedException(this.GetType().FullName);
             }
         }
     }
