@@ -154,6 +154,35 @@
                 Assert.AreEqual(expected, actual);
             }
 
+            [TestCase(float.NegativeInfinity)]
+            [TestCase(float.MinValue)]
+            [TestCase(int.MinValue)]
+            [TestCase(-1.2f)]
+            [TestCase(-1)]
+            [TestCase(-0.1f)]
+            [TestCase(-1.2E-34f)]
+            [TestCase(-0.0f)]
+            [TestCase(0.0f)]
+            [TestCase(1.2E-123f)]
+            [TestCase(0.1f)]
+            [TestCase(1)]
+            [TestCase(1.2f)]
+            [TestCase(1.2E34f)]
+            [TestCase(int.MaxValue)]
+            [TestCase(float.MaxValue)]
+            [TestCase(float.NaN)]
+            public void Float(float value)
+            {
+                var with = new WithMutable<float> { Value = value };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableOfSingle>" + Environment.NewLine +
+                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
+                               "</WithMutableOfSingle>";
+
+                var actual = Xml.Serialize(with);
+                Assert.AreEqual(expected, actual);
+            }
+
             public class WithMutableBoxed
             {
                 public object Value { get; set; }
