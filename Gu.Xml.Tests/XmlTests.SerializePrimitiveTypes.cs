@@ -84,6 +84,16 @@
                 Assert.AreEqual(expected, actual);
             }
 
+            [TestCase(StringComparison.InvariantCulture)]
+            [TestCase(StringComparison.CurrentCultureIgnoreCase)]
+            public void EnumStringComparison(StringComparison value)
+            {
+                var with = new WithMutable<StringComparison> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
             [TestCaseSource(nameof(IntSource))]
             public void Int32(int value)
             {
