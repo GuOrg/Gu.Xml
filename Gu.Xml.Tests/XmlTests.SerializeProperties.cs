@@ -144,7 +144,7 @@
             {
                 public WithGetPrivateSet(int value)
                 {
-                    Value = value;
+                    this.Value = value;
                 }
 
                 public int Value { get; private set; }
@@ -165,6 +165,7 @@
                 public WithGetOnlyAndCalculated(int value)
                 {
                     this.Value = value;
+                    _ = this.Negated;
                 }
 
                 public int Value { get; }
@@ -198,6 +199,13 @@
 
             public class WithPrivateProtectedStatic
             {
+                public WithPrivateProtectedStatic()
+                {
+                    StaticValue = 1;
+                    this.PrivateValue = 2;
+                    this.ProtectedValue = 3;
+                }
+
                 public static int StaticValue { get; set; } = 1;
 
                 private int PrivateValue { get; set; } = 2;

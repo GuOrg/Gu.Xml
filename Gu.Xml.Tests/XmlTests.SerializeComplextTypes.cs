@@ -11,13 +11,18 @@
         {
             private static readonly TestCaseData[] Values =
             {
-                new TestCaseData(new WithPublicMutableProperty()),
-                new TestCaseData(new WithPublicMutableFieldXmlElementExplicitName()),
-                new TestCaseData(new WithPublicMutableField()),
-                new TestCaseData(new WithPublicMutableFieldXmlElementExplicitName()),
-                new TestCaseData(new WithTwoPublicMutableProperties()),
-                new TestCaseData(new GenericWithPublicMutableProperty<int>()),
+                new TestCaseData(new WithPublicMutableProperty { Value = 1 }),
+                new TestCaseData(new WithPublicMutableFieldXmlElementExplicitName { Value = 1 }),
+                new TestCaseData(new WithPublicMutableField { Value = 1 }),
+                new TestCaseData(new WithPublicMutableFieldXmlElementExplicitName { Value = 1 }),
+                new TestCaseData(new WithTwoPublicMutableProperties { Value1 = 1, Value2 = 1 }),
+                new TestCaseData(new WithFieldBeforeProperty { Value1 = 1, Value2 = 1 }),
+                new TestCaseData(new WithPropertyBeforeField { Value1 = 1, Value2 = 1 }),
+                new TestCaseData(new Virtual { Value = 3 }),
+                new TestCaseData(new Override { Value = 3 }),
+                new TestCaseData(new GenericWithPublicMutableProperty<int> { Value = 1 }),
                 new TestCaseData(new GenericWithPublicMutableProperty<string>()),
+                new TestCaseData(new GenericWithPublicMutableProperty<string> { Value = "abc" }),
                 new TestCaseData(new GenericWithPublicMutableProperty<GenericWithPublicMutableProperty<double>> { Value = new GenericWithPublicMutableProperty<double>() }),
                 new TestCaseData(new GenericWithPublicMutableProperty<WithTwoPublicMutableProperties>()),
                 new TestCaseData(new KeyValuePair<int, double>(1, 2)),
@@ -122,6 +127,20 @@
                 public int Value2 { get; set; } = 2;
             }
 
+            public class WithFieldBeforeProperty
+            {
+                public int Value1 = 1;
+
+                public int Value2 { get; set; } = 2;
+            }
+
+            public class WithPropertyBeforeField
+            {
+                public int Value2 { get; set; } = 2;
+
+                public int Value1 = 1;
+            }
+
             public struct StructWithGetOnlyProperty
             {
                 public StructWithGetOnlyProperty(int value)
@@ -130,6 +149,26 @@
                 }
 
                 public int Value { get; }
+            }
+
+            public abstract class Abstract
+            {
+                public int Value1 { get; set; } = 1;
+            }
+
+            public class Concrete : Abstract
+            {
+                public int Value2 { get; set; } = 2;
+            }
+
+            public class Virtual
+            {
+                public virtual int Value { get; set; } = 1;
+            }
+
+            public class Override : Virtual
+            {
+                public override int Value { get; set; } = 2;
             }
         }
     }
