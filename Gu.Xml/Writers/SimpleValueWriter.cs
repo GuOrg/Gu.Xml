@@ -17,6 +17,7 @@
             Add<char>((writer, value) => writer.Write((int)value));
             Add<double>((writer, value) => writer.Write(ToString(value)));
             Add<float>((writer, value) => writer.Write(ToString(value)));
+            Add<long>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
             Add<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
 
             void Add<T>(Action<TextWriter, T> write)

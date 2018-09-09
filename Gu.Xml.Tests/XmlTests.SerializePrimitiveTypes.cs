@@ -117,9 +117,25 @@
             }
 
             [TestCaseSource(nameof(IntSource))]
-            public void BoxedInt32(int value)
+            public void Int32Boxed(int value)
             {
                 var with = new WithMutableBoxed { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(long.MinValue)]
+            [TestCase(int.MinValue)]
+            [TestCase(-1)]
+            [TestCase(-0)]
+            [TestCase(0)]
+            [TestCase(1)]
+            [TestCase(int.MaxValue)]
+            [TestCase(long.MaxValue)]
+            public void Int64(long value)
+            {
+                var with = new WithMutable<long> { Value = value };
                 var actual = Xml.Serialize(with);
                 var expected = Reference.Xml(with);
                 Assert.AreEqual(expected, actual);
