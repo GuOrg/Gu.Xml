@@ -18,6 +18,7 @@
                 new TestCaseData(new Foo<int>()),
                 new TestCaseData(new Foo<string>()),
                 new TestCaseData(new Foo<Foo<double>> { Value = new Foo<double>() }),
+                new TestCaseData(new Foo<Bar>()),
                 new TestCaseData(new Foo<KeyValuePair<int, double>> { Value = new KeyValuePair<int, double>(1, 2) }),
             };
 
