@@ -14,12 +14,14 @@
             Default.TryAdd(typeof(string), new SimpleValueWriter<string>((writer, value) => writer.Write(value)));
 
             Add<bool>((writer, value) => writer.Write(value ? "true" : "false"));
+            Add<byte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
             Add<char>((writer, value) => writer.Write((int)value));
             Add<decimal>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
             Add<double>((writer, value) => writer.Write(ToString(value)));
             Add<float>((writer, value) => writer.Write(ToString(value)));
-            Add<long>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
             Add<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
+            Add<long>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
+            Add<sbyte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
 
             void Add<T>(Action<TextWriter, T> write)
                 where T : struct

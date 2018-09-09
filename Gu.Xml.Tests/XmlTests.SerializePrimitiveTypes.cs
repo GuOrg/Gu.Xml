@@ -27,6 +27,32 @@
                 Assert.AreEqual(expected, actual);
             }
 
+            [TestCase(byte.MinValue)]
+            [TestCase(0)]
+            [TestCase(1)]
+            [TestCase(byte.MaxValue)]
+            public void Byte(byte value)
+            {
+                var with = new WithMutable<byte> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(sbyte.MinValue)]
+            [TestCase(-1)]
+            [TestCase(-0)]
+            [TestCase(0)]
+            [TestCase(1)]
+            [TestCase(sbyte.MaxValue)]
+            public void SByte(sbyte value)
+            {
+                var with = new WithMutable<sbyte> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
             [TestCase(true)]
             [TestCase(false)]
             public void Boolean(bool value)
