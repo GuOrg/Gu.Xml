@@ -17,6 +17,7 @@
                 new TestCaseData(new Bar()),
                 new TestCaseData(new Foo<int>()),
                 new TestCaseData(new Foo<string>()),
+                new TestCaseData(new Foo<Foo<double>> { Value = new Foo<double>() }),
                 new TestCaseData(new Foo<KeyValuePair<int, double>> { Value = new KeyValuePair<int, double>(1, 2) }),
             };
 
@@ -24,31 +25,23 @@
             public void SerializeValue(object value)
             {
                 var expected = ReferenceXml(value);
-                try
+                var actual = Xml.Serialize(value);
+                if (actual == expected)
                 {
-                    var actual = Xml.Serialize(value);
-                    if (actual == expected)
-                    {
-                        return;
-                    }
-
-                    Console.WriteLine("Expected:");
-                    Console.Write(expected);
-                    Console.WriteLine();
-                    Console.WriteLine();
-
-                    Console.WriteLine("Actual:");
-                    Console.Write(actual);
-                    Console.WriteLine();
-                    Console.WriteLine();
-
-                    Assert.AreEqual(expected, actual);
+                    return;
                 }
-                catch
-                {
-                    Console.WriteLine(expected);
-                    throw;
-                }
+
+                Console.WriteLine("Expected:");
+                Console.Write(expected);
+                Console.WriteLine();
+                Console.WriteLine();
+
+                Console.WriteLine("Actual:");
+                Console.Write(actual);
+                Console.WriteLine();
+                Console.WriteLine();
+
+                Assert.AreEqual(expected, actual);
             }
 
             private static string ReferenceXml(object value)

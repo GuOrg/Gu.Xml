@@ -87,6 +87,7 @@
                 }
                 else
                 {
+                    this.WriteIndentation();
                     this.writer.Write("</");
                     this.writer.Write(name);
                     this.writer.Write(">");
