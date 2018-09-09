@@ -36,8 +36,7 @@
                      $"  <Value>{XmlConvert.ToString(value.Value)}</Value>" + Environment.NewLine +
                       "</WithMutableNullableBool>"
                     : "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                      "<WithMutableNullableBool>" + Environment.NewLine +
-                      "</WithMutableNullableBool>";
+                      "<WithMutableNullableBool />";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
@@ -69,8 +68,7 @@
                       $"  <Value>{XmlConvert.ToString(value.Value)}</Value>" + Environment.NewLine +
                       "</WithMutableBoxed>"
                     : "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                      "<WithMutableBoxed>" + Environment.NewLine +
-                      "</WithMutableBoxed>";
+                      "<WithMutableBoxed />";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);

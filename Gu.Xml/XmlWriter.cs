@@ -1,9 +1,7 @@
 ﻿namespace Gu.Xml
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Text;
 
     /// <summary>
     /// Wraps a <see cref="TextWriter"/> and exposes methods for writing XML.
@@ -13,6 +11,7 @@
         private readonly TextWriter writer;
 
         private int indentLevel;
+        private bool pendingCloseStartElement = false;
         private bool disposed;
 
         /// <summary>
@@ -41,20 +40,57 @@
             }
             else if (SimpleValueWriter.TryGet(value, out var simple))
             {
-                this.WriteStartElement(name);
+                if (this.pendingCloseStartElement)
+                {
+                    this.writer.WriteLine(">");
+                    this.pendingCloseStartElement = false;
+                }
+
+                this.WriteIndentation();
+                this.writer.Write("<");
+                this.writer.Write(name);
+                this.writer.Write(">");
                 simple.Write(this.writer, value);
-                this.WriteEndElement(name);
+                this.writer.Write("</");
+                this.writer.Write(name);
+                this.writer.Write(">");
             }
             else if (ComplexValueWriter.GetOrCreate(value) is ComplexValueWriter complex)
             {
-                this.WriteStartElement(name, value, complex.Attributes);
-                this.writer.WriteLine();
+                if (this.pendingCloseStartElement)
+                {
+                    this.writer.WriteLine(">");
+                    this.pendingCloseStartElement = false;
+                }
+
+                this.WriteIndentation();
+                this.writer.Write("<");
+                this.writer.Write(name);
+                foreach (var attributeWriter in complex.Attributes)
+                {
+                    attributeWriter.Write(this.writer, value);
+                }
+
+                this.pendingCloseStartElement = true;
+
+                this.indentLevel++;
                 foreach (var elementWriter in complex.Elements)
                 {
                     elementWriter.Write(this, value);
                 }
 
-                this.WriteEndElement(name);
+                this.indentLevel--;
+                if (this.pendingCloseStartElement)
+                {
+                    this.writer.Write(" />");
+                    this.pendingCloseStartElement = false;
+                }
+                else
+                {
+                    this.writer.Write("</");
+                    this.writer.Write(name);
+                    this.writer.Write(">");
+                }
             }
             else
             {
@@ -65,37 +101,6 @@
         public void Write(string text)
         {
             this.writer.Write(text);
-        }
-
-        public void WriteStartElement(string name)
-        {
-            this.WriteIndentation();
-            this.writer.Write("<");
-            this.writer.Write(name);
-            this.writer.Write(">");
-            this.indentLevel++;
-        }
-
-        public void WriteStartElement<T>(string name, T source, IReadOnlyList<AttributeWriter> attributeWriters)
-        {
-            this.WriteIndentation();
-            this.writer.Write("<");
-            this.writer.Write(name);
-            foreach (var attributeWriter in attributeWriters)
-            {
-                attributeWriter.Write(this.writer, source);
-            }
-
-            this.writer.Write(">");
-            this.indentLevel++;
-        }
-
-        public void WriteEndElement(string name)
-        {
-            this.writer.Write("</");
-            this.writer.Write(name);
-            this.writer.Write(">");
-            this.indentLevel--;
         }
 
         public void WriteLine()
@@ -114,6 +119,14 @@
 #pragma warning disable IDISP007 // Don't dispose injected.
             this.writer.Dispose();
 #pragma warning restore IDISP007 // Don't dispose injected.
+        }
+
+        internal void Reset()
+        {
+            System.Diagnostics.Debug.Assert(this.indentLevel == 0, "this.indentLevel == 0");
+            this.indentLevel = 0;
+            System.Diagnostics.Debug.Assert(!this.pendingCloseStartElement, "!this.pendingCloseStartElement");
+            this.pendingCloseStartElement = false;
         }
 
         private void WriteIndentation()

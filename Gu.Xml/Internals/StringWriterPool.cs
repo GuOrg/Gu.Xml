@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml
 {
     using System.Collections.Concurrent;
+    using System.Globalization;
     using System.IO;
     using System.Text;
 
@@ -12,6 +13,7 @@
         {
             if (Cache.TryDequeue(out var cached))
             {
+                cached.Writer.Reset();
                 return cached;
             }
 
@@ -28,7 +30,7 @@
         {
             public Item()
             {
-                this.Writer = new XmlWriter(new StringWriter(this.Builder));
+                this.Writer = new XmlWriter(new StringWriter(this.Builder, CultureInfo.InvariantCulture));
             }
 
             internal StringBuilder Builder { get; } = new StringBuilder();

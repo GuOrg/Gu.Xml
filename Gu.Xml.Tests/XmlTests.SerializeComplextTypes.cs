@@ -14,7 +14,10 @@
             private static readonly TestCaseData[] Values =
             {
                 new TestCaseData(new Foo()),
-                //new TestCaseData(new List<int> { 1, 2 }),
+                new TestCaseData(new Bar()),
+                new TestCaseData(new Foo<int>()),
+                new TestCaseData(new Foo<string>()),
+                new TestCaseData(new Foo<KeyValuePair<int, double>> { Value = new KeyValuePair<int, double>(1, 2) }),
             };
 
             [TestCaseSource(nameof(Values))]
@@ -70,6 +73,13 @@
             public class Foo<T>
             {
                 public T Value { get; set; } = default(T);
+            }
+
+            public class Bar
+            {
+                public int Value1 { get; set; } = 1;
+
+                public int Value2 { get; set; } = 2;
             }
         }
     }

@@ -78,8 +78,7 @@
             {
                 var with = new WithPrivateProtectedStatic();
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithPrivateProtectedStatic>" + Environment.NewLine +
-                               "</WithPrivateProtectedStatic>";
+                               "<WithPrivateProtectedStatic />";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
@@ -103,8 +102,7 @@
             {
                 var with = new WithXmlIgnore { Value = 1 };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithXmlIgnore>" + Environment.NewLine +
-                               "</WithXmlIgnore>";
+                               "<WithXmlIgnore />";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
@@ -115,8 +113,7 @@
             {
                 var with = new WithXmlAttribute { Value = 1 };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithXmlAttribute Value=\"1\">" + Environment.NewLine +
-                               "</WithXmlAttribute>";
+                               "<WithXmlAttribute Value=\"1\" />";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
@@ -127,8 +124,7 @@
             {
                 var with = new WithXmlAttributeExplicitName { Value = 1 };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithXmlAttributeExplicitName Name=\"1\">" + Environment.NewLine +
-                               "</WithXmlAttributeExplicitName>";
+                               "<WithXmlAttributeExplicitName Name=\"1\" />";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
