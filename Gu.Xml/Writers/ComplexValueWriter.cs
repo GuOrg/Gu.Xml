@@ -4,6 +4,7 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
 
     public class ComplexValueWriter
     {
@@ -28,7 +29,8 @@
         {
             return new ComplexValueWriter(
                 Array.Empty<AttributeWriter>(),
-                type.GetProperties().Select(x => ElementWriter.Create(x.Name, x)).ToArray());
+                type.GetProperties().Where(x => x.SetMethod != null || Attribute.GetCustomAttribute(x.GetMethod, typeof(CompilerGeneratedAttribute)) != null)
+                                    .Select(x => ElementWriter.Create(x.Name, x)).ToArray());
         }
     }
 }

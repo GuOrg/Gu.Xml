@@ -4,7 +4,7 @@
     using System.Xml;
     using NUnit.Framework;
 
-    public class XmlTests
+    public partial class XmlTests
     {
         public class SerializePrimitiveTypes
         {
