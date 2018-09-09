@@ -7,6 +7,7 @@
 
     public partial class XmlTests
     {
+        [Explicit("Not implemented yet.")]
         public class SerializeCollections
         {
             private static readonly TestCaseData[] Values =
