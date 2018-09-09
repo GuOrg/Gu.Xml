@@ -1,27 +1,29 @@
 ﻿namespace Gu.Xml
 {
+    using System;
     using System.Reflection;
 
-    public class ElementWriter
+    public abstract class ElementWriter
     {
-        public ElementWriter(PropertyInfo member, string name)
+        protected ElementWriter(string name)
         {
-            this.Member = member;
             this.Name = name;
         }
 
-        public PropertyInfo Member { get; }
-
         public string Name { get; }
 
-        public void Write<T>(XmlWriter writer, T source)
+        public static ElementWriter Create(string name, PropertyInfo property)
         {
-            var o = this.Member.GetValue(source);
-            if (o != null)
-            {
-                writer.WriteElement(this.Name, o);
-                writer.WriteLine();
-            }
+            return (ElementWriter)typeof(ElementWriter).GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
+                                                       .MakeGenericMethod(property.ReflectedType, property.PropertyType)
+                                                       .Invoke(null, new object[] { name, property });
+        }
+
+        public abstract void Write<T>(XmlWriter writer, T source);
+
+        private static ElementWriter<TSource, TValue> CreateWriter<TSource, TValue>(string name, PropertyInfo property)
+        {
+            return new ElementWriter<TSource, TValue>(name, (Func<TSource, TValue>)Delegate.CreateDelegate(typeof(Func<TSource, TValue>), property.GetMethod));
         }
     }
 }

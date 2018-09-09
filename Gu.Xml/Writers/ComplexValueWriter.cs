@@ -28,7 +28,7 @@
         {
             return new ComplexValueWriter(
                 Array.Empty<AttributeWriter>(),
-                type.GetProperties().Select(x => new ElementWriter(x, x.Name)).ToArray());
+                type.GetProperties().Select(x => ElementWriter.Create(x.Name, x)).ToArray());
         }
     }
 }
