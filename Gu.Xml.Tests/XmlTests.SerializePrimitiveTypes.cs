@@ -117,6 +117,15 @@
             }
 
             [TestCaseSource(nameof(IntSource))]
+            public void Int32Nullable(int value)
+            {
+                var with = new WithMutable<int?> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCaseSource(nameof(IntSource))]
             public void Int32Boxed(int value)
             {
                 var with = new WithMutableBoxed { Value = value };
