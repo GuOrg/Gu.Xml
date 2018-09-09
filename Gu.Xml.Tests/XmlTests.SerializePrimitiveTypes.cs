@@ -14,11 +14,11 @@
             [TestCase(false)]
             public void Boolean(bool value)
             {
-                var with = new WithMutableBool { Value = value };
+                var with = new WithMutable<bool> { Value = value };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableBool>" + Environment.NewLine +
+                               "<WithMutableOfBoolean>" + Environment.NewLine +
                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableBool>";
+                               "</WithMutableOfBoolean>";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
@@ -29,14 +29,14 @@
             [TestCase(null)]
             public void NullableBoolean(bool? value)
             {
-                var with = new WithMutableNullableBool { Value = value };
+                var with = new WithMutableNullable<bool> { Value = value };
                 var expected = value.HasValue
                     ? "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                      "<WithMutableNullableBool>" + Environment.NewLine +
+                      "<WithMutableNullableOfBoolean>" + Environment.NewLine +
                      $"  <Value>{XmlConvert.ToString(value.Value)}</Value>" + Environment.NewLine +
-                      "</WithMutableNullableBool>"
+                      "</WithMutableNullableOfBoolean>"
                     : "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                      "<WithMutableNullableBool />";
+                      "<WithMutableNullableOfBoolean />";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
@@ -77,11 +77,11 @@
             [TestCaseSource(nameof(IntSource))]
             public void Int32(int value)
             {
-                var with = new WithMutableInt { Value = value };
+                var with = new WithMutable<int> { Value = value };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableInt>" + Environment.NewLine +
+                               "<WithMutableOfInt32>" + Environment.NewLine +
                               $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableInt>";
+                               "</WithMutableOfInt32>";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
@@ -119,11 +119,11 @@
             [TestCase(double.NaN)]
             public void Double(double value)
             {
-                var with = new WithMutableDouble { Value = value };
+                var with = new WithMutable<double> { Value = value };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithMutableDouble>" + Environment.NewLine +
+                               "<WithMutableOfDouble>" + Environment.NewLine +
                                $"  <Value>{XmlConvert.ToString(value)}</Value>" + Environment.NewLine +
-                               "</WithMutableDouble>";
+                               "</WithMutableOfDouble>";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
@@ -134,24 +134,15 @@
                 public object Value { get; set; }
             }
 
-            public class WithMutableBool
+            public class WithMutable<T>
             {
-                public bool Value { get; set; }
+                public T Value { get; set; }
             }
 
-            public class WithMutableNullableBool
+            public class WithMutableNullable<T> 
+                where T : struct 
             {
-                public bool? Value { get; set; }
-            }
-
-            public class WithMutableInt
-            {
-                public int Value { get; set; }
-            }
-
-            public class WithMutableDouble
-            {
-                public double Value { get; set; }
+                public T? Value { get; set; }
             }
         }
     }

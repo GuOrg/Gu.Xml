@@ -25,7 +25,7 @@
             [TestCaseSource(nameof(Values))]
             public void SerializeValue(object value)
             {
-                var expected = ReferenceXml(value);
+                var expected = Reference.Xml(value);
                 var actual = Xml.Serialize(value);
                 if (actual == expected)
                 {
@@ -43,20 +43,6 @@
                 Console.WriteLine();
 
                 Assert.AreEqual(expected, actual);
-            }
-
-            private static string ReferenceXml(object value)
-            {
-                var sb = new StringBuilder();
-                var serializer = new XmlSerializer(value.GetType());
-                using (var writer = new StringWriter(sb))
-                {
-                    serializer.Serialize(writer, value);
-                }
-
-                return sb.Replace("utf-16", "utf-8")
-                         .Replace(" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "")
-                         .ToString();
             }
 
             public class Foo
