@@ -3,7 +3,7 @@
     using System;
     using System.IO;
 
-    public class EnumWriter : SimpleValueWriter
+    public sealed class EnumWriter : SimpleValueWriter
     {
         public static readonly EnumWriter Default = new EnumWriter();
 
