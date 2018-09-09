@@ -9,7 +9,7 @@
 
         public override void Write<T>(TextWriter writer, T value)
         {
-            writer.Write(Enum.Format(typeof(T), value, "F"));
+            writer.Write(Enum.Format(typeof(T), value, "G").Replace(",", string.Empty));
         }
     }
 }

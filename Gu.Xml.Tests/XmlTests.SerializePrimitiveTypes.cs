@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml.Tests
 {
     using System;
+    using System.Globalization;
     using System.Xml;
     using NUnit.Framework;
 
@@ -89,6 +90,18 @@
             public void EnumStringComparison(StringComparison value)
             {
                 var with = new WithMutable<StringComparison> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.Xml(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(CultureTypes.NeutralCultures)]
+            [TestCase(CultureTypes.SpecificCultures)]
+            [TestCase(CultureTypes.NeutralCultures | CultureTypes.SpecificCultures)]
+            [TestCase(CultureTypes.AllCultures)]
+            public void EnumCultureTypes(CultureTypes value)
+            {
+                var with = new WithMutable<CultureTypes> { Value = value };
                 var actual = Xml.Serialize(with);
                 var expected = Reference.Xml(with);
                 Assert.AreEqual(expected, actual);
