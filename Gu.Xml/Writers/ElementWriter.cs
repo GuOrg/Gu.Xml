@@ -52,8 +52,15 @@
                         }
 
                         if (field.Name.StartsWith("_") &&
-                            field.Name.Length == property.Name.Length +1 &&
-                            property.Name.IndexOf(field.Name, StringComparison.OrdinalIgnoreCase) == 1)
+                            field.Name.Length == property.Name.Length + 1 &&
+                            field.Name.IndexOf(property.Name, StringComparison.OrdinalIgnoreCase) == 1)
+                        {
+                            return true;
+                        }
+
+                        if (field.Name.StartsWith("m_") &&
+                            field.Name.Length == property.Name.Length + 2 &&
+                            field.Name.IndexOf(property.Name, StringComparison.OrdinalIgnoreCase) == 2)
                         {
                             return true;
                         }

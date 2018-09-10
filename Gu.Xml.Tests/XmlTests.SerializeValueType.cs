@@ -87,14 +87,14 @@
             }
 
             [Test]
-            public void ValueTupleOfIntD32Double()
+            public void ValueTupleOfInt32String()
             {
-                var value = (1, 2);
+                var value = (1, "a");
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<ValueTupleOfInt32Int32>" + Environment.NewLine +
+                               "<ValueTupleOfInt32String>" + Environment.NewLine +
                                "  <Item1>1</Item1>" + Environment.NewLine +
-                               "  <Item2>2</Item2>" + Environment.NewLine +
-                               "</ValueTupleOfInt32Int32>";
+                               "  <Item2>a</Item2>" + Environment.NewLine +
+                               "</ValueTupleOfInt32String>";
                 var actual = Xml.Serialize(value);
                 Assert.AreEqual(expected, actual);
             }

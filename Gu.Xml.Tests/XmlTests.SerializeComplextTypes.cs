@@ -72,6 +72,19 @@ namespace Gu.Xml.Tests
                 Assert.AreEqual(expected, actual);
             }
 
+            [Test]
+            public void TupleOfInt32String()
+            {
+                var value = Tuple.Create(1, "a");
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<TupleOfInt32String>" + Environment.NewLine +
+                               "  <Item1>1</Item1>" + Environment.NewLine +
+                               "  <Item2>a</Item2>" + Environment.NewLine +
+                               "</TupleOfInt32String>";
+                var actual = Xml.Serialize(value);
+                Assert.AreEqual(expected, actual);
+            }
+
             public class WithoutDefaultCtor
             {
                 public WithoutDefaultCtor(int value)
