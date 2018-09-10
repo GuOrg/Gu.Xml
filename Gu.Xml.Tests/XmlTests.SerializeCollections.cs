@@ -56,6 +56,19 @@
             }
 
             [Test]
+            public void BitArray()
+            {
+                var value = new BitArray(new[] { true, false });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<BitArray>" + Environment.NewLine +
+                               "  <Boolean>true</Boolean>" + Environment.NewLine +
+                               "  <Boolean>false</Boolean>" + Environment.NewLine +
+                               "</BitArray>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
             public void ConcurrentDictionaryOfInt32StringTwoEntries()
             {
                 var value = new ConcurrentDictionary<int, string>(new Dictionary<int, string> { { 1, "a" }, { 2, "b" } });
@@ -175,6 +188,25 @@
                                "    <Value>3</Value>" + Environment.NewLine +
                                "  </Foo>" + Environment.NewLine +
                                "</HashSetOfFoo>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void Hashtable()
+            {
+                var value = new Hashtable { { 1, "a" }, { 2, "b" } };
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<Hashtable>" + Environment.NewLine +
+                               "  <DictionaryEntry>" + Environment.NewLine +
+                               "    <Key>2</Key>" + Environment.NewLine +
+                               "    <Value>b</Value>" + Environment.NewLine +
+                               "  </DictionaryEntry>" + Environment.NewLine +
+                               "  <DictionaryEntry>" + Environment.NewLine +
+                               "    <Key>1</Key>" + Environment.NewLine +
+                               "    <Value>a</Value>" + Environment.NewLine +
+                               "  </DictionaryEntry>" + Environment.NewLine +
+                               "</Hashtable>";
                 Assert.AreEqual(expected, actual);
             }
 
@@ -377,14 +409,14 @@
 
             public class Foo : IComparable<Foo>
             {
-                // ReSharper disable once UnusedMember.Local for XmlSerializer
-                private Foo()
-                {
-                }
-
                 public Foo(int value)
                 {
                     this.Value = value;
+                }
+
+                // ReSharper disable once UnusedMember.Local for XmlSerializer
+                private Foo()
+                {
                 }
 
                 public int Value { get; }

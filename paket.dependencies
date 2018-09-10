@@ -12,6 +12,7 @@ group Test
   storaget: none
   source https://api.nuget.org/v3/index.json
   nuget NUnit
+  nuget Newtonsoft.Json
 
 group Benchmark
   storaget: none
