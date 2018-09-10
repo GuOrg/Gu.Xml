@@ -11,24 +11,26 @@ namespace Gu.Xml.Tests
         {
             private static readonly TestCaseData[] Values =
             {
-                new TestCaseData(new WithPublicGetSet { Value = 1 }),
-                new TestCaseData(new WithPublicMutableField { Value = 1 }),
-                new TestCaseData(new WithTwoPublicMutableProperties { Value1 = 1, Value2 = 2 }),
-                new TestCaseData(new WithFieldBeforeProperty { Value1 = 1, Value2 = 2 }),
-                new TestCaseData(new WithPropertyBeforeField { Value1 = 1, Value2 = 2 }),
-                new TestCaseData(new ConcreteWithProperties { Value1 = 1, Value2 = 2, Value3 = 3, Value4 = 4 }),
-                new TestCaseData(new ConcreteWithFields { Value1 = 1, Value2 = 2, Value3 = 3, Value4 = 4 }),
-                new TestCaseData(new Virtual { Value = 1 }),
-                new TestCaseData(new Override { Value = 1 }),
+                new TestCaseData(new WithPublicGetSet {Value = 1}),
+                new TestCaseData(new WithPublicMutableField {Value = 1}),
+                new TestCaseData(new WithTwoPublicMutableProperties {Value1 = 1, Value2 = 2}),
+                new TestCaseData(new WithFieldBeforeProperty {Value1 = 1, Value2 = 2}),
+                new TestCaseData(new WithPropertyBeforeField {Value1 = 1, Value2 = 2}),
+                new TestCaseData(new ConcreteWithProperties {Value1 = 1, Value2 = 2, Value3 = 3, Value4 = 4}),
+                new TestCaseData(new ConcreteWithFields {Value1 = 1, Value2 = 2, Value3 = 3, Value4 = 4}),
+                new TestCaseData(new Virtual {Value = 1}),
+                new TestCaseData(new Override {Value = 1}),
                 new TestCaseData(new WithExplicitInterface()),
-                new TestCaseData(new WithImplicitInterface { Value = 1 }),
+                new TestCaseData(new WithImplicitInterface {Value = 1}),
                 new TestCaseData(new WithExplicitGetOnly()),
-                new TestCaseData(new GenericWithPublicMutableProperty<int> { Value = 1 }),
+                new TestCaseData(new GenericWithPublicMutableProperty<int> {Value = 1}),
                 new TestCaseData(new GenericWithPublicMutableProperty<string>()),
-                new TestCaseData(new GenericWithPublicMutableProperty<string> { Value = "abc" }),
-                new TestCaseData(new GenericWithPublicMutableProperty<GenericWithPublicMutableProperty<double>> { Value = new GenericWithPublicMutableProperty<double>() }),
+                new TestCaseData(new GenericWithPublicMutableProperty<string> {Value = "abc"}),
+                new TestCaseData(new GenericWithPublicMutableProperty<GenericWithPublicMutableProperty<double>>
+                    {Value = new GenericWithPublicMutableProperty<double>()}),
                 new TestCaseData(new GenericWithPublicMutableProperty<WithTwoPublicMutableProperties>()),
-                new TestCaseData(new GenericWithPublicMutableProperty<WithTwoPublicMutableProperties> { Value = new WithTwoPublicMutableProperties { Value1 = 1, Value2 = 2 } }),
+                new TestCaseData(new GenericWithPublicMutableProperty<WithTwoPublicMutableProperties>
+                    {Value = new WithTwoPublicMutableProperties {Value1 = 1, Value2 = 2}}),
             };
 
             [TestCaseSource(nameof(Values))]
@@ -98,6 +100,21 @@ namespace Gu.Xml.Tests
                 Assert.AreEqual(expected, actual);
             }
 
+            [Test]
+            public void AnonymousOfInt32StringAsPropertyValue()
+            {
+                var value = new WithObjectPublicGetSet { Value = new { Number = 1, Text = "a" } };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithObjectPublicGetSet>" + Environment.NewLine +
+                               "  <Value>" + Environment.NewLine +
+                               "    <Number>1</Number>" + Environment.NewLine +
+                               "    <Text>a</Text>" + Environment.NewLine +
+                               "  </Value>" + Environment.NewLine +
+                               "</WithObjectPublicGetSet>";
+                var actual = Xml.Serialize(value);
+                Assert.AreEqual(expected, actual);
+            }
+
             public class WithoutDefaultCtor
             {
                 public WithoutDefaultCtor(int value)
@@ -111,6 +128,11 @@ namespace Gu.Xml.Tests
             public class WithPublicGetSet
             {
                 public int Value { get; set; } = 1;
+            }
+
+            public class WithObjectPublicGetSet
+            {
+                public object Value { get; set; } = 1;
             }
 
             public class WithPublicMutableField
