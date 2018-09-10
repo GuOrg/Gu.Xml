@@ -45,7 +45,8 @@
             string Name()
             {
                 if (Attribute.GetCustomAttribute(property, typeof(XmlElementAttribute)) is XmlElementAttribute xmlElement &&
-                    xmlElement.ElementName is string name)
+                    xmlElement.ElementName is string name &&
+                    !string.IsNullOrEmpty(name))
                 {
                     return name;
                 }
@@ -75,7 +76,8 @@
             string Name()
             {
                 if (Attribute.GetCustomAttribute(field, typeof(XmlElementAttribute)) is XmlElementAttribute xmlElement &&
-                    xmlElement.ElementName is string name)
+                    xmlElement.ElementName is string name &&
+                    !string.IsNullOrEmpty(name))
                 {
                     return name;
                 }

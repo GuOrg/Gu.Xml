@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml.Tests
 {
     using System;
+    using System.Diagnostics;
     using System.Xml.Serialization;
     using NUnit.Framework;
 
@@ -8,16 +9,42 @@
     {
         public class SerializeProperties
         {
-            [Test]
-            public void GetSet()
+            private static readonly TestCaseData[] Values =
             {
-                var with = new WithGetSet { Value = 1 };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithGetSet>" + Environment.NewLine +
-                               "  <Value>1</Value>" + Environment.NewLine +
-                               "</WithGetSet>";
+                new TestCaseData(new WithPublicGetSet { Value = 1 }),
+                new TestCaseData(new WithXmlIgnore { Value = 1 }),
+                new TestCaseData(new WithGetSetAndCalculated { Value = 1 }),
+                new TestCaseData(new WithXmlElementAttribute { Value = 1 }),
+                new TestCaseData(new WithXmlElementAttributeExplicitName { Value = 1 }),
+                new TestCaseData(new WithXmlAttributeAttribute { Value = 1 }),
+                new TestCaseData(new WithXmlAttributeAttributeExplicitName { Value = 1 }),
+            };
 
-                var actual = Xml.Serialize(with);
+            [TestCaseSource(nameof(Values))]
+            public void Serialize(object value)
+            {
+                var expected = Reference.Xml(value);
+                var actual = Xml.Serialize(value);
+                if (actual == expected)
+                {
+                    if (Debugger.IsAttached)
+                    {
+                        Console.WriteLine(expected);
+                    }
+
+                    return;
+                }
+
+                Console.WriteLine("Expected:");
+                Console.Write(expected);
+                Console.WriteLine();
+                Console.WriteLine();
+
+                Console.WriteLine("Actual:");
+                Console.Write(actual);
+                Console.WriteLine();
+                Console.WriteLine();
+
                 Assert.AreEqual(expected, actual);
             }
 
@@ -84,53 +111,7 @@
                 Assert.AreEqual(expected, actual);
             }
 
-            [Test]
-            public void XmlElementAttribute()
-            {
-                var with = new WithXmlElement { Value = 1 };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithXmlElement>" + Environment.NewLine +
-                               "  <Name>1</Name>" + Environment.NewLine +
-                               "</WithXmlElement>";
-
-                var actual = Xml.Serialize(with);
-                Assert.AreEqual(expected, actual);
-            }
-
-            [Test]
-            public void XmlIgnoreAttribute()
-            {
-                var with = new WithXmlIgnore { Value = 1 };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithXmlIgnore />";
-
-                var actual = Xml.Serialize(with);
-                Assert.AreEqual(expected, actual);
-            }
-
-            [Test]
-            public void XmlAttributeAttribute()
-            {
-                var with = new WithXmlAttribute { Value = 1 };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithXmlAttribute Value=\"1\" />";
-
-                var actual = Xml.Serialize(with);
-                Assert.AreEqual(expected, actual);
-            }
-
-            [Test]
-            public void XmlAttributeAttributeExplicitName()
-            {
-                var with = new WithXmlAttributeExplicitName { Value = 1 };
-                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<WithXmlAttributeExplicitName Name=\"1\" />";
-
-                var actual = Xml.Serialize(with);
-                Assert.AreEqual(expected, actual);
-            }
-
-            public class WithGetSet
+            public class WithPublicGetSet
             {
                 public int Value { get; set; }
             }
@@ -160,32 +141,46 @@
                 public int Value { get; }
             }
 
+            public class WithGetSetAndCalculated
+            {
+                public int Value { get; set; }
+
+                // ReSharper disable once UnusedMember.Global
+                public int Negated => -this.Value;
+            }
+
             public class WithGetOnlyAndCalculated
             {
                 public WithGetOnlyAndCalculated(int value)
                 {
                     this.Value = value;
-                    _ = this.Negated;
                 }
 
                 public int Value { get; }
 
+                // ReSharper disable once UnusedMember.Global
                 public int Negated => -this.Value;
             }
 
-            public class WithXmlElement
+            public class WithXmlElementAttribute
+            {
+                [XmlElement]
+                public int Value { get; set; }
+            }
+
+            public class WithXmlElementAttributeExplicitName
             {
                 [XmlElement("Name")]
                 public int Value { get; set; }
             }
 
-            public class WithXmlAttribute
+            public class WithXmlAttributeAttribute
             {
                 [XmlAttribute]
                 public int Value { get; set; }
             }
 
-            public class WithXmlAttributeExplicitName
+            public class WithXmlAttributeAttributeExplicitName
             {
                 [XmlAttribute("Name")]
                 public int Value { get; set; }
