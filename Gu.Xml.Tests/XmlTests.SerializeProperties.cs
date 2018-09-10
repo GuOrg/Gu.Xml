@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Xml.Serialization;
     using NUnit.Framework;
 
     public partial class XmlTests
@@ -12,12 +11,8 @@
             private static readonly TestCaseData[] Values =
             {
                 new TestCaseData(new WithPublicGetSet { Value = 1 }),
-                new TestCaseData(new WithXmlIgnore { Value = 1 }),
+                new TestCaseData(new SerializeWithXmlAttributes.PropertyWithXmlIgnore { Value = 1 }),
                 new TestCaseData(new WithGetSetAndCalculated { Value = 1 }),
-                new TestCaseData(new WithXmlElementAttribute { Value = 1 }),
-                new TestCaseData(new WithXmlElementAttributeExplicitName { Value = 1 }),
-                new TestCaseData(new WithXmlAttributeAttribute { Value = 1 }),
-                new TestCaseData(new WithXmlAttributeAttributeExplicitName { Value = 1 }),
             };
 
             [TestCaseSource(nameof(Values))]
@@ -160,36 +155,6 @@
 
                 // ReSharper disable once UnusedMember.Global
                 public int Negated => -this.Value;
-            }
-
-            public class WithXmlElementAttribute
-            {
-                [XmlElement]
-                public int Value { get; set; }
-            }
-
-            public class WithXmlElementAttributeExplicitName
-            {
-                [XmlElement("Name")]
-                public int Value { get; set; }
-            }
-
-            public class WithXmlAttributeAttribute
-            {
-                [XmlAttribute]
-                public int Value { get; set; }
-            }
-
-            public class WithXmlAttributeAttributeExplicitName
-            {
-                [XmlAttribute("Name")]
-                public int Value { get; set; }
-            }
-
-            public class WithXmlIgnore
-            {
-                [XmlIgnore]
-                public int Value { get; set; }
             }
 
             public class WithPrivateProtectedStatic
