@@ -12,7 +12,7 @@
         private readonly TextWriter writer;
 
         private int indentLevel;
-        private bool pendingCloseStartElement = false;
+        private bool pendingCloseStartElement;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlWriter"/> class.
@@ -23,16 +23,30 @@
             this.writer = writer;
         }
 
+        /// <summary>
+        /// Writes &lt;?xml version="1.0" encoding="utf-8"?&gt;
+        /// </summary>
         public void WriteXmlDeclaration()
         {
             this.writer.WriteLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         }
 
+        /// <summary>
+        /// Writes the root element  for <paramref name="value"/> and it's contents.
+        /// </summary>
+        /// <typeparam name="T">The type of the value.</typeparam>
+        /// <param name="value">The value.</param>
         public void WriteRootElement<T>(T value)
         {
             this.WriteElement(RootName.Get(value.GetType()), value);
         }
 
+        /// <summary>
+        /// Write an element for <paramref name="value"/> and it's contents.
+        /// </summary>
+        /// <typeparam name="T">The type of the value.</typeparam>
+        /// <param name="name">The element name.</param>
+        /// <param name="value">The value.</param>
         public void WriteElement<T>(string name, T value)
         {
             if (value == null)
@@ -72,7 +86,7 @@
                 foreach (var item in enumerable)
                 {
                     this.WriteElement(RootName.Get(item.GetType()), item);
-                    this.WriteLine();
+                    this.writer.WriteLine();
                 }
 
                 this.indentLevel--;
@@ -131,11 +145,6 @@
             {
                 throw new InvalidOperationException($"Failed getting a value writer for {value}");
             }
-        }
-
-        public void Write(string text)
-        {
-            this.writer.Write(text);
         }
 
         public void WriteLine()

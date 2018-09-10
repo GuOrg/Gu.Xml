@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <CodeAnalysisRuleSet>Gu.Xml.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <Import Project="..\.paket\Paket.Restore.targets" />
