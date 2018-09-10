@@ -3,7 +3,6 @@
     using System;
     using System.IO;
     using System.Reflection;
-    using System.Xml.Serialization;
 
     public abstract class AttributeWriter
     {
@@ -62,11 +61,11 @@
         private static bool TryGetAttributeName(MemberInfo member, out string name)
         {
             name = null;
-            if (Attribute.GetCustomAttribute(member, typeof(XmlAttributeAttribute)) is XmlAttributeAttribute xmlAttribute)
+            if (member.TryGetCustomAttribute(out System.Xml.Serialization.XmlAttributeAttribute xmlAttribute))
             {
                 name = xmlAttribute.AttributeName ?? string.Empty;
             }
-            else if (Attribute.GetCustomAttribute(member, typeof(SoapAttributeAttribute)) is SoapAttributeAttribute soapAttribute)
+            else if (member.TryGetCustomAttribute(out System.Xml.Serialization.SoapAttributeAttribute soapAttribute))
             {
                 name = soapAttribute.AttributeName ?? string.Empty;
             }

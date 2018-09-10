@@ -66,7 +66,7 @@
             where T : Attribute
         {
             name = null;
-            if (Attribute.GetCustomAttribute(type, typeof(T)) is T attribute)
+            if (type.TryGetCustomAttribute(out T attribute))
             {
                 name = getName(attribute);
             }

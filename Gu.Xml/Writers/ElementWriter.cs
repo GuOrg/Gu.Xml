@@ -2,7 +2,6 @@
 {
     using System;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     public abstract class ElementWriter
     {
@@ -36,8 +35,8 @@
             bool IsIgnoredCalculated()
             {
                 return property.SetMethod == null &&
-                       Attribute.GetCustomAttribute(property.GetMethod, typeof(CompilerGeneratedAttribute)) == null &&
-                       Attribute.GetCustomAttribute(property.GetMethod, typeof(System.Xml.Serialization.XmlElementAttribute)) == null;
+                       !property.GetMethod.TryGetCustomAttribute<System.Runtime.CompilerServices.CompilerGeneratedAttribute>(out _) &&
+                       !property.GetMethod.TryGetCustomAttribute<System.Xml.Serialization.XmlElementAttribute>(out _);
             }
         }
 
@@ -77,22 +76,22 @@
         private static bool TryGetElementName(MemberInfo member, out string name)
         {
             name = null;
-            if (Attribute.GetCustomAttribute(member, typeof(System.Xml.Serialization.XmlElementAttribute)) is System.Xml.Serialization.XmlElementAttribute xmlAttribute)
+            if (member.TryGetCustomAttribute(out System.Xml.Serialization.XmlElementAttribute xmlAttribute))
             {
                 name = xmlAttribute.ElementName ?? string.Empty;
             }
-            else if (Attribute.GetCustomAttribute(member, typeof(System.Xml.Serialization.SoapElementAttribute)) is System.Xml.Serialization.SoapElementAttribute soapAttribute)
+            else if (member.TryGetCustomAttribute(out System.Xml.Serialization.SoapElementAttribute soapAttribute))
             {
                 name = soapAttribute.ElementName ?? string.Empty;
             }
 
             if (name == null)
             {
-                if (Attribute.GetCustomAttribute(member, typeof(System.Xml.Serialization.XmlIgnoreAttribute)) != null ||
-                    Attribute.GetCustomAttribute(member, typeof(System.Xml.Serialization.XmlAttributeAttribute)) != null ||
-                    Attribute.GetCustomAttribute(member, typeof(System.Xml.Serialization.SoapIgnoreAttribute)) != null ||
-                    Attribute.GetCustomAttribute(member, typeof(System.Xml.Serialization.SoapAttributeAttribute)) != null ||
-                    Attribute.GetCustomAttribute(member, typeof(System.Runtime.Serialization.IgnoreDataMemberAttribute)) != null)
+                if (member.TryGetCustomAttribute<System.Xml.Serialization.XmlIgnoreAttribute>(out _) ||
+                    member.TryGetCustomAttribute<System.Xml.Serialization.XmlAttributeAttribute>(out _) ||
+                    member.TryGetCustomAttribute<System.Xml.Serialization.SoapIgnoreAttribute>(out _) ||
+                    member.TryGetCustomAttribute<System.Xml.Serialization.SoapAttributeAttribute>(out _) ||
+                    member.TryGetCustomAttribute<System.Runtime.Serialization.IgnoreDataMemberAttribute>(out _))
                 {
                     return false;
                 }
