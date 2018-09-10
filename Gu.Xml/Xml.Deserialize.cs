@@ -46,7 +46,7 @@
                         isOptional = true;
                         replacementValue = typeof(Enumerable)
                             .GetMethod(nameof(Enumerable.Empty), BindingFlags.Static | BindingFlags.Public)
-                            .MakeGenericMethod(new Type[] { parameter.ParameterType.GetGenericArguments().Single()})
+                            .MakeGenericMethod(new Type[] { parameter.ParameterType.GetGenericArguments().Single() })
                             .Invoke(null, Array.Empty<object>());
                     }
                     else if (Nullable.GetUnderlyingType(parameter.ParameterType) != null)
