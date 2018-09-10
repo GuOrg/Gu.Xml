@@ -39,7 +39,7 @@
             {
                 var with = new WithMutable<byte> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -53,7 +53,7 @@
             {
                 var with = new WithMutable<sbyte> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -63,7 +63,7 @@
             {
                 var with = new WithMutable<bool> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -91,7 +91,7 @@
             {
                 var with = new WithMutableBoxed { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -102,7 +102,7 @@
             {
                 var with = new WithMutableBoxed { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -112,7 +112,7 @@
             {
                 var with = new WithMutable<char> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -120,7 +120,7 @@
             public void Decimal(decimal value)
             {
                 var with = new WithMutable<decimal> { Value = value };
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
             }
@@ -145,7 +145,7 @@
             public void Double(double value)
             {
                 var with = new WithMutable<double> { Value = value };
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
             }
@@ -156,7 +156,7 @@
             {
                 var with = new WithMutable<StringComparison> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -168,7 +168,7 @@
             {
                 var with = new WithMutable<CultureTypes> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -192,7 +192,7 @@
             public void Float(float value)
             {
                 var with = new WithMutable<float> { Value = value };
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
             }
@@ -203,7 +203,7 @@
             {
                 var with = new WithMutable<Guid> { Value = System.Guid.Parse(value) };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -216,7 +216,7 @@
             {
                 var with = new WithMutable<short> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -225,7 +225,7 @@
             {
                 var with = new WithMutable<int> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -234,7 +234,7 @@
             {
                 var with = new WithMutable<int?> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -243,7 +243,7 @@
             {
                 var with = new WithMutableBoxed { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -259,7 +259,7 @@
             {
                 var with = new WithMutable<long> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -274,7 +274,7 @@
             {
                 var with = new WithMutable<string> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -284,7 +284,7 @@
             {
                 var with = new WithMutable<ushort> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -296,7 +296,7 @@
             {
                 var with = new WithMutable<uint> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -306,7 +306,7 @@
             {
                 var with = new WithMutable<ulong> { Value = value };
                 var actual = Xml.Serialize(with);
-                var expected = Reference.Xml(with);
+                var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);
             }
 

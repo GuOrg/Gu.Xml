@@ -13,13 +13,13 @@
             {
                 new TestCaseData(new WithXmlRootAttribute { Value = 1 }),
                 new TestCaseData(new WithXmlRootAttributeExplicitName { Value = 1 }),
-                new TestCaseData(new PropertyWithXmlIgnore { Value = 1 }),
-                new TestCaseData(new FieldWithXmlIgnore { Value = 1 }),
+                new TestCaseData(new PropertyWithXmlIgnoreAttribute { Value = 1 }),
                 new TestCaseData(new PropertyWithXmlElementAttribute { Value = 1 }),
                 new TestCaseData(new PropertyWithXmlElementAttributeExplicitName { Value = 1 }),
                 new TestCaseData(new PropertyWithXmlAttributeAttribute { Value = 1 }),
                 new TestCaseData(new PropertyWithXmlAttributeAttributeExplicitName { Value = 1 }),
                 new TestCaseData(new ExplicitInterfaceWithXmlElementAttribute()),
+                new TestCaseData(new FieldWithXmlIgnoreAttribute { Value = 1 }),
                 new TestCaseData(new FieldWithXmlElementAttribute { Value = 1 }),
                 new TestCaseData(new FieldWithXmlElementAttributeExplicitName { Value = 1 }),
                 new TestCaseData(new FieldWithXmlAttributeAttribute { Value = 1 }),
@@ -29,7 +29,7 @@
             [TestCaseSource(nameof(Values))]
             public void Serialize(object value)
             {
-                var expected = Reference.Xml(value);
+                var expected = Reference.XmlSerializer(value);
                 var actual = Xml.Serialize(value);
                 if (actual == expected)
                 {
@@ -126,13 +126,13 @@
                 public int Value;
             }
 
-            public class PropertyWithXmlIgnore
+            public class PropertyWithXmlIgnoreAttribute
             {
                 [XmlIgnore]
                 public int Value { get; set; }
             }
 
-            public class FieldWithXmlIgnore
+            public class FieldWithXmlIgnoreAttribute
             {
                 [XmlIgnore]
                 public int Value { get; set; }

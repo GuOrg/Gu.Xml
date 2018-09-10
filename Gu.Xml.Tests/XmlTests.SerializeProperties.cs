@@ -11,14 +11,14 @@
             private static readonly TestCaseData[] Values =
             {
                 new TestCaseData(new WithPublicGetSet { Value = 1 }),
-                new TestCaseData(new SerializeWithXmlAttributes.PropertyWithXmlIgnore { Value = 1 }),
+                new TestCaseData(new SerializeWithXmlAttributes.PropertyWithXmlIgnoreAttribute { Value = 1 }),
                 new TestCaseData(new WithGetSetAndCalculated { Value = 1 }),
             };
 
             [TestCaseSource(nameof(Values))]
             public void Serialize(object value)
             {
-                var expected = Reference.Xml(value);
+                var expected = Reference.XmlSerializer(value);
                 var actual = Xml.Serialize(value);
                 if (actual == expected)
                 {

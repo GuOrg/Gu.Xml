@@ -36,7 +36,7 @@ namespace Gu.Xml.Tests
             [TestCaseSource(nameof(Values))]
             public void Serialize(object value)
             {
-                var expected = Reference.Xml(value);
+                var expected = Reference.XmlSerializer(value);
                 var actual = Xml.Serialize(value);
                 if (actual == expected)
                 {

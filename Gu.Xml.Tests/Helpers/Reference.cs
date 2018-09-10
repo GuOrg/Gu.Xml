@@ -6,7 +6,7 @@
 
     public static class Reference
     {
-        public static string Xml(object value)
+        public static string XmlSerializer(object value)
         {
             var sb = new StringBuilder();
             var serializer = new XmlSerializer(value.GetType());
