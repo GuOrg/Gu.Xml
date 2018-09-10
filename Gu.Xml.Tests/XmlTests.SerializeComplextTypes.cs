@@ -13,7 +13,7 @@ namespace Gu.Xml.Tests
         {
             private static readonly TestCaseData[] Values =
             {
-                new TestCaseData(new WithPublicMutableProperty { Value = 1 }),
+                new TestCaseData(new WithPublicGetSet { Value = 1 }),
                 new TestCaseData(new WithXmlRoot { Value = 1 }),
                 new TestCaseData(new WithPublicMutableFieldXmlElementExplicitName { Value = 1 }),
                 new TestCaseData(new WithPublicMutableField { Value = 1 }),
@@ -23,8 +23,11 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new WithPropertyBeforeField { Value1 = 1, Value2 = 2 }),
                 new TestCaseData(new ConcreteWithProperties { Value1 = 1, Value2 = 2, Value3 = 3, Value4 = 4 }),
                 new TestCaseData(new ConcreteWithFields { Value1 = 1, Value2 = 2, Value3 = 3, Value4 = 4 }),
-                new TestCaseData(new Virtual { Value = 3 }),
-                new TestCaseData(new Override { Value = 3 }),
+                new TestCaseData(new Virtual { Value = 1 }),
+                new TestCaseData(new Override { Value = 1 }),
+                new TestCaseData(new WithExplicitInterface()),
+                new TestCaseData(new WithImplicitInterface { Value = 1 }),
+                new TestCaseData(new WithExplicitGetOnly()),
                 new TestCaseData(new GenericWithPublicMutableProperty<int> { Value = 1 }),
                 new TestCaseData(new GenericWithPublicMutableProperty<string>()),
                 new TestCaseData(new GenericWithPublicMutableProperty<string> { Value = "abc" }),
@@ -85,7 +88,7 @@ namespace Gu.Xml.Tests
                 public int Value { get; }
             }
 
-            public class WithPublicMutableProperty
+            public class WithPublicGetSet
             {
                 public int Value { get; set; } = 1;
             }
@@ -173,6 +176,33 @@ namespace Gu.Xml.Tests
             public class Override : Virtual
             {
                 public override int Value { get; set; } = 2;
+            }
+
+            public interface IValue
+            {
+                // ReSharper disable once UnusedMember.Global
+                int Value { get; set; }
+            }
+
+            public class WithExplicitInterface : IValue
+            {
+                int IValue.Value { get; set; }
+            }
+
+            public class WithImplicitInterface : IValue
+            {
+                public int Value { get; set; }
+            }
+
+            public interface IGetOnlyValue
+            {
+                // ReSharper disable once UnusedMember.Global
+                int Value { get; }
+            }
+
+            public class WithExplicitGetOnly : IGetOnlyValue
+            {
+                int IGetOnlyValue.Value => 1;
             }
         }
     }
