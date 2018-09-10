@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Concurrent;
     using System.Text;
-    using System.Xml.Serialization;
 
     internal static class RootName
     {
@@ -16,18 +15,11 @@
 
         private static string Create(Type type)
         {
-            if (Attribute.GetCustomAttribute(type, typeof(XmlRootAttribute)) is XmlRootAttribute xmlRoot &&
-                xmlRoot.ElementName is string elementName &&
-                !string.IsNullOrEmpty(elementName))
+            if (TryGetNameFromAttribute<System.Xml.Serialization.XmlRootAttribute>(type, x => x.ElementName, out var name) ||
+                TryGetNameFromAttribute<System.Xml.Serialization.SoapTypeAttribute>(type, x => x.TypeName, out name) ||
+                TryGetNameFromAttribute<System.Runtime.Serialization.DataContractAttribute>(type, x => x.Name, out name))
             {
-                return elementName;
-            }
-
-            if (Attribute.GetCustomAttribute(type, typeof(SoapTypeAttribute)) is SoapTypeAttribute soapType &&
-                soapType.TypeName is string typeName &&
-                !string.IsNullOrEmpty(typeName))
-            {
-                return typeName;
+                return name;
             }
 
             if (!type.IsGenericType &&
@@ -68,6 +60,18 @@
                     builder.Append(current.Name);
                 }
             }
+        }
+
+        private static bool TryGetNameFromAttribute<T>(Type type, Func<T, string> getName, out string name)
+            where T : Attribute
+        {
+            name = null;
+            if (Attribute.GetCustomAttribute(type, typeof(T)) is T attribute)
+            {
+                name = getName(attribute);
+            }
+
+            return !string.IsNullOrEmpty(name);
         }
     }
 }

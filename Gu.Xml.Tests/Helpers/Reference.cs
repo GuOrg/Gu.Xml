@@ -50,7 +50,7 @@
             }
 
             return sb.Replace("utf-16", "utf-8")
-                     .Replace("xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://schemas.datacontract.org/2004/07/Gu.Xml.Tests\"", string.Empty)
+                     .Replace(" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://schemas.datacontract.org/2004/07/Gu.Xml.Tests\"", string.Empty)
                      .ToString();
         }
     }

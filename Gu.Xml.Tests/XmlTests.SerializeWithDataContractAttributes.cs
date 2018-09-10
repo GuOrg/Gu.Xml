@@ -25,7 +25,8 @@
             [TestCaseSource(nameof(Values))]
             public void Serialize(object value)
             {
-                var expected = Reference.DataContractSerializer(value);
+                var expected = Reference.DataContractSerializer(value)
+                                        .Replace("XmlTests.SerializeWithDataContractAttributes.", string.Empty);
                 var actual = Xml.Serialize(value);
                 if (actual == expected)
                 {
@@ -53,12 +54,14 @@
             [DataContract]
             public class WithDataContractAttribute
             {
+                [DataMember]
                 public int Value { get; set; } = 1;
             }
 
             [DataContract(Name = "Name")]
             public class WithDataContractAttributeExplicitName
             {
+                [DataMember]
                 public int Value { get; set; } = 1;
             }
 
