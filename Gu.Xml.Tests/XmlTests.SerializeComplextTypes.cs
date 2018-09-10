@@ -2,7 +2,6 @@
 namespace Gu.Xml.Tests
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using NUnit.Framework;
 
@@ -29,8 +28,7 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new GenericWithPublicMutableProperty<string> { Value = "abc" }),
                 new TestCaseData(new GenericWithPublicMutableProperty<GenericWithPublicMutableProperty<double>> { Value = new GenericWithPublicMutableProperty<double>() }),
                 new TestCaseData(new GenericWithPublicMutableProperty<WithTwoPublicMutableProperties>()),
-                new TestCaseData(new KeyValuePair<int, double>(1, 2)),
-                new TestCaseData(new GenericWithPublicMutableProperty<KeyValuePair<int, double>> { Value = new KeyValuePair<int, double>(1, 2) }),
+                new TestCaseData(new GenericWithPublicMutableProperty<WithTwoPublicMutableProperties> { Value = new WithTwoPublicMutableProperties { Value1 = 1, Value2 = 2 } }),
             };
 
             [TestCaseSource(nameof(Values))]

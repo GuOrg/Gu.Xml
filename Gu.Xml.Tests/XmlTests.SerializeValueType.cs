@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml.Tests
 {
     using System;
+    using System.Collections.Generic;
     using NUnit.Framework;
 
     public partial class XmlTests
@@ -68,6 +69,19 @@
                                "  <Value />" + Environment.NewLine +
                                "</WithOfEmptyStruct>";
 
+                var actual = Xml.Serialize(value);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void KeyValuePairOfInt32Double()
+            {
+                var value = new KeyValuePair<int, double>(1, 2);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<KeyValuePairOfInt32Double>" + Environment.NewLine +
+                               "  <Key>1</Key>" + Environment.NewLine +
+                               "  <Value>2</Value>" + Environment.NewLine +
+                               "</KeyValuePairOfInt32Double>";
                 var actual = Xml.Serialize(value);
                 Assert.AreEqual(expected, actual);
             }

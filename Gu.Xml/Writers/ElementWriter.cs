@@ -36,7 +36,31 @@
             {
                 return property.SetMethod == null &&
                        !property.GetMethod.TryGetCustomAttribute<System.Runtime.CompilerServices.CompilerGeneratedAttribute>(out _) &&
-                       !property.GetMethod.TryGetCustomAttribute<System.Xml.Serialization.XmlElementAttribute>(out _);
+                       !property.GetMethod.TryGetCustomAttribute<System.Xml.Serialization.XmlElementAttribute>(out _) &&
+                       !HasBackingField();
+            }
+
+            bool HasBackingField()
+            {
+                if (property.DeclaringType is Type declaringType)
+                {
+                    foreach (var field in declaringType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField | BindingFlags.DeclaredOnly))
+                    {
+                        if (string.Equals(property.Name, field.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return true;
+                        }
+
+                        if (field.Name.StartsWith("_") &&
+                            field.Name.Length == property.Name.Length +1 &&
+                            property.Name.IndexOf(field.Name, StringComparison.OrdinalIgnoreCase) == 1)
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
             }
         }
 
