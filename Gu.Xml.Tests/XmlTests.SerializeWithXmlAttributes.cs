@@ -19,6 +19,7 @@
                 new TestCaseData(new PropertyWithXmlElementAttributeExplicitName { Value = 1 }),
                 new TestCaseData(new PropertyWithXmlAttributeAttribute { Value = 1 }),
                 new TestCaseData(new PropertyWithXmlAttributeAttributeExplicitName { Value = 1 }),
+                new TestCaseData(new ExplicitInterfaceWithXmlElementAttribute()),
                 new TestCaseData(new FieldWithXmlElementAttribute { Value = 1 }),
                 new TestCaseData(new FieldWithXmlElementAttributeExplicitName { Value = 1 }),
                 new TestCaseData(new FieldWithXmlAttributeAttribute { Value = 1 }),
@@ -87,6 +88,18 @@
             {
                 [XmlElement("Name")]
                 public int Value = 1;
+            }
+
+            public interface IValue
+            {
+                // ReSharper disable once UnusedMember.Global
+                int Value { get; set; }
+            }
+
+            public class ExplicitInterfaceWithXmlElementAttribute : IValue
+            {
+                [XmlElement]
+                int IValue.Value { get; set; }
             }
 
             public class PropertyWithXmlAttributeAttribute
