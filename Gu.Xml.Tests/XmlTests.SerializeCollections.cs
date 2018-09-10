@@ -218,6 +218,64 @@
             }
 
             [Test]
+            public void SortedDictionaryOfInt32String()
+            {
+                var value = new SortedDictionary<int, string>(new Dictionary<int, string> { { 1, "a" }, { 2, "b" } });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<SortedDictionaryOfInt32String>" + Environment.NewLine +
+                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "    <Key>1</Key>" + Environment.NewLine +
+                               "    <Value>a</Value>" + Environment.NewLine +
+                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "    <Key>2</Key>" + Environment.NewLine +
+                               "    <Value>b</Value>" + Environment.NewLine +
+                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "</SortedDictionaryOfInt32String>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void SortedListOfInt32String()
+            {
+                var value = new SortedList<int, string>(new Dictionary<int, string> { { 1, "a" }, { 2, "b" } });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<SortedListOfInt32String>" + Environment.NewLine +
+                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "    <Key>1</Key>" + Environment.NewLine +
+                               "    <Value>a</Value>" + Environment.NewLine +
+                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "    <Key>2</Key>" + Environment.NewLine +
+                               "    <Value>b</Value>" + Environment.NewLine +
+                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "</SortedListOfInt32String>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void SortedSetOfFooOfInt32()
+            {
+                var value = new SortedSet<Foo>(new[] { new Foo(1), new Foo(2), new Foo(3) });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<SortedSetOfFoo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>1</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>2</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>3</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "</SortedSetOfFoo>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
             public void QueueOfFooOfInt32()
             {
                 var value = new Queue<Foo>(new[] { new Foo(1), new Foo(2), new Foo(3) });
@@ -237,7 +295,7 @@
                 Assert.AreEqual(expected, actual);
             }
 
-            public class Foo
+            public class Foo : IComparable<Foo>
             {
                 // ReSharper disable once UnusedMember.Local for XmlSerializer
                 private Foo()
@@ -250,6 +308,8 @@
                 }
 
                 public int Value { get; }
+
+                public int CompareTo(Foo other) => this.Value.CompareTo(other.Value);
             }
         }
     }
