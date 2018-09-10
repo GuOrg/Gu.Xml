@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
     using NUnit.Framework;
 
@@ -250,6 +251,128 @@
                                "    <Value>a</Value>" + Environment.NewLine +
                                "  </DictionaryEntry>" + Environment.NewLine +
                                "</Hashtable>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void ImmutableArrayOfInt32()
+            {
+                var value = ImmutableArray.Create(new[] { 1, 2, 3 });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ImmutableArrayOfInt32>" + Environment.NewLine +
+                               "  <Int32>1</Int32>" + Environment.NewLine +
+                               "  <Int32>2</Int32>" + Environment.NewLine +
+                               "  <Int32>3</Int32>" + Environment.NewLine +
+                               "</ImmutableArrayOfInt32>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void ImmutableDictionaryOfInt32String()
+            {
+                var value = ImmutableDictionary.CreateRange(new[] { new KeyValuePair<int, string>(1, "a"), new KeyValuePair<int, string>(2, "b") });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ImmutableDictionaryOfInt32String>" + Environment.NewLine +
+                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "    <Key>1</Key>" + Environment.NewLine +
+                               "    <Value>a</Value>" + Environment.NewLine +
+                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "    <Key>2</Key>" + Environment.NewLine +
+                               "    <Value>b</Value>" + Environment.NewLine +
+                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "</ImmutableDictionaryOfInt32String>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void ImmutableHashSetOfInt32()
+            {
+                var value = ImmutableHashSet.Create(1, 2, 3);
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ImmutableHashSetOfInt32>" + Environment.NewLine +
+                               "  <Int32>1</Int32>" + Environment.NewLine +
+                               "  <Int32>2</Int32>" + Environment.NewLine +
+                               "  <Int32>3</Int32>" + Environment.NewLine +
+                               "</ImmutableHashSetOfInt32>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void ImmutableListOfInt32()
+            {
+                var value = ImmutableList.Create(1, 2, 3);
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ImmutableListOfInt32>" + Environment.NewLine +
+                               "  <Int32>1</Int32>" + Environment.NewLine +
+                               "  <Int32>2</Int32>" + Environment.NewLine +
+                               "  <Int32>3</Int32>" + Environment.NewLine +
+                               "</ImmutableListOfInt32>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void ImmutableQueueOfInt32()
+            {
+                var value = ImmutableQueue.Create(1, 2, 3);
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ImmutableQueueOfInt32>" + Environment.NewLine +
+                               "  <Int32>1</Int32>" + Environment.NewLine +
+                               "  <Int32>2</Int32>" + Environment.NewLine +
+                               "  <Int32>3</Int32>" + Environment.NewLine +
+                               "</ImmutableQueueOfInt32>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void ImmutableSortedDictionaryOfInt32String()
+            {
+                var value = ImmutableSortedDictionary.CreateRange(new[] { new KeyValuePair<int, string>(1, "a"), new KeyValuePair<int, string>(2, "b") });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ImmutableSortedDictionaryOfInt32String>" + Environment.NewLine +
+                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "    <Key>1</Key>" + Environment.NewLine +
+                               "    <Value>a</Value>" + Environment.NewLine +
+                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "    <Key>2</Key>" + Environment.NewLine +
+                               "    <Value>b</Value>" + Environment.NewLine +
+                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "</ImmutableSortedDictionaryOfInt32String>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void ImmutableSortedSetOfInt32()
+            {
+                var value = ImmutableSortedSet.Create(1, 2, 3);
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ImmutableSortedSetOfInt32>" + Environment.NewLine +
+                               "  <Int32>1</Int32>" + Environment.NewLine +
+                               "  <Int32>2</Int32>" + Environment.NewLine +
+                               "  <Int32>3</Int32>" + Environment.NewLine +
+                               "</ImmutableSortedSetOfInt32>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void ImmutableStackOfInt32()
+            {
+                var value = ImmutableStack.Create(3, 2, 1);
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ImmutableStackOfInt32>" + Environment.NewLine +
+                               "  <Int32>1</Int32>" + Environment.NewLine +
+                               "  <Int32>2</Int32>" + Environment.NewLine +
+                               "  <Int32>3</Int32>" + Environment.NewLine +
+                               "</ImmutableStackOfInt32>";
                 Assert.AreEqual(expected, actual);
             }
 

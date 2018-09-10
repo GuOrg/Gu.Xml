@@ -5,4 +5,5 @@ group Analyzers
 
 group Test
   NUnit
+  System.Collections.Immutable
   Newtonsoft.Json

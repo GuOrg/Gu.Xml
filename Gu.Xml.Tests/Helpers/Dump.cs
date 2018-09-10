@@ -2,8 +2,7 @@
 {
     using System;
     using System.Collections;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.IO;
     using System.Linq;
     using NUnit.Framework;
@@ -22,10 +21,7 @@
         }
 
         [Explicit("Script")]
-        [TestCase(typeof(IEnumerable<>))]
-        [TestCase(typeof(Queue<>))]
-        [TestCase(typeof(HashSet<>))]
-        [TestCase(typeof(ConcurrentDictionary<,>))]
+        [TestCase(typeof(ImmutableArray<>))]
         public void MarkdownList(Type source)
         {
             foreach (var type in source.Assembly
@@ -33,9 +29,11 @@
                                        .Where(x => typeof(IEnumerable).IsAssignableFrom(x) &&
                                                    !x.IsInterface &&
                                                    !x.IsAbstract &&
-                                                   x.Namespace == source.Namespace))
+                                                   !x.Name.Contains("Builder") &&
+                                                   x.Namespace == source.Namespace)
+                                       .OrderBy(x => x.Name))
             {
-                Console.WriteLine("- [ ] " + type);
+                Console.WriteLine("- [ ] `" + type.ToString().Replace("`1[T]", "<T>").Replace("`2[TKey,TValue]", "<TKey, TValue>") + "`");
             }
         }
     }
