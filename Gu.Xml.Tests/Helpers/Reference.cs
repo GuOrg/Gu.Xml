@@ -8,8 +8,8 @@
     {
         public static string XmlSerializer(object value)
         {
-            var sb = new StringBuilder();
             var serializer = new XmlSerializer(value.GetType());
+            var sb = new StringBuilder();
             using (var writer = new StringWriter(sb))
             {
                 serializer.Serialize(writer, value);
@@ -17,6 +17,24 @@
 
             return sb.Replace("utf-16", "utf-8")
                      .Replace(" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", string.Empty)
+                     .Replace(" xsi:type=\"xsd:boolean\"", string.Empty)
+                     .Replace(" xsi:type=\"xsd:int\"", string.Empty)
+                     .ToString();
+        }
+
+        public static string XmlSerializerSoap(object value)
+        {
+            var myMapping = new SoapReflectionImporter().ImportTypeMapping(value.GetType());
+            var serializer = new XmlSerializer(myMapping);
+            var sb = new StringBuilder();
+            using (var writer = new StringWriter(sb))
+            {
+                serializer.Serialize(writer, value);
+            }
+
+            return sb.Replace("utf-16", "utf-8")
+                     .Replace(" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", string.Empty)
+                     .Replace(" id=\"id1\"", string.Empty)
                      .Replace(" xsi:type=\"xsd:boolean\"", string.Empty)
                      .Replace(" xsi:type=\"xsd:int\"", string.Empty)
                      .ToString();

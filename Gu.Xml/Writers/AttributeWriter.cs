@@ -16,9 +16,8 @@
 
         public static bool TryCreate(PropertyInfo property, out AttributeWriter writer)
         {
-            if (Attribute.GetCustomAttribute(property, typeof(XmlAttributeAttribute)) is XmlAttributeAttribute attribute)
+            if (TryGetAttributeName(property, out var name))
             {
-                var name = string.IsNullOrEmpty(attribute.AttributeName) ? property.Name : attribute.AttributeName;
                 writer = (AttributeWriter)typeof(AttributeWriter)
                                         .GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
                                         .MakeGenericMethod(property.ReflectedType, property.PropertyType)
@@ -32,9 +31,8 @@
 
         public static bool TryCreate(FieldInfo field, out AttributeWriter writer)
         {
-            if (Attribute.GetCustomAttribute(field, typeof(XmlAttributeAttribute)) is XmlAttributeAttribute attribute)
+            if (TryGetAttributeName(field, out var name))
             {
-                var name = string.IsNullOrEmpty(attribute.AttributeName) ? field.Name : attribute.AttributeName;
                 writer = (AttributeWriter)typeof(AttributeWriter)
                                           .GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
                                           .MakeGenericMethod(field.ReflectedType, field.FieldType)
@@ -59,6 +57,31 @@
                 default:
                     throw new InvalidOperationException($"Not handling {member}. Bug in Gu.Xml.");
             }
+        }
+
+        private static bool TryGetAttributeName(MemberInfo member, out string name)
+        {
+            name = null;
+            if (Attribute.GetCustomAttribute(member, typeof(XmlAttributeAttribute)) is XmlAttributeAttribute xmlAttribute)
+            {
+                name = xmlAttribute.AttributeName ?? string.Empty;
+            }
+            else if (Attribute.GetCustomAttribute(member, typeof(SoapAttributeAttribute)) is SoapAttributeAttribute soapAttribute)
+            {
+                name = soapAttribute.AttributeName ?? string.Empty;
+            }
+
+            if (name == null)
+            {
+                return false;
+            }
+
+            if (name == string.Empty)
+            {
+                name = member.Name;
+            }
+
+            return true;
         }
     }
 }

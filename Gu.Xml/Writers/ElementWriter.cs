@@ -22,13 +22,12 @@
                 !getMethod.IsPrivate &&
                 !getMethod.IsFamily &&
                 !IsIgnoredCalculated() &&
-                Attribute.GetCustomAttribute(property, typeof(XmlIgnoreAttribute)) == null &&
-                Attribute.GetCustomAttribute(property, typeof(XmlAttributeAttribute)) == null)
+                TryGetElementName(property, out var name))
             {
                 writer = (ElementWriter)typeof(ElementWriter)
                                                 .GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
                                                 .MakeGenericMethod(property.ReflectedType, property.PropertyType)
-                                                .Invoke(null, new object[] { Name(), property });
+                                                .Invoke(null, new object[] { name, property });
                 return true;
             }
 
@@ -41,18 +40,6 @@
                        Attribute.GetCustomAttribute(property.GetMethod, typeof(CompilerGeneratedAttribute)) == null &&
                        Attribute.GetCustomAttribute(property.GetMethod, typeof(XmlElementAttribute)) == null;
             }
-
-            string Name()
-            {
-                if (Attribute.GetCustomAttribute(property, typeof(XmlElementAttribute)) is XmlElementAttribute xmlElement &&
-                    xmlElement.ElementName is string name &&
-                    !string.IsNullOrEmpty(name))
-                {
-                    return name;
-                }
-
-                return property.Name;
-            }
         }
 
         public static bool TryCreate(FieldInfo field, out ElementWriter writer)
@@ -60,30 +47,17 @@
             if (!field.IsStatic &&
                 !field.IsPrivate &&
                 !field.IsFamily &&
-                Attribute.GetCustomAttribute(field, typeof(XmlIgnoreAttribute)) == null &&
-                Attribute.GetCustomAttribute(field, typeof(XmlAttributeAttribute)) == null)
+                TryGetElementName(field, out var name))
             {
                 writer = (ElementWriter)typeof(ElementWriter)
                                         .GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
                                         .MakeGenericMethod(field.ReflectedType, field.FieldType)
-                                        .Invoke(null, new object[] { Name(), field });
+                                        .Invoke(null, new object[] { name, field });
                 return true;
             }
 
             writer = null;
             return false;
-
-            string Name()
-            {
-                if (Attribute.GetCustomAttribute(field, typeof(XmlElementAttribute)) is XmlElementAttribute xmlElement &&
-                    xmlElement.ElementName is string name &&
-                    !string.IsNullOrEmpty(name))
-                {
-                    return name;
-                }
-
-                return field.Name;
-            }
         }
 
         public abstract void Write<T>(XmlWriter writer, T source);
@@ -99,6 +73,39 @@
                 default:
                     throw new InvalidOperationException($"Not handling {member}. Bug in Gu.Xml.");
             }
+        }
+
+        private static bool TryGetElementName(MemberInfo member, out string name)
+        {
+            name = null;
+            if (Attribute.GetCustomAttribute(member, typeof(XmlElementAttribute)) is XmlElementAttribute xmlAttribute)
+            {
+                name = xmlAttribute.ElementName ?? string.Empty;
+            }
+            else if (Attribute.GetCustomAttribute(member, typeof(SoapElementAttribute)) is SoapElementAttribute soapAttribute)
+            {
+                name = soapAttribute.ElementName ?? string.Empty;
+            }
+
+            if (name == null)
+            {
+                if (Attribute.GetCustomAttribute(member, typeof(XmlIgnoreAttribute)) != null ||
+                    Attribute.GetCustomAttribute(member, typeof(XmlAttributeAttribute)) != null ||
+                    Attribute.GetCustomAttribute(member, typeof(SoapIgnoreAttribute)) != null ||
+                    Attribute.GetCustomAttribute(member, typeof(SoapAttributeAttribute)) != null)
+                {
+                    return false;
+                }
+
+                name = member.Name;
+            }
+
+            if (name == string.Empty)
+            {
+                name = member.Name;
+            }
+
+            return true;
         }
     }
 }

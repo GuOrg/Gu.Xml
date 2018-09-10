@@ -23,6 +23,13 @@
                 return elementName;
             }
 
+            if (Attribute.GetCustomAttribute(type, typeof(SoapTypeAttribute)) is SoapTypeAttribute soapType &&
+                soapType.TypeName is string typeName &&
+                !string.IsNullOrEmpty(typeName))
+            {
+                return typeName;
+            }
+
             if (!type.IsGenericType &&
                 !type.HasElementType)
             {
