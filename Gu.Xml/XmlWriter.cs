@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml
 {
     using System;
+    using System.Collections;
     using System.IO;
 
     /// <summary>
@@ -53,6 +54,40 @@
                 this.writer.Write("</");
                 this.writer.Write(name);
                 this.writer.Write(">");
+            }
+            else if (value is IEnumerable enumerable)
+            {
+                if (this.pendingCloseStartElement)
+                {
+                    this.writer.WriteLine(">");
+                    this.pendingCloseStartElement = false;
+                }
+
+                this.WriteIndentation();
+                this.writer.Write("<");
+                this.writer.Write(name);
+                this.pendingCloseStartElement = true;
+
+                this.indentLevel++;
+                foreach (var item in enumerable)
+                {
+                    this.WriteElement(RootName.Get(item.GetType()), item);
+                    this.WriteLine();
+                }
+
+                this.indentLevel--;
+                if (this.pendingCloseStartElement)
+                {
+                    this.writer.Write(" />");
+                    this.pendingCloseStartElement = false;
+                }
+                else
+                {
+                    this.WriteIndentation();
+                    this.writer.Write("</");
+                    this.writer.Write(name);
+                    this.writer.Write(">");
+                }
             }
             else if (ComplexValueWriter.GetOrCreate(value) is ComplexValueWriter complex)
             {
