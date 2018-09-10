@@ -29,18 +29,26 @@
             }
 
             var builder = new StringBuilder();
-            Append(type);
+            AppendRecursive(type);
             return VerifyName(builder.ToString());
 
-            void Append(Type current)
+            void AppendRecursive(Type current)
             {
                 if (current.IsGenericType)
                 {
-                    builder.Append(current.Name, 0, current.Name.IndexOf('`'));
+                    if (type.IsAnonymous())
+                    {
+                        builder.Append("Anonymous");
+                    }
+                    else
+                    {
+                        builder.Append(current.Name, 0, current.Name.IndexOf('`'));
+                    }
+
                     builder.Append("Of");
                     foreach (var argument in current.GenericTypeArguments)
                     {
-                        Append(argument);
+                        AppendRecursive(argument);
                     }
                 }
                 else if (current.IsArray)
@@ -48,7 +56,7 @@
                     if (current.HasElementType)
                     {
                         builder.Append("ArrayOf");
-                        Append(current.GetElementType());
+                        AppendRecursive(current.GetElementType());
                     }
                     else
                     {

@@ -37,6 +37,7 @@
                 return property.SetMethod == null &&
                        !property.GetMethod.TryGetCustomAttribute<System.Runtime.CompilerServices.CompilerGeneratedAttribute>(out _) &&
                        !property.GetMethod.TryGetCustomAttribute<System.Xml.Serialization.XmlElementAttribute>(out _) &&
+                       !property.DeclaringType.IsAnonymous() &&
                        !HasBackingField();
             }
 
