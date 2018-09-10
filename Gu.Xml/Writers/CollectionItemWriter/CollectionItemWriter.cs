@@ -35,20 +35,41 @@
 
                 return DictionaryItemWriter;
             }
+            else
+            {
+                if (TryCreateGenericEnumerableWriter(out var writer))
+                {
+                    return writer;
+                }
 
-            return EnumerableItemWriter;
+                return EnumerableItemWriter;
+            }
 
-            bool TryCreateGenericDictionaryWriter(out CollectionItemWriter writer)
+            bool TryCreateGenericDictionaryWriter(out CollectionItemWriter result)
             {
                 if (type.IsGenericType &&
                     type.GetInterface("ICollection`1") is Type collectionType &&
                     collectionType.GenericTypeArguments.TrySingle(out var kvpType))
                 {
-                    writer = (CollectionItemWriter)Activator.CreateInstance(typeof(DictionaryItemWriter<,>).MakeGenericType(kvpType.GenericTypeArguments));
+                    result = (CollectionItemWriter)Activator.CreateInstance(typeof(DictionaryItemWriter<,>).MakeGenericType(kvpType.GenericTypeArguments));
                     return true;
                 }
 
-                writer = null;
+                result = null;
+                return false;
+            }
+
+            bool TryCreateGenericEnumerableWriter(out CollectionItemWriter result)
+            {
+                if (type.IsGenericType &&
+                    type.GetInterface("IEnumerable`1") is Type enumerableType &&
+                    enumerableType.GenericTypeArguments.TrySingle(out var elementType))
+                {
+                    result = (CollectionItemWriter)Activator.CreateInstance(typeof(EnumerableItemWriter<>).MakeGenericType(elementType));
+                    return true;
+                }
+
+                result = null;
                 return false;
             }
         }
