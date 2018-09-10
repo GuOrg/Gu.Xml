@@ -20,7 +20,7 @@
         }
 
         [Benchmark]
-        public string XmlString() => StringBuilder.ToString();
+        public string StringBuilderToString() => StringBuilder.ToString();
 
         [Benchmark]
         public string XmlSerializerSerialize()
