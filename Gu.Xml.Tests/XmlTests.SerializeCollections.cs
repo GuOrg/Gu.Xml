@@ -54,6 +54,46 @@
             }
 
             [Test]
+            public void ConcurrentStackOfFooOfInt32()
+            {
+                var value = new ConcurrentStack<Foo>(new[] { new Foo(3), new Foo(2), new Foo(1) });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ConcurrentStackOfFoo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>1</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>2</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>3</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "</ConcurrentStackOfFoo>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void ConcurrentQueueOfFooOfInt32()
+            {
+                var value = new ConcurrentQueue<Foo>(new[] { new Foo(1), new Foo(2), new Foo(3) });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ConcurrentQueueOfFoo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>1</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>2</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>3</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "</ConcurrentQueueOfFoo>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
             public void DictionaryOfInt32StringEmpty()
             {
                 var value = new Dictionary<int, string>();
@@ -154,6 +194,26 @@
                                "    <Value>3</Value>" + Environment.NewLine +
                                "  </Foo>" + Environment.NewLine +
                                "</ListOfFoo>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void StackOfFooOfInt32()
+            {
+                var value = new Stack<Foo>(new[] { new Foo(3), new Foo(2), new Foo(1) });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<StackOfFoo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>1</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>2</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>3</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "</StackOfFoo>";
                 Assert.AreEqual(expected, actual);
             }
 
