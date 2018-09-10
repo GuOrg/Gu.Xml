@@ -5,8 +5,6 @@
 
     public sealed class EnumWriter : SimpleValueWriter
     {
-        private readonly string format;
-
         /// <summary>
         /// An <see cref="EnumWriter"/> that serializes with 'G' format string.
         /// </summary>
@@ -16,6 +14,8 @@
         /// An <see cref="EnumWriter"/> that serializes with 'D' format string.
         /// </summary>
         public static readonly EnumWriter Integer = new EnumWriter("D");
+
+        private readonly string format;
 
         private EnumWriter(string format)
         {

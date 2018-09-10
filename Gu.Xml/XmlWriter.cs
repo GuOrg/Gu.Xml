@@ -24,7 +24,7 @@
         }
 
         /// <summary>
-        /// Writes &lt;?xml version="1.0" encoding="utf-8"?&gt;
+        /// Writes &lt;?xml version="1.0" encoding="utf-8"?&gt;.
         /// </summary>
         public void WriteXmlDeclaration()
         {
