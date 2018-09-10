@@ -1,4 +1,5 @@
-﻿namespace Gu.Xml.Tests
+﻿#pragma warning disable SA1202
+namespace Gu.Xml.Tests
 {
     using System;
     using System.Diagnostics;

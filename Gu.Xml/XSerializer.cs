@@ -7,11 +7,9 @@
 
     public class XDocument
     {
-
     }
 
     public class XReader
     {
-
     }
 }

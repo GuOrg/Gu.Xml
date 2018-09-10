@@ -25,7 +25,9 @@
 
         public static string XmlSerializerSoap(object value)
         {
+#pragma warning disable GU0051 // Cache the XmlSerializer. Fine here in tests.
             var serializer = new XmlSerializer(new SoapReflectionImporter().ImportTypeMapping(value.GetType()));
+#pragma warning restore GU0051 // Cache the XmlSerializer.
             var sb = new StringBuilder();
             using (var writer = new StringWriter(sb))
             {
