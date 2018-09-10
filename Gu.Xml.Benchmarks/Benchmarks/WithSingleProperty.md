@@ -11,7 +11,7 @@ Frequency=2835943 Hz, Resolution=352.6164 ns, Timer=TSC
 ```
 |                     Method |        Mean |      Error |     StdDev | Scaled | ScaledSD |  Gen 0 | Allocated |
 |--------------------------- |------------:|-----------:|-----------:|-------:|---------:|-------:|----------:|
-|             GuXmlSerialize |   598.65 ns |  9.7937 ns |  9.1610 ns |   1.00 |     0.00 | 0.1211 |     256 B |
+|             GuXmlSerialize |   165.94 ns |  3.3159 ns |  4.0722 ns |   1.00 |     0.00 | 0.0801 |     168 B |
 |      StringBuilderToString |    29.98 ns |  0.4597 ns |  0.4075 ns |   0.05 |     0.00 | 0.0915 |     192 B |
-|     XmlSerializerSerialize | 2,916.28 ns | 49.6134 ns | 46.4084 ns |   4.87 |     0.10 | 1.8768 |    3944 B |
-| JsonConvertSerializeObject |   562.53 ns |  9.9019 ns |  9.2622 ns |   0.94 |     0.02 | 0.6056 |    1272 B |
+|     XmlSerializerSerialize | 2,799.09 ns | 48.7561 ns | 45.6064 ns |  16.88 |     0.48 | 1.8768 |    3944 B |
+| JsonConvertSerializeObject |   546.22 ns |  5.7752 ns |  5.1195 ns |   3.29 |     0.08 | 0.6056 |    1272 B |

@@ -1,7 +1,6 @@
 ﻿namespace Gu.Xml
 {
     using System;
-    using System.Collections;
     using System.IO;
 
     /// <summary>
@@ -52,7 +51,7 @@
             if (value == null)
             {
             }
-            else if (SimpleValueWriter.TryGet(value, out var simple))
+            else if (WriterAction<T>.TryGetSimple(value, out var simple))
             {
                 if (this.pendingCloseStartElement)
                 {
@@ -64,7 +63,7 @@
                 this.writer.Write("<");
                 this.writer.Write(name);
                 this.writer.Write(">");
-                simple.Write(this.writer, value);
+                simple(this.writer, value);
                 this.writer.Write("</");
                 this.writer.Write(name);
                 this.writer.Write(">");
