@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml.Tests
 {
     using System;
+    using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using NUnit.Framework;
@@ -31,6 +32,26 @@
                                "  <Int32>2</Int32>" + Environment.NewLine +
                                "  <Int32>3</Int32>" + Environment.NewLine +
                                "</ArrayOfInt32>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void ArrayList()
+            {
+                var value = new ArrayList { new Foo(1), new Foo(2), new Foo(3) };
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ArrayList>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>1</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>2</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>3</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "</ArrayList>";
                 Assert.AreEqual(expected, actual);
             }
 
@@ -198,6 +219,26 @@
             }
 
             [Test]
+            public void Stack()
+            {
+                var value = new Stack(new[] { new Foo(3), new Foo(2), new Foo(1) });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<Stack>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>1</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>2</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>3</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "</Stack>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
             public void StackOfFooOfInt32()
             {
                 var value = new Stack<Foo>(new[] { new Foo(3), new Foo(2), new Foo(1) });
@@ -237,6 +278,25 @@
             }
 
             [Test]
+            public void SortedList()
+            {
+                var value = new SortedList(new Dictionary<int, string> { { 1, "a" }, { 2, "b" } });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<SortedList>" + Environment.NewLine +
+                               "  <DictionaryEntry>" + Environment.NewLine +
+                               "    <Key>1</Key>" + Environment.NewLine +
+                               "    <Value>a</Value>" + Environment.NewLine +
+                               "  </DictionaryEntry>" + Environment.NewLine +
+                               "  <DictionaryEntry>" + Environment.NewLine +
+                               "    <Key>2</Key>" + Environment.NewLine +
+                               "    <Value>b</Value>" + Environment.NewLine +
+                               "  </DictionaryEntry>" + Environment.NewLine +
+                               "</SortedList>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
             public void SortedListOfInt32String()
             {
                 var value = new SortedList<int, string>(new Dictionary<int, string> { { 1, "a" }, { 2, "b" } });
@@ -272,6 +332,26 @@
                                "    <Value>3</Value>" + Environment.NewLine +
                                "  </Foo>" + Environment.NewLine +
                                "</SortedSetOfFoo>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void Queue()
+            {
+                var value = new Queue(new[] { new Foo(1), new Foo(2), new Foo(3) });
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<Queue>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>1</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>2</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>3</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "</Queue>";
                 Assert.AreEqual(expected, actual);
             }
 
