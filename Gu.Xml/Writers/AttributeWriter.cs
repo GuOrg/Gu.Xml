@@ -4,15 +4,31 @@
     using System.IO;
     using System.Reflection;
 
+    /// <summary>
+    /// Base class for an attribute writer used by <see cref="XmlWriter"/>
+    /// </summary>
     public abstract class AttributeWriter
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttributeWriter"/> class.
+        /// </summary>
+        /// <param name="name">The name of the attribute to write.</param>
         public AttributeWriter(string name)
         {
             this.Name = name;
         }
 
+        /// <summary>
+        /// Gets name of the attribute to write.
+        /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// Check if <paramref name="property"/> has any attributes like [XmlAttribute].
+        /// </summary>
+        /// <param name="property">The <see cref="PropertyInfo"/>.</param>
+        /// <param name="writer">The <see cref="AttributeWriter"/>.</param>
+        /// <returns>True if an <see cref="AttributeWriter"/> was created.</returns>
         public static bool TryCreate(PropertyInfo property, out AttributeWriter writer)
         {
             if (TryGetAttributeName(property, out var name))
