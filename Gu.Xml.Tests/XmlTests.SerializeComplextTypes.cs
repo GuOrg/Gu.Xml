@@ -85,6 +85,19 @@ namespace Gu.Xml.Tests
                 Assert.AreEqual(expected, actual);
             }
 
+            [Test]
+            public void AnonymousOfInt32String()
+            {
+                var value = new { Number = 1, Text = "a" };
+                ////var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                ////               "<AnonymousOfInt32String>" + Environment.NewLine +
+                ////               "  <Number>1</Number>" + Environment.NewLine +
+                ////               "  <Text>a</Text>" + Environment.NewLine +
+                ////               "</AnonymousOfInt32String>";
+                var exception = Assert.Throws<InvalidOperationException>(() => Xml.Serialize(value));
+                Assert.AreEqual("The name <>f__AnonymousType0OfInt32String is not supported.", exception.Message);
+            }
+
             public class WithoutDefaultCtor
             {
                 public WithoutDefaultCtor(int value)

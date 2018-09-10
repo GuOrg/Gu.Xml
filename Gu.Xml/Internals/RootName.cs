@@ -19,18 +19,18 @@
                 TryGetNameFromAttribute<System.Xml.Serialization.SoapTypeAttribute>(type, x => x.TypeName, out name) ||
                 TryGetNameFromAttribute<System.Runtime.Serialization.DataContractAttribute>(type, x => x.Name, out name))
             {
-                return name;
+                return VerifyName(name);
             }
 
             if (!type.IsGenericType &&
                 !type.HasElementType)
             {
-                return type.Name;
+                return VerifyName(type.Name);
             }
 
             var builder = new StringBuilder();
             Append(type);
-            return builder.ToString();
+            return VerifyName(builder.ToString());
 
             void Append(Type current)
             {
@@ -72,6 +72,16 @@
             }
 
             return !string.IsNullOrEmpty(name);
+        }
+
+        private static string VerifyName(string name)
+        {
+            if (name.Contains("<") || name.Contains(">"))
+            {
+                throw new InvalidOperationException($"The name {name} is not supported.");
+            }
+
+            return name;
         }
     }
 }
