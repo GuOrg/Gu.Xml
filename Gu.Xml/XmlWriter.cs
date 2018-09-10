@@ -69,7 +69,7 @@
                 this.writer.Write(name);
                 this.writer.Write(">");
             }
-            else if (value is IEnumerable enumerable)
+            else if (CollectionItemWriter.TryGet(value, out var itemWriter))
             {
                 if (this.pendingCloseStartElement)
                 {
@@ -83,13 +83,9 @@
                 this.pendingCloseStartElement = true;
 
                 this.indentLevel++;
-                foreach (var item in enumerable)
-                {
-                    this.WriteElement(RootName.Get(item.GetType()), item);
-                    this.writer.WriteLine();
-                }
-
+                itemWriter.WriteItems(this, value);
                 this.indentLevel--;
+
                 if (this.pendingCloseStartElement)
                 {
                     this.writer.Write(" />");

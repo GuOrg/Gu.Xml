@@ -77,14 +77,14 @@
                 var actual = Xml.Serialize(value);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<ConcurrentDictionaryOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>1</Key>" + Environment.NewLine +
                                "    <Value>a</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>2</Key>" + Environment.NewLine +
                                "    <Value>b</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
                                "</ConcurrentDictionaryOfInt32String>";
                 Assert.AreEqual(expected, actual);
             }
@@ -146,10 +146,10 @@
                 var actual = Xml.Serialize(value);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<DictionaryOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>1</Key>" + Environment.NewLine +
                                "    <Value>a</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
                                "</DictionaryOfInt32String>";
                 Assert.AreEqual(expected, actual);
             }
@@ -161,14 +161,14 @@
                 var actual = Xml.Serialize(value);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<DictionaryOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>1</Key>" + Environment.NewLine +
                                "    <Value>a</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>2</Key>" + Environment.NewLine +
                                "    <Value>b</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
                                "</DictionaryOfInt32String>";
                 Assert.AreEqual(expected, actual);
             }
@@ -242,14 +242,14 @@
                 var actual = Xml.Serialize(value);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<Hashtable>" + Environment.NewLine +
-                               "  <DictionaryEntry>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>2</Key>" + Environment.NewLine +
                                "    <Value>b</Value>" + Environment.NewLine +
-                               "  </DictionaryEntry>" + Environment.NewLine +
-                               "  <DictionaryEntry>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>1</Key>" + Environment.NewLine +
                                "    <Value>a</Value>" + Environment.NewLine +
-                               "  </DictionaryEntry>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
                                "</Hashtable>";
                 Assert.AreEqual(expected, actual);
             }
@@ -275,14 +275,14 @@
                 var actual = Xml.Serialize(value);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<ImmutableDictionaryOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>1</Key>" + Environment.NewLine +
                                "    <Value>a</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>2</Key>" + Environment.NewLine +
                                "    <Value>b</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
                                "</ImmutableDictionaryOfInt32String>";
                 Assert.AreEqual(expected, actual);
             }
@@ -336,14 +336,14 @@
                 var actual = Xml.Serialize(value);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<ImmutableSortedDictionaryOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>1</Key>" + Environment.NewLine +
                                "    <Value>a</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>2</Key>" + Environment.NewLine +
                                "    <Value>b</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
                                "</ImmutableSortedDictionaryOfInt32String>";
                 Assert.AreEqual(expected, actual);
             }
@@ -463,14 +463,14 @@
                 var actual = Xml.Serialize(value);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<SortedDictionaryOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>1</Key>" + Environment.NewLine +
                                "    <Value>a</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>2</Key>" + Environment.NewLine +
                                "    <Value>b</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
                                "</SortedDictionaryOfInt32String>";
                 Assert.AreEqual(expected, actual);
             }
@@ -482,14 +482,14 @@
                 var actual = Xml.Serialize(value);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<SortedList>" + Environment.NewLine +
-                               "  <DictionaryEntry>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>1</Key>" + Environment.NewLine +
                                "    <Value>a</Value>" + Environment.NewLine +
-                               "  </DictionaryEntry>" + Environment.NewLine +
-                               "  <DictionaryEntry>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>2</Key>" + Environment.NewLine +
                                "    <Value>b</Value>" + Environment.NewLine +
-                               "  </DictionaryEntry>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
                                "</SortedList>";
                 Assert.AreEqual(expected, actual);
             }
@@ -501,14 +501,14 @@
                 var actual = Xml.Serialize(value);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<SortedListOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>1</Key>" + Environment.NewLine +
                                "    <Value>a</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
-                               "  <KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
+                               "  <Entry>" + Environment.NewLine +
                                "    <Key>2</Key>" + Environment.NewLine +
                                "    <Value>b</Value>" + Environment.NewLine +
-                               "  </KeyValuePairOfInt32String>" + Environment.NewLine +
+                               "  </Entry>" + Environment.NewLine +
                                "</SortedListOfInt32String>";
                 Assert.AreEqual(expected, actual);
             }
