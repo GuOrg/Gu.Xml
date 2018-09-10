@@ -1,6 +1,5 @@
 ﻿namespace Gu.Xml
 {
-    using System.Collections;
     using System.Collections.Generic;
 
     public class DictionaryItemWriter<TKey, TValue> : CollectionItemWriter
