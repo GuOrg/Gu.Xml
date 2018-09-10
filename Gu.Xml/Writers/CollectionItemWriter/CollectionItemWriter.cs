@@ -28,10 +28,29 @@
         {
             if (typeof(IDictionary).IsAssignableFrom(type))
             {
+                if (TryCreateGenericDictionaryWriter(out var writer))
+                {
+                    return writer;
+                }
+
                 return DictionaryItemWriter;
             }
 
             return EnumerableItemWriter;
+
+            bool TryCreateGenericDictionaryWriter(out CollectionItemWriter writer)
+            {
+                if (type.IsGenericType &&
+                    type.GetInterface("ICollection`1") is Type collectionType &&
+                    collectionType.GenericTypeArguments.TrySingle(out var kvpType))
+                {
+                    writer = (CollectionItemWriter)Activator.CreateInstance(typeof(DictionaryItemWriter<,>).MakeGenericType(kvpType.GenericTypeArguments));
+                    return true;
+                }
+
+                writer = null;
+                return false;
+            }
         }
     }
 }
