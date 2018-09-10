@@ -8,7 +8,7 @@
     {
         internal static Func<TSource, TValue> CreateGetter<TSource, TValue>(this FieldInfo property)
         {
-            var parameter = Expression.Parameter(typeof(TSource));
+            var parameter = Expression.Parameter(typeof(TSource), "source");
             return Expression.Lambda<Func<TSource, TValue>>(Expression.Field(parameter, property), parameter)
                              .Compile();
         }
