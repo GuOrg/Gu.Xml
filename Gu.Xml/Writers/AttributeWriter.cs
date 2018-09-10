@@ -55,7 +55,7 @@
                 case PropertyInfo property:
                     return new AttributeWriter<TSource, TValue>(name, property.CreateGetter<TSource, TValue>());
                 case FieldInfo field:
-                    return new AttributeWriter<TSource, TValue>(name, x => (TValue)field.GetValue(x));
+                    return new AttributeWriter<TSource, TValue>(name, field.CreateGetter<TSource, TValue>());
                 default:
                     throw new InvalidOperationException($"Not handling {member}. Bug in Gu.Xml.");
             }

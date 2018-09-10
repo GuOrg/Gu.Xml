@@ -93,7 +93,7 @@
                 case PropertyInfo property:
                     return new ElementWriter<TSource, TValue>(name, property.CreateGetter<TSource, TValue>());
                 case FieldInfo field:
-                    return new ElementWriter<TSource, TValue>(name, x => (TValue)field.GetValue(x));
+                    return new ElementWriter<TSource, TValue>(name, field.CreateGetter<TSource, TValue>());
                 default:
                     throw new InvalidOperationException($"Not handling {member}. Bug in Gu.Xml.");
             }
