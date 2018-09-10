@@ -1,7 +1,10 @@
 ﻿namespace Gu.Xml
 {
     using System;
+    using System.Collections;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
 
     internal static class RootName
@@ -25,6 +28,14 @@
             if (!type.IsGenericType &&
                 !type.HasElementType)
             {
+                if (type.Name.StartsWith("<") &&
+                    typeof(IEnumerable).IsAssignableFrom(type) &&
+                    typeof(IEnumerator).IsAssignableFrom(type) &&
+                    type.GetInterfaces().Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEnumerable<>)).FirstOrDefault() is Type enumerableType)
+                {
+                    return Create(enumerableType);
+                }
+
                 return VerifyName(type.Name);
             }
 

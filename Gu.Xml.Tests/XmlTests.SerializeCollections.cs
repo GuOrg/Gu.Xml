@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Linq;
     using NUnit.Framework;
 
     public partial class XmlTests
@@ -168,6 +169,48 @@
                                "    <Value>b</Value>" + Environment.NewLine +
                                "  </KeyValuePairOfInt32String>" + Environment.NewLine +
                                "</DictionaryOfInt32String>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void EnumerableRange()
+            {
+                var value = Enumerable.Range(1, 3);
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<IEnumerableOfInt32>" + Environment.NewLine +
+                               "  <Int32>1</Int32>" + Environment.NewLine +
+                               "  <Int32>2</Int32>" + Environment.NewLine +
+                               "  <Int32>3</Int32>" + Environment.NewLine +
+                               "</IEnumerableOfInt32>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void EnumerableSelect()
+            {
+                var value = Enumerable.Range(1, 3).Select(x => x);
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WhereSelectEnumerableIteratorOfInt32Int32>" + Environment.NewLine +
+                               "  <Int32>1</Int32>" + Environment.NewLine +
+                               "  <Int32>2</Int32>" + Environment.NewLine +
+                               "  <Int32>3</Int32>" + Environment.NewLine +
+                               "</WhereSelectEnumerableIteratorOfInt32Int32>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void EnumerableWhere()
+            {
+                var value = Enumerable.Range(1, 3).Where(_ => true);
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WhereEnumerableIteratorOfInt32>" + Environment.NewLine +
+                               "  <Int32>1</Int32>" + Environment.NewLine +
+                               "  <Int32>2</Int32>" + Environment.NewLine +
+                               "  <Int32>3</Int32>" + Environment.NewLine +
+                               "</WhereEnumerableIteratorOfInt32>";
                 Assert.AreEqual(expected, actual);
             }
 
