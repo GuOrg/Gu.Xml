@@ -86,6 +86,19 @@
                 Assert.AreEqual(expected, actual);
             }
 
+            [Test]
+            public void ValueTupleOfIntD32Double()
+            {
+                var value = (1, 2);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ValueTupleOfInt32Int32>" + Environment.NewLine +
+                               "  <Item1>1</Item1>" + Environment.NewLine +
+                               "  <Item2>2</Item2>" + Environment.NewLine +
+                               "</ValueTupleOfInt32Int32>";
+                var actual = Xml.Serialize(value);
+                Assert.AreEqual(expected, actual);
+            }
+
             public struct StructWithGetOnlyProperty
             {
                 public StructWithGetOnlyProperty(int value)
