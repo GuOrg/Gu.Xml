@@ -28,6 +28,11 @@
             TextWriterActions.RegisterStruct<ushort>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
         }
 
+        public static bool TryGetSimple<TMember>(TMember value, out Action<TextWriter, TMember> writer)
+        {
+            return WriterActionCache<TMember>.TryGetSimple(value, out writer);
+        }
+
         /// <summary>
         /// Try getting a writer for writing the element contents as a string.
         /// </summary>
@@ -38,7 +43,7 @@
         /// <param name="type">The type of the value.</param>
         /// <param name="writer"></param>
         /// <returns>True if a writer was found for <paramref name="type"/></returns>
-        public static bool TryGetSimple<TMember>(Type type, out Action<TextWriter, TMember> writer)
+        private static bool TryGetSimple<TMember>(Type type, out Action<TextWriter, TMember> writer)
         {
             if (TextWriterActions.TryGet(type, out var castAction))
             {
@@ -113,5 +118,37 @@
             return value.ToString("R", NumberFormatInfo.InvariantInfo);
         }
 
+        private static class WriterActionCache<T>
+        {
+            // ReSharper disable once StaticMemberInGenericType
+            private static bool isValueCreated;
+            private static Action<TextWriter, T> simple;
+
+            public static bool TryGetSimple(T value, out Action<TextWriter, T> write)
+            {
+                if (isValueCreated)
+                {
+                    write = simple;
+                    return write != null;
+                }
+
+                var type = value.GetType();
+                if (WriterAction.TryGetSimple<T>(type, out var defaultAction))
+                {
+                    if (typeof(T) == type)
+                    {
+                        simple = write = defaultAction;
+                        isValueCreated = true;
+                        return true;
+                    }
+
+                    write = defaultAction;
+                    return true;
+                }
+
+                write = null;
+                return false;
+            }
+        }
     }
 }

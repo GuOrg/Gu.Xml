@@ -51,7 +51,7 @@
             if (value == null)
             {
             }
-            else if (WriterAction<T>.TryGetSimple(value, out var simple))
+            else if (WriterAction.TryGetSimple(value, out var simple))
             {
                 if (this.pendingCloseStartElement)
                 {

@@ -19,7 +19,7 @@
             {
                 if (this.getter(typedSource) is TValue value)
                 {
-                    if (WriterAction<TValue>.TryGetSimple(value, out var valueWriter))
+                    if (WriterAction.TryGetSimple(value, out var valueWriter))
                     {
                         writer.Write(" ");
                         writer.Write(this.Name);

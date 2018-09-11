@@ -7,8 +7,6 @@
     public sealed class EnumWriter<T>
         where T : struct, Enum
     {
-        private readonly ConcurrentDictionary<T, string> cache = new ConcurrentDictionary<T, string>();
-
         /// <summary>
         /// An <see cref="EnumWriterOld"/> that serializes with 'G' format string.
         /// </summary>
@@ -19,6 +17,7 @@
         /// </summary>
         public static readonly EnumWriter<T> Integer = new EnumWriter<T>("D");
 
+        private readonly ConcurrentDictionary<T, string> cache = new ConcurrentDictionary<T, string>();
         private readonly string format;
 
         private EnumWriter(string format)
