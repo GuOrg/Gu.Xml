@@ -64,6 +64,7 @@
 
             if (type.IsEnum)
             {
+                // ReSharper disable once PossibleNullReferenceException
                 _ = typeof(TextWriterActions).GetMethod(nameof(Gu.Xml.TextWriterActions.RegisterEnum), BindingFlags.Public | BindingFlags.Instance)
                                              .MakeGenericMethod(type)
                                              .Invoke(TextWriterActions, null);
@@ -87,6 +88,7 @@
                 return "INF";
             }
 
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (value == 0 &&
                 BitConverter.DoubleToInt64Bits(value) != BitConverter.DoubleToInt64Bits(0.0))
             {
@@ -109,6 +111,7 @@
                 return "INF";
             }
 
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (value == 0 &&
                 BitConverter.DoubleToInt64Bits(value) != BitConverter.DoubleToInt64Bits(0.0))
             {
