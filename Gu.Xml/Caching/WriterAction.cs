@@ -30,7 +30,7 @@
 
         public static bool TryGetSimple<TMember>(TMember value, out Action<TextWriter, TMember> writer)
         {
-            return WriterActionCache<TMember>.TryGetSimple(value, out writer);
+            return TryGetSimple(value?.GetType() ?? typeof(TMember), out writer);
         }
 
         /// <summary>
@@ -112,39 +112,6 @@
             }
 
             return value.ToString("R", NumberFormatInfo.InvariantInfo);
-        }
-
-        private static class WriterActionCache<T>
-        {
-            // ReSharper disable once StaticMemberInGenericType
-            private static bool isValueCreated;
-            private static Action<TextWriter, T> simple;
-
-            public static bool TryGetSimple(T value, out Action<TextWriter, T> write)
-            {
-                if (isValueCreated)
-                {
-                    write = simple;
-                    return write != null;
-                }
-
-                var type = value.GetType();
-                if (TryGetSimple<T>(type, out var defaultAction))
-                {
-                    if (typeof(T) == type)
-                    {
-                        simple = write = defaultAction;
-                        isValueCreated = true;
-                        return true;
-                    }
-
-                    write = defaultAction;
-                    return true;
-                }
-
-                write = null;
-                return false;
-            }
         }
     }
 }

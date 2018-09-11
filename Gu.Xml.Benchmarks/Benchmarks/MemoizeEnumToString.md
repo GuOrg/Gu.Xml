@@ -11,5 +11,5 @@ Frequency=3410068 Hz, Resolution=293.2493 ns, Timer=TSC
 ```
 |        Method |      Mean |      Error |     StdDev | Scaled |  Gen 0 | Allocated |
 |-------------- |----------:|-----------:|-----------:|-------:|-------:|----------:|
-|    EnumFormat | 589.15 ns | 11.7351 ns | 23.1640 ns |   1.00 | 0.0334 |     216 B |
-| CacheGetOrAdd |  17.57 ns |  0.3991 ns |  0.3920 ns |   0.03 |      - |       0 B |
+|    EnumFormat | 503.80 ns | 10.0104 ns | 17.5324 ns |   1.00 | 0.0334 |     216 B |
+| CacheGetOrAdd |  16.51 ns |  0.4239 ns |  0.3966 ns |   0.03 |      - |       0 B |
