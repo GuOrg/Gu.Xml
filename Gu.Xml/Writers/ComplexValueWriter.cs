@@ -80,34 +80,28 @@
             }
         }
 
-        private sealed class BaseTypeCountComparer : IComparer<Type>, IComparer<MemberInfo>, IComparer
+        private sealed class BaseTypeCountComparer : IComparer<MemberInfo>, IComparer
         {
             public static readonly BaseTypeCountComparer Default = new BaseTypeCountComparer();
 
-            public int Compare(MemberInfo x, MemberInfo y) => this.Compare(x.DeclaringType, y.DeclaringType);
-
-            public int Compare(Type x, Type y)
+            public int Compare(MemberInfo x, MemberInfo y)
             {
-                if (x == y)
+                var xType = x.DeclaringType;
+                var yType = y.DeclaringType;
+                if (xType == yType)
                 {
                     return 0;
                 }
 
-                return Count(x).CompareTo(Count(y));
+                return Count(xType).CompareTo(Count(yType));
             }
 
             int IComparer.Compare(object x, object y)
             {
-                if (x is PropertyInfo xp &&
-                    y is PropertyInfo yp)
+                if (x is MemberInfo xp &&
+                    y is MemberInfo yp)
                 {
                     return this.Compare(xp, yp);
-                }
-
-                if (x is Type xt &&
-                    y is Type yt)
-                {
-                    return this.Compare(xt, yt);
                 }
 
                 return 0;

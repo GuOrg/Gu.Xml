@@ -24,7 +24,7 @@
             }
             else
             {
-                throw new InvalidOperationException("Source is null. Should not get here. Bug in Gu.Xml.");
+                throw new InvalidOperationException($"Source is {source}. Should not get here. Bug in Gu.Xml.");
             }
         }
     }

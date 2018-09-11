@@ -13,29 +13,29 @@
             this.getter = getter;
         }
 
-        public override void Write<T>(TextWriter writer, T source)
+        public override void Write<T>(XmlWriterActions writerActions, TextWriter writer, T source)
         {
             if (source is TSource typedSource)
             {
                 if (this.getter(typedSource) is TValue value)
                 {
-                    if (SimpleValueWriter.TryGet(value, out var valueWriter))
+                    if (writerActions.TryGetSimple(value, out var valueWriter))
                     {
                         writer.Write(" ");
                         writer.Write(this.Name);
                         writer.Write("=\"");
-                        valueWriter.Write(writer, value);
+                        valueWriter(writer, value);
                         writer.Write("\"");
                     }
                     else
                     {
-                        throw new InvalidOperationException($"Could not find a {nameof(SimpleValueWriter)} for {value} of type {value.GetType()}");
+                        throw new InvalidOperationException($"Could not find a Action<TextWriter, {nameof(TValue)}> for {value} of type {value.GetType()}");
                     }
                 }
             }
             else
             {
-                throw new InvalidOperationException("Source is null. Should not get here. Bug in Gu.Xml.");
+                throw new InvalidOperationException($"Source is {source}. Should not get here. Bug in Gu.Xml.");
             }
         }
     }

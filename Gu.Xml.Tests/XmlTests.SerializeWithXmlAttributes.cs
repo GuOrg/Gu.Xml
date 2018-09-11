@@ -1,4 +1,5 @@
-﻿namespace Gu.Xml.Tests
+﻿#pragma warning disable SA1201 // Elements should appear in the correct order
+namespace Gu.Xml.Tests
 {
     using System;
     using System.Diagnostics;

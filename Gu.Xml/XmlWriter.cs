@@ -1,14 +1,32 @@
 ﻿namespace Gu.Xml
 {
     using System;
-    using System.Collections;
+    using System.Globalization;
     using System.IO;
+    using Gu.Xml.Internals;
 
     /// <summary>
     /// Wraps a <see cref="TextWriter"/> and exposes methods for writing XML.
     /// </summary>
     public sealed class XmlWriter : IDisposable
     {
+        private static readonly XmlWriterActions DefaultWriterActions = new XmlWriterActions()
+            .SimpleClass<string>((writer, value) => writer.Write(value))
+            .SimpleStruct<bool>((writer, value) => writer.Write(value ? "true" : "false"))
+            .SimpleStruct<byte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
+            .SimpleStruct<char>((writer, value) => writer.Write((int)value))
+            .SimpleStruct<decimal>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))
+            .SimpleStruct<double>((writer, value) => writer.Write(XmlFormat.ToString(value)))
+            .SimpleStruct<float>((writer, value) => writer.Write(XmlFormat.ToString(value)))
+            .SimpleStruct<Guid>((writer, value) => writer.Write(value.ToString()))
+            .SimpleStruct<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
+            .SimpleStruct<long>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
+            .SimpleStruct<short>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))
+            .SimpleStruct<sbyte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
+            .SimpleStruct<ulong>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))
+            .SimpleStruct<uint>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))
+            .SimpleStruct<ushort>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
+
         private readonly TextWriter writer;
 
         private int indentLevel;
@@ -52,7 +70,7 @@
             if (value == null)
             {
             }
-            else if (SimpleValueWriter.TryGet(value, out var simple))
+            else if (DefaultWriterActions.TryGetSimple(value, out var simple))
             {
                 if (this.pendingCloseStartElement)
                 {
@@ -64,12 +82,12 @@
                 this.writer.Write("<");
                 this.writer.Write(name);
                 this.writer.Write(">");
-                simple.Write(this.writer, value);
+                simple(this.writer, value);
                 this.writer.Write("</");
                 this.writer.Write(name);
                 this.writer.Write(">");
             }
-            else if (CollectionItemWriter.TryGet(value, out var itemWriter))
+            else if (DefaultWriterActions.TryGetCollection(value, out var itemWriter))
             {
                 if (this.pendingCloseStartElement)
                 {
@@ -83,7 +101,7 @@
                 this.pendingCloseStartElement = true;
 
                 this.indentLevel++;
-                itemWriter.WriteItems(this, value);
+                itemWriter(this, value);
                 this.indentLevel--;
 
                 if (this.pendingCloseStartElement)
@@ -112,7 +130,7 @@
                 this.writer.Write(name);
                 foreach (var attributeWriter in complex.Attributes)
                 {
-                    attributeWriter.Write(this.writer, value);
+                    attributeWriter.Write(DefaultWriterActions, this.writer, value);
                 }
 
                 this.pendingCloseStartElement = true;

@@ -72,14 +72,14 @@
             [TestCase(null)]
             public void BooleanNullable(bool? value)
             {
-                var with = new WithMutableNullable<bool> { Value = value };
+                var with = new WithMutable<bool?> { Value = value };
                 var expected = value.HasValue
                     ? "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                      "<WithMutableNullableOfBoolean>" + Environment.NewLine +
+                      "<WithMutableOfNullableOfBoolean>" + Environment.NewLine +
                      $"  <Value>{XmlConvert.ToString(value.Value)}</Value>" + Environment.NewLine +
-                      "</WithMutableNullableOfBoolean>"
+                      "</WithMutableOfNullableOfBoolean>"
                     : "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                      "<WithMutableNullableOfBoolean />";
+                      "<WithMutableOfNullableOfBoolean />";
 
                 var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
@@ -157,6 +157,19 @@
                 var with = new WithMutable<StringComparison> { Value = value };
                 var actual = Xml.Serialize(with);
                 var expected = Reference.XmlSerializer(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(StringComparison.InvariantCulture)]
+            [TestCase(StringComparison.CurrentCultureIgnoreCase)]
+            public void EnumStringComparisonBoxed(StringComparison value)
+            {
+                var with = new WithMutableBoxed { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableBoxed>" + Environment.NewLine +
+                              $"  <Value>{value.ToString()}</Value>" + Environment.NewLine +
+                               "</WithMutableBoxed>";
                 Assert.AreEqual(expected, actual);
             }
 
@@ -318,12 +331,6 @@
             public class WithMutable<T>
             {
                 public T Value { get; set; }
-            }
-
-            public class WithMutableNullable<T>
-                where T : struct
-            {
-                public T? Value { get; set; }
             }
         }
     }
