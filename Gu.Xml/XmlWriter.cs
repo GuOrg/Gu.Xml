@@ -87,7 +87,7 @@
                 this.writer.Write(name);
                 this.writer.Write(">");
             }
-            else if (CollectionItemWriter.TryGet(value, out var itemWriter))
+            else if (DefaultWriterActions.TryGetCollection(value, out var itemWriter))
             {
                 if (this.pendingCloseStartElement)
                 {

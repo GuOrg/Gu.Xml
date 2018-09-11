@@ -1,16 +1,31 @@
 ﻿namespace Gu.Xml
 {
     using System;
+    using System.Collections;
+    using System.Collections.Concurrent;
     using System.IO;
     using System.Reflection;
 
     public class WriterActions
     {
         private readonly CastActions<TextWriter> simpleActions = new CastActions<TextWriter>();
+        private readonly ConcurrentDictionary<Type, CollectionItemWriter> collectionActions = new ConcurrentDictionary<Type, CollectionItemWriter>();
 
         public bool TryGetSimple<TMember>(TMember value, out Action<TextWriter, TMember> writer)
         {
             return this.TryGetSimple(value?.GetType() ?? typeof(TMember), out writer);
+        }
+
+        public bool TryGetCollection<T>(T value, out CollectionItemWriter writer)
+        {
+            if (value is IEnumerable)
+            {
+                writer = collectionActions.GetOrAdd(value.GetType(), x => CollectionItemWriter.Create(x));
+                return true;
+            }
+
+            writer = null;
+            return false;
         }
 
         public WriterActions SimpleClass<T>(Action<TextWriter, T> action)
