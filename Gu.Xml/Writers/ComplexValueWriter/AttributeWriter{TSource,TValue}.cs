@@ -13,13 +13,13 @@
             this.getter = getter;
         }
 
-        public override void Write<T>(TextWriter writer, T source)
+        public override void Write<T>(WriterActions writerActions, TextWriter writer, T source)
         {
             if (source is TSource typedSource)
             {
                 if (this.getter(typedSource) is TValue value)
                 {
-                    if (WriterAction.TryGetSimple(value, out var valueWriter))
+                    if (writerActions.TryGetSimple(value, out var valueWriter))
                     {
                         writer.Write(" ");
                         writer.Write(this.Name);
