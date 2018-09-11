@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    public class CollectionWriter
+    public static class CollectionWriter
     {
         private static readonly CastAction<XmlWriter> EnumerableItemWriter = CastAction<XmlWriter>.Create<IEnumerable>(WriteItems);
         private static readonly CastAction<XmlWriter> DictionaryItemWriter = CastAction<XmlWriter>.Create<IDictionary>(WriteItems);
@@ -37,6 +37,7 @@
                     type.GetInterface("ICollection`1") is Type collectionType &&
                     collectionType.GenericTypeArguments.TrySingle(out var kvpType))
                 {
+                    // ReSharper disable once PossibleNullReferenceException
                     result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateGenericDictionaryWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                  .MakeGenericMethod(type, kvpType.GenericTypeArguments[0], kvpType.GenericTypeArguments[1])
                                                                  .Invoke(null, null);
@@ -53,6 +54,7 @@
                     type.GetInterface("IEnumerable`1") is Type enumerableType &&
                     enumerableType.GenericTypeArguments.TrySingle(out var elementType))
                 {
+                    // ReSharper disable once PossibleNullReferenceException
                     result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateGenericEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                             .MakeGenericMethod(type, elementType)
                                                                             .Invoke(null, null);
