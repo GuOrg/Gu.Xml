@@ -7,7 +7,7 @@
 
     public static class WriterAction
     {
-        private static readonly TextWriterActions TextWriterActions = new TextWriterActions();
+        private static readonly CastActions<TextWriter> TextWriterActions = new CastActions<TextWriter>();
 
         static WriterAction()
         {
@@ -58,9 +58,9 @@
             if (type.IsEnum)
             {
                 // ReSharper disable once PossibleNullReferenceException
-                _ = typeof(TextWriterActions).GetMethod(nameof(Gu.Xml.TextWriterActions.RegisterEnum), BindingFlags.Public | BindingFlags.Instance)
+                _ = typeof(CastActionsExt).GetMethod(nameof(CastActionsExt.RegisterEnum), BindingFlags.Public | BindingFlags.Static)
                                              .MakeGenericMethod(type)
-                                             .Invoke(TextWriterActions, null);
+                                             .Invoke(null, new[] { TextWriterActions });
                 return TryGetSimple(typeof(TMember), out writer);
             }
 
