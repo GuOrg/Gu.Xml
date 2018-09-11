@@ -10,7 +10,7 @@
     /// </summary>
     public sealed class XmlWriter : IDisposable
     {
-        private static readonly WriterActions DefaultWriterActions = new WriterActions()
+        private static readonly XmlWriterActions DefaultWriterActions = new XmlWriterActions()
             .SimpleClass<string>((writer, value) => writer.Write(value))
             .SimpleStruct<bool>((writer, value) => writer.Write(value ? "true" : "false"))
             .SimpleStruct<byte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))

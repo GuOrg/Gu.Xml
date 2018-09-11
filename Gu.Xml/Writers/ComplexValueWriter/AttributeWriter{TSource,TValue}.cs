@@ -13,7 +13,7 @@
             this.getter = getter;
         }
 
-        public override void Write<T>(WriterActions writerActions, TextWriter writer, T source)
+        public override void Write<T>(XmlWriterActions writerActions, TextWriter writer, T source)
         {
             if (source is TSource typedSource)
             {

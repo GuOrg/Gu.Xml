@@ -59,7 +59,7 @@
             return false;
         }
 
-        public abstract void Write<T>(WriterActions writerActions, TextWriter writer, T source);
+        public abstract void Write<T>(XmlWriterActions writerActions, TextWriter writer, T source);
 
         private static AttributeWriter<TSource, TValue> CreateWriter<TSource, TValue>(string name, MemberInfo member)
         {

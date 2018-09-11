@@ -6,7 +6,7 @@
     using System.IO;
     using System.Reflection;
 
-    public class WriterActions
+    public class XmlWriterActions
     {
         private readonly CastActions<TextWriter> simpleActions = new CastActions<TextWriter>();
         private readonly ConcurrentDictionary<Type, CollectionItemWriter> collectionActions = new ConcurrentDictionary<Type, CollectionItemWriter>();
@@ -20,7 +20,7 @@
         {
             if (value is IEnumerable)
             {
-                writer = collectionActions.GetOrAdd(value.GetType(), x => CollectionItemWriter.Create(x));
+                writer = this.collectionActions.GetOrAdd(value.GetType(), x => CollectionItemWriter.Create(x));
                 return true;
             }
 
@@ -28,14 +28,14 @@
             return false;
         }
 
-        public WriterActions SimpleClass<T>(Action<TextWriter, T> action)
+        public XmlWriterActions SimpleClass<T>(Action<TextWriter, T> action)
             where T : class
         {
             this.simpleActions.RegisterClass(action);
             return this;
         }
 
-        public WriterActions SimpleStruct<T>(Action<TextWriter, T> action)
+        public XmlWriterActions SimpleStruct<T>(Action<TextWriter, T> action)
             where T : struct
         {
             this.simpleActions.RegisterStruct(action);
