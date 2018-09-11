@@ -10,10 +10,10 @@
     [DebuggerDisplay("{this.raw}")]
     public class CastAction<TWriter>
     {
-        private readonly object raw;
+        private readonly Delegate raw;
         private readonly Action<TWriter, object> boxedAction;
 
-        private CastAction(object raw, Action<TWriter, object> boxedAction)
+        private CastAction(Delegate raw, Action<TWriter, object> boxedAction)
         {
             this.raw = raw;
             this.boxedAction = boxedAction;
