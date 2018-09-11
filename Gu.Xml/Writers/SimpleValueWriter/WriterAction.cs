@@ -5,14 +5,16 @@
 
     public class WriterAction<T>
     {
+        // ReSharper disable once StaticMemberInGenericType
+        private static bool isValueCreated;
         private static Action<TextWriter, T> action;
 
         public static bool TryGetSimple(T value, out Action<TextWriter, T> write)
         {
-            if (action != null)
+            if (isValueCreated)
             {
                 write = action;
-                return true;
+                return write != null;
             }
 
             var type = value.GetType();
@@ -21,6 +23,7 @@
                 if (typeof(T) == type)
                 {
                     action = write = (Action<TextWriter, T>)defaultAction;
+                    isValueCreated = true;
                     return true;
                 }
 
