@@ -8,12 +8,12 @@
         where T : struct, Enum
     {
         /// <summary>
-        /// An <see cref="EnumWriterOld"/> that serializes with 'G' format string.
+        /// An <see cref="EnumWriter{T}"/> that serializes with 'G' format string.
         /// </summary>
         public static readonly EnumWriter<T> Default = new EnumWriter<T>("G");
 
         /// <summary>
-        /// An <see cref="EnumWriterOld"/> that serializes with 'D' format string.
+        /// An <see cref="EnumWriter{T}"/> that serializes with 'D' format string.
         /// </summary>
         public static readonly EnumWriter<T> Integer = new EnumWriter<T>("D");
 
