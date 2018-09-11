@@ -56,7 +56,7 @@
         {
             if (this.simpleActions.TryGet(type, out var castAction))
             {
-                if (castAction.TryGet<TMember>(out writer))
+                if (castAction.TryGet(out writer))
                 {
                     return true;
                 }
