@@ -14,6 +14,8 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new WithPublicGetSet { Value = 1 }),
                 new TestCaseData(new WithPublicMutableField { Value = 1 }),
                 new TestCaseData(new WithTwoPublicMutableProperties { Value1 = 1, Value2 = 2 }),
+                new TestCaseData(new WithTwoPublicMutableBoxedProperties { Value1 = 1, Value2 = 2 }),
+                new TestCaseData(new WithTwoPublicMutableBoxedProperties { Value1 = 1, Value2 = 2.0 }),
                 new TestCaseData(new WithFieldBeforeProperty { Value1 = 1, Value2 = 2 }),
                 new TestCaseData(new WithPropertyBeforeField { Value1 = 1, Value2 = 2 }),
                 new TestCaseData(new ConcreteWithProperties { Value1 = 1, Value2 = 2, Value3 = 3, Value4 = 4 }),
@@ -148,6 +150,13 @@ namespace Gu.Xml.Tests
                 public int Value1 { get; set; } = 1;
 
                 public int Value2 { get; set; } = 2;
+            }
+
+            public class WithTwoPublicMutableBoxedProperties
+            {
+                public object Value1 { get; set; } = 1;
+
+                public object Value2 { get; set; } = 2;
             }
 
             public class WithFieldBeforeProperty

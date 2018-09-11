@@ -3,21 +3,21 @@
     using System;
     using System.IO;
 
-    public sealed class EnumWriter : SimpleValueWriter
+    public sealed class EnumWriterOld : SimpleValueWriter
     {
         /// <summary>
-        /// An <see cref="EnumWriter"/> that serializes with 'G' format string.
+        /// An <see cref="EnumWriterOld"/> that serializes with 'G' format string.
         /// </summary>
-        public static readonly EnumWriter Default = new EnumWriter("G");
+        public static readonly EnumWriterOld Default = new EnumWriterOld("G");
 
         /// <summary>
-        /// An <see cref="EnumWriter"/> that serializes with 'D' format string.
+        /// An <see cref="EnumWriterOld"/> that serializes with 'D' format string.
         /// </summary>
-        public static readonly EnumWriter Integer = new EnumWriter("D");
+        public static readonly EnumWriterOld Integer = new EnumWriterOld("D");
 
         private readonly string format;
 
-        private EnumWriter(string format)
+        private EnumWriterOld(string format)
         {
             this.format = format;
         }

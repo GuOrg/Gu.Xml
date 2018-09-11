@@ -47,7 +47,7 @@
 
             if (typeof(T).IsEnum)
             {
-                writer = Default.GetOrAdd(typeof(T), EnumWriter.Default);
+                writer = Default.GetOrAdd(typeof(T), EnumWriterOld.Default);
             }
 
             return Default.TryGetValue(value.GetType(), out writer);

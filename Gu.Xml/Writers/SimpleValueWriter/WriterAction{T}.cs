@@ -7,33 +7,27 @@
     {
         // ReSharper disable once StaticMemberInGenericType
         private static bool isValueCreated;
-        private static Action<TextWriter, T> action;
+        private static Action<TextWriter, T> simple;
 
         public static bool TryGetSimple(T value, out Action<TextWriter, T> write)
         {
             if (isValueCreated)
             {
-                write = action;
+                write = simple;
                 return write != null;
             }
 
             var type = value.GetType();
-            if (DefaultTextWriterActions.Default.TryGetValue(type, out var defaultAction))
+            if (DefaultWriterActions.TryGetSimple<T>(type, out var defaultAction))
             {
                 if (typeof(T) == type)
                 {
-                    action = write = (Action<TextWriter, T>)defaultAction;
+                    simple = write = defaultAction;
                     isValueCreated = true;
                     return true;
                 }
 
-                write = (writer, writeValue) => ((Delegate)defaultAction).DynamicInvoke(writer, writeValue);
-                return true;
-            }
-
-            if (type.IsEnum)
-            {
-                action = write = (Action<TextWriter, T>)DefaultTextWriterActions.Default.GetOrAdd(type, t => new Action<TextWriter, T>((writer, writeValue) => writer.Write(Enum.Format(t, writeValue, "G").Replace(",", string.Empty))));
+                write = defaultAction;
                 return true;
             }
 
