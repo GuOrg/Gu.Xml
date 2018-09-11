@@ -3,6 +3,10 @@
     using System;
     using System.Diagnostics;
 
+    /// <summary>
+    /// A wrapper for Action{TWriter, TValue} that allows getting a casting action for boxed values.
+    /// </summary>
+    /// <typeparam name="TWriter"></typeparam>
     [DebuggerDisplay("{this.raw}")]
     public class CastAction<TWriter>
     {

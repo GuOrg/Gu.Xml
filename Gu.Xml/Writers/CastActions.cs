@@ -3,6 +3,9 @@
     using System;
     using System.Collections.Concurrent;
 
+    /// <summary>
+    /// A cache of <see cref="CastAction{TextWriter}"/>
+    /// </summary>
     public class CastActions<TWriter>
     {
         protected readonly ConcurrentDictionary<Type, CastAction<TWriter>> Cache = new ConcurrentDictionary<Type, CastAction<TWriter>>();

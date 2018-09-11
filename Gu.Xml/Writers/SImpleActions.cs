@@ -3,6 +3,9 @@
     using System;
     using System.IO;
 
+    /// <summary>
+    /// A cache of <see cref="CastAction{TextWriter}"/>
+    /// </summary>
     public class SimpleActions : CastActions<TextWriter>
     {
         public void RegisterEnum<T>()
