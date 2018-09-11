@@ -129,7 +129,7 @@
                 }
 
                 var type = value.GetType();
-                if (WriterAction.TryGetSimple<T>(type, out var defaultAction))
+                if (TryGetSimple<T>(type, out var defaultAction))
                 {
                     if (typeof(T) == type)
                     {
