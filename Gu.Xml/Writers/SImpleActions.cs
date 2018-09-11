@@ -3,7 +3,7 @@
     using System;
     using System.IO;
 
-    public class TextWriterActions : CastActions<TextWriter>
+    public class SimpleActions : CastActions<TextWriter>
     {
         public void RegisterEnum<T>()
             where T : struct, Enum

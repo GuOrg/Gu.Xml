@@ -19,17 +19,17 @@
             {
                 if (this.getter(typedSource) is TValue value)
                 {
-                    if (SimpleValueWriter.TryGet(value, out var valueWriter))
+                    if (WriterAction<TValue>.TryGetSimple(value, out var valueWriter))
                     {
                         writer.Write(" ");
                         writer.Write(this.Name);
                         writer.Write("=\"");
-                        valueWriter.Write(writer, value);
+                        valueWriter(writer, value);
                         writer.Write("\"");
                     }
                     else
                     {
-                        throw new InvalidOperationException($"Could not find a {nameof(SimpleValueWriter)} for {value} of type {value.GetType()}");
+                        throw new InvalidOperationException($"Could not find a Action<TextWriter, {nameof(TValue)}> for {value} of type {value.GetType()}");
                     }
                 }
             }

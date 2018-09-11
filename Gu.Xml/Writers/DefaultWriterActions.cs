@@ -7,7 +7,7 @@
 
     public static class DefaultWriterActions
     {
-        private static readonly TextWriterActions Actions = new TextWriterActions();
+        private static readonly SimpleActions Actions = new SimpleActions();
 
         static DefaultWriterActions()
         {
@@ -59,7 +59,7 @@
 
             if (type.IsEnum)
             {
-                _ = typeof(TextWriterActions).GetMethod("RegisterEnum", BindingFlags.Public | BindingFlags.Instance)
+                _ = typeof(SimpleActions).GetMethod(nameof(SimpleActions.RegisterEnum), BindingFlags.Public | BindingFlags.Instance)
                                              .MakeGenericMethod(type)
                                              .Invoke(Actions, null);
                 return TryGetSimple(typeof(TMember), out writer);
