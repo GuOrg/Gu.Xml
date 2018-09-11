@@ -26,6 +26,13 @@
                 (writer, value) => action(writer, (T)value));
         }
 
+        /// <summary>
+        /// Try casting the inner action and boxing action  to <see cref="Action{TWriter, T}"/>.
+        /// Returns true if any of the casts are successful.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public bool TryGet<T>(out Action<TWriter, T> action)
         {
             if (this.raw is Action<TWriter, T> rawMatch)
