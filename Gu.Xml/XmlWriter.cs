@@ -101,7 +101,7 @@
                 this.pendingCloseStartElement = true;
 
                 this.indentLevel++;
-                itemWriter.WriteItems(this, value);
+                itemWriter(this, value);
                 this.indentLevel--;
 
                 if (this.pendingCloseStartElement)

@@ -9,19 +9,19 @@
     public class XmlWriterActions
     {
         private readonly CastActions<TextWriter> simpleActions = new CastActions<TextWriter>();
-        private readonly ConcurrentDictionary<Type, CollectionItemWriter> collectionActions = new ConcurrentDictionary<Type, CollectionItemWriter>();
+        private readonly ConcurrentDictionary<Type, CastAction<XmlWriter>> collectionActions = new ConcurrentDictionary<Type, CastAction<XmlWriter>>();
 
         public bool TryGetSimple<TMember>(TMember value, out Action<TextWriter, TMember> writer)
         {
             return this.TryGetSimple(value?.GetType() ?? typeof(TMember), out writer);
         }
 
-        public bool TryGetCollection<T>(T value, out CollectionItemWriter writer)
+        public bool TryGetCollection<T>(T value, out Action<XmlWriter, T> writer)
         {
-            if (value is IEnumerable)
+            if (value is IEnumerable &&
+                this.collectionActions.GetOrAdd(value.GetType(), x => CollectionWriter.Create(x)) is CastAction<XmlWriter> castAction)
             {
-                writer = this.collectionActions.GetOrAdd(value.GetType(), x => CollectionItemWriter.Create(x));
-                return true;
+                return castAction.TryGet(out writer);
             }
 
             writer = null;
