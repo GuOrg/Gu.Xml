@@ -7,13 +7,12 @@ namespace Gu.Xml.Benchmarks
     using System.Linq;
     using BenchmarkDotNet.Reports;
     using BenchmarkDotNet.Running;
-    using Gu.Xml.Benchmarks.Benchmarks;
 
     public class Program
     {
         public static void Main()
         {
-            foreach (var summary in RunSingle<WithSingleProperty>())
+            foreach (var summary in RunSingle<MemoizeEnumToString>())
             {
                 CopyResult(summary);
             }

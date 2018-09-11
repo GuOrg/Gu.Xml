@@ -1,4 +1,4 @@
-﻿namespace Gu.Xml.Benchmarks.Benchmarks
+﻿namespace Gu.Xml.Benchmarks
 {
     using System.Globalization;
     using System.IO;
