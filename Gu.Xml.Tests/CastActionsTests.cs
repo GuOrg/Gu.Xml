@@ -1,4 +1,5 @@
-﻿namespace Gu.Xml.Tests
+﻿// ReSharper disable RedundantCast
+namespace Gu.Xml.Tests
 {
     using System;
     using System.IO;
@@ -15,8 +16,9 @@
             {
                 var actions = new CastActions<StringWriter>();
                 actions.RegisterStruct<int>((writer, value) => writer.Write(value));
-                Assert.AreEqual(true, actions.TryGet(typeof(int), out var action));
-                action.Raw<int>().Invoke(stringWriter, 1);
+                Assert.AreEqual(true, actions.TryGet(typeof(int), out var castAction));
+                Assert.AreEqual(true, castAction.TryGet<int>(out var action));
+                action.Invoke(stringWriter, 1);
                 Assert.AreEqual("1", sb.ToString());
             }
         }
@@ -29,8 +31,9 @@
             {
                 var actions = new CastActions<StringWriter>();
                 actions.RegisterStruct<int>((writer, value) => writer.Write(value));
-                Assert.AreEqual(true, actions.TryGet(typeof(int), out var action));
-                action.Boxed().Invoke(stringWriter, (IFormattable)1);
+                Assert.AreEqual(true, actions.TryGet(typeof(int), out var castAction));
+                Assert.AreEqual(true, castAction.TryGet<IFormattable>(out var action));
+                action.Invoke(stringWriter, (IFormattable)1);
                 Assert.AreEqual("1", sb.ToString());
             }
         }
@@ -43,8 +46,9 @@
             {
                 var actions = new CastActions<StringWriter>();
                 actions.RegisterStruct<int>((writer, value) => writer.Write(value));
-                Assert.AreEqual(true, actions.TryGet(typeof(int), out var action));
-                action.Boxed().Invoke(stringWriter, (object)1);
+                Assert.AreEqual(true, actions.TryGet(typeof(int), out var castAction));
+                Assert.AreEqual(true, castAction.TryGet<object>(out var action));
+                action.Invoke(stringWriter, (object)1);
                 Assert.AreEqual("1", sb.ToString());
             }
         }
@@ -57,8 +61,9 @@
             {
                 var actions = new CastActions<StringWriter>();
                 actions.RegisterStruct<int>((writer, value) => writer.Write(value));
-                Assert.AreEqual(true, actions.TryGet(typeof(int?), out var action));
-                action.Raw<int?>().Invoke(stringWriter, (int?)1);
+                Assert.AreEqual(true, actions.TryGet(typeof(int?), out var castAction));
+                Assert.AreEqual(true, castAction.TryGet<int?>(out var action));
+                action.Invoke(stringWriter, (int?)1);
                 Assert.AreEqual("1", sb.ToString());
             }
         }
@@ -71,8 +76,9 @@
             {
                 var actions = new CastActions<StringWriter>();
                 actions.RegisterStruct<int>((writer, value) => writer.Write(value));
-                Assert.AreEqual(true, actions.TryGet(typeof(int?), out var action));
-                action.Boxed().Invoke(stringWriter, (int?)1);
+                Assert.AreEqual(true, actions.TryGet(typeof(int?), out var castAction));
+                Assert.AreEqual(true, castAction.TryGet<object>(out var action));
+                action.Invoke(stringWriter, (int?)1);
                 Assert.AreEqual("1", sb.ToString());
             }
         }

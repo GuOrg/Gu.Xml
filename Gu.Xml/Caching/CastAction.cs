@@ -11,12 +11,12 @@
     public class CastAction<TWriter>
     {
         private readonly Delegate raw;
-        private readonly Action<TWriter, object> boxedAction;
+        private readonly Action<TWriter, object> boxing;
 
-        private CastAction(Delegate raw, Action<TWriter, object> boxedAction)
+        private CastAction(Delegate raw, Action<TWriter, object> boxing)
         {
             this.raw = raw;
-            this.boxedAction = boxedAction;
+            this.boxing = boxing;
         }
 
         public static CastAction<TWriter> Create<T>(Action<TWriter, T> action)
@@ -26,8 +26,22 @@
                 (writer, value) => action(writer, (T)value));
         }
 
-        public Action<TWriter, TMember> Raw<TMember>() => (Action<TWriter, TMember>)this.raw;
+        public bool TryGet<T>(out Action<TWriter, T> action)
+        {
+            if (this.raw is Action<TWriter, T> rawMatch)
+            {
+                action = rawMatch;
+                return true;
+            }
 
-        public Action<TWriter, object> Boxed() => this.boxedAction;
+            if (this.boxing is Action<TWriter, T> boxingMatch)
+            {
+                action = boxingMatch;
+                return true;
+            }
+
+            action = null;
+            return false;
+        }
     }
 }

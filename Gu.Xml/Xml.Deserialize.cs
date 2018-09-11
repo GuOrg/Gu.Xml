@@ -1,4 +1,5 @@
-﻿namespace Gu.Xml
+﻿// ReSharper disable All temp disabling to not get here all the time.
+namespace Gu.Xml
 {
     using System;
     using System.Collections.Generic;

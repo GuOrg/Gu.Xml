@@ -47,15 +47,8 @@
         {
             if (TextWriterActions.TryGet(type, out var castAction))
             {
-                if (type == typeof(TMember))
+                if (castAction.TryGet<TMember>(out writer))
                 {
-                    writer = castAction.Raw<TMember>();
-                    return true;
-                }
-
-                if (castAction.Boxed() is Action<TextWriter, TMember> match)
-                {
-                    writer = match;
                     return true;
                 }
 
