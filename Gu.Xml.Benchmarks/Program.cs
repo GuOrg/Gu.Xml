@@ -12,24 +12,15 @@ namespace Gu.Xml.Benchmarks
     {
         public static void Main()
         {
-            foreach (var summary in RunSingle<MemoizeEnumToString>())
+            foreach (var summary in RunAll())
             {
                 CopyResult(summary);
             }
         }
 
-        private static IEnumerable<Summary> RunAll()
-        {
-            var switcher = new BenchmarkSwitcher(typeof(Program).Assembly);
-            var summaries = switcher.RunAll();
-            return summaries;
-        }
+        private static IEnumerable<Summary> RunAll() => BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).RunAll();
 
-        private static IEnumerable<Summary> RunSingle<T>()
-        {
-            var summaries = new[] { BenchmarkRunner.Run<T>() };
-            return summaries;
-        }
+        private static IEnumerable<Summary> RunSingle<T>() => new[] { BenchmarkRunner.Run<T>() };
 
         private static void CopyResult(Summary summary)
         {
