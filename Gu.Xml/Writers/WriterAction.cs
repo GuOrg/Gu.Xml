@@ -5,11 +5,11 @@
     using System.IO;
     using System.Reflection;
 
-    public static class DefaultWriterActions
+    public static class WriterAction
     {
         private static readonly TextWriterActions TextWriterActions = new TextWriterActions();
 
-        static DefaultWriterActions()
+        static WriterAction()
         {
             TextWriterActions.RegisterClass<string>((writer, value) => writer.Write(value));
             TextWriterActions.RegisterStruct<bool>((writer, value) => writer.Write(value ? "true" : "false"));
