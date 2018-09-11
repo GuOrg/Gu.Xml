@@ -14,7 +14,7 @@
             using (var stringWriter = new StringWriter(sb))
             {
                 var actions = new CastActions<StringWriter>();
-                actions.Register<int>((writer, value) => writer.Write(value));
+                actions.RegisterStruct<int>((writer, value) => writer.Write(value));
                 Assert.AreEqual(true, actions.TryGet(typeof(int), out var action));
                 action.Raw<int>().Invoke(stringWriter, 1);
                 Assert.AreEqual("1", sb.ToString());
@@ -28,7 +28,7 @@
             using (var stringWriter = new StringWriter(sb))
             {
                 var actions = new CastActions<StringWriter>();
-                actions.Register<int>((writer, value) => writer.Write(value));
+                actions.RegisterStruct<int>((writer, value) => writer.Write(value));
                 Assert.AreEqual(true, actions.TryGet(typeof(int), out var action));
                 action.Boxed().Invoke(stringWriter, (IFormattable)1);
                 Assert.AreEqual("1", sb.ToString());
@@ -42,7 +42,7 @@
             using (var stringWriter = new StringWriter(sb))
             {
                 var actions = new CastActions<StringWriter>();
-                actions.Register<int>((writer, value) => writer.Write(value));
+                actions.RegisterStruct<int>((writer, value) => writer.Write(value));
                 Assert.AreEqual(true, actions.TryGet(typeof(int), out var action));
                 action.Boxed().Invoke(stringWriter, (object)1);
                 Assert.AreEqual("1", sb.ToString());
@@ -56,7 +56,7 @@
             using (var stringWriter = new StringWriter(sb))
             {
                 var actions = new CastActions<StringWriter>();
-                actions.Register<int>((writer, value) => writer.Write(value));
+                actions.RegisterStruct<int>((writer, value) => writer.Write(value));
                 Assert.AreEqual(true, actions.TryGet(typeof(int?), out var action));
                 action.Raw<int?>().Invoke(stringWriter, (int?)1);
                 Assert.AreEqual("1", sb.ToString());
@@ -70,7 +70,7 @@
             using (var stringWriter = new StringWriter(sb))
             {
                 var actions = new CastActions<StringWriter>();
-                actions.Register<int>((writer, value) => writer.Write(value));
+                actions.RegisterStruct<int>((writer, value) => writer.Write(value));
                 Assert.AreEqual(true, actions.TryGet(typeof(int?), out var action));
                 action.Boxed().Invoke(stringWriter, (int?)1);
                 Assert.AreEqual("1", sb.ToString());

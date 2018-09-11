@@ -6,7 +6,7 @@
     /// <summary>
     /// A cache of <see cref="CastAction{TextWriter}"/>
     /// </summary>
-    public class SimpleActions : CastActions<TextWriter>
+    public class TextWriterActions : CastActions<TextWriter>
     {
         public void RegisterEnum<T>()
             where T : struct, Enum

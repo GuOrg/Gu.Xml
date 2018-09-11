@@ -16,7 +16,7 @@
             this.Cache[typeof(T)] = CastAction<TWriter>.Create(action);
         }
 
-        public void Register<T>(Action<TWriter, T> action)
+        public void RegisterStruct<T>(Action<TWriter, T> action)
             where T : struct
         {
             this.Cache[typeof(T)] = CastAction<TWriter>.Create(action);

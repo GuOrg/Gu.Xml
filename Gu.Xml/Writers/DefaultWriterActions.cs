@@ -7,25 +7,25 @@
 
     public static class DefaultWriterActions
     {
-        private static readonly SimpleActions Actions = new SimpleActions();
+        private static readonly TextWriterActions TextWriterActions = new TextWriterActions();
 
         static DefaultWriterActions()
         {
-            Actions.RegisterClass<string>((writer, value) => writer.Write(value));
-            Actions.Register<bool>((writer, value) => writer.Write(value ? "true" : "false"));
-            Actions.Register<byte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
-            Actions.Register<char>((writer, value) => writer.Write((int)value));
-            Actions.Register<decimal>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
-            Actions.Register<double>((writer, value) => writer.Write(ToString(value)));
-            Actions.Register<float>((writer, value) => writer.Write(ToString(value)));
-            Actions.Register<Guid>((writer, value) => writer.Write(value.ToString()));
-            Actions.Register<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
-            Actions.Register<long>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
-            Actions.Register<short>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
-            Actions.Register<sbyte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
-            Actions.Register<ulong>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
-            Actions.Register<uint>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
-            Actions.Register<ushort>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
+            TextWriterActions.RegisterClass<string>((writer, value) => writer.Write(value));
+            TextWriterActions.RegisterStruct<bool>((writer, value) => writer.Write(value ? "true" : "false"));
+            TextWriterActions.RegisterStruct<byte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
+            TextWriterActions.RegisterStruct<char>((writer, value) => writer.Write((int)value));
+            TextWriterActions.RegisterStruct<decimal>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
+            TextWriterActions.RegisterStruct<double>((writer, value) => writer.Write(ToString(value)));
+            TextWriterActions.RegisterStruct<float>((writer, value) => writer.Write(ToString(value)));
+            TextWriterActions.RegisterStruct<Guid>((writer, value) => writer.Write(value.ToString()));
+            TextWriterActions.RegisterStruct<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
+            TextWriterActions.RegisterStruct<long>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
+            TextWriterActions.RegisterStruct<short>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
+            TextWriterActions.RegisterStruct<sbyte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
+            TextWriterActions.RegisterStruct<ulong>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
+            TextWriterActions.RegisterStruct<uint>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
+            TextWriterActions.RegisterStruct<ushort>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
         }
 
         /// <summary>
@@ -40,7 +40,7 @@
         /// <returns>True if a writer was found for <paramref name="type"/></returns>
         public static bool TryGetSimple<TMember>(Type type, out Action<TextWriter, TMember> writer)
         {
-            if (Actions.TryGet(type, out var castAction))
+            if (TextWriterActions.TryGet(type, out var castAction))
             {
                 if (type == typeof(TMember))
                 {
@@ -59,9 +59,9 @@
 
             if (type.IsEnum)
             {
-                _ = typeof(SimpleActions).GetMethod(nameof(SimpleActions.RegisterEnum), BindingFlags.Public | BindingFlags.Instance)
+                _ = typeof(TextWriterActions).GetMethod(nameof(Gu.Xml.TextWriterActions.RegisterEnum), BindingFlags.Public | BindingFlags.Instance)
                                              .MakeGenericMethod(type)
-                                             .Invoke(Actions, null);
+                                             .Invoke(TextWriterActions, null);
                 return TryGetSimple(typeof(TMember), out writer);
             }
 
