@@ -13,7 +13,13 @@
 
         public bool TryGetSimple<TMember>(TMember value, out Action<TextWriter, TMember> writer)
         {
-            return this.TryGetSimple(value?.GetType() ?? typeof(TMember), out writer);
+            if (value == null)
+            {
+                writer = null;
+                return false;
+            }
+
+            return this.TryGetSimple(value.GetType(), out writer);
         }
 
         public bool TryGetCollection<T>(T value, out Action<XmlWriter, T> writer)
