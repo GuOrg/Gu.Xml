@@ -9,6 +9,9 @@
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../Gu.Xml.snk</AssemblyOriginatorKeyFile>
+    <Version>0.1.0</Version>
+    <PackageProjectUrl>https://github.com/GuOrg/Gu.Xml</PackageProjectUrl>
+    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
   </PropertyGroup>
 
   <Import Project="..\.paket\Paket.Restore.targets" />

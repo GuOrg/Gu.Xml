@@ -97,7 +97,7 @@ namespace Gu.Xml.Tests
                 // ReSharper disable once UnusedMember.Global
                 // ReSharper disable UnusedMemberInSuper.Global
                 int Value { get; set; }
-                // ReSharper restore UnusedMemberInSuper.Global
+                //// ReSharper restore UnusedMemberInSuper.Global
             }
 
             public class ExplicitInterfaceWithDataMemberAttribute : IValue
