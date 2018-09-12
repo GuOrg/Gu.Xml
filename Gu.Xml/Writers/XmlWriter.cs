@@ -112,39 +112,50 @@
                     this.TextWriter.WriteMany("</", name, ">");
                 }
             }
-            else if (DefaultWriterActions.TryGetWriteMap(value, out var complex))
+            else if (DefaultWriterActions.TryGetWriteMap(value, out var map))
             {
-                this.WriteIndentation();
-                this.TextWriter.Write("<");
-                this.TextWriter.Write(name);
-                foreach (var castAction in complex.Attributes)
-                {
-                    castAction.Invoke(this, value);
-                }
-
-                this.pendingCloseStartElement = true;
-
-                this.indentLevel++;
-                foreach (var elementWriter in complex.Elements)
-                {
-                    elementWriter.Write(this, value);
-                }
-
-                this.indentLevel--;
-                if (this.pendingCloseStartElement)
-                {
-                    this.TextWriter.Write(" />");
-                    this.pendingCloseStartElement = false;
-                }
-                else
-                {
-                    this.WriteIndentation();
-                    this.TextWriter.WriteMany("</", name, ">");
-                }
+                this.WriteElement(name, value, map);
             }
             else
             {
                 throw new InvalidOperationException($"Failed getting a value writer for {value}");
+            }
+        }
+
+        internal void WriteElement<T>(string name, T value, WriteMap map)
+        {
+            if (this.pendingCloseStartElement)
+            {
+                this.TextWriter.WriteLine(">");
+                this.pendingCloseStartElement = false;
+            }
+
+            this.WriteIndentation();
+            this.TextWriter.Write("<");
+            this.TextWriter.Write(name);
+            foreach (var castAction in map.Attributes)
+            {
+                castAction.Invoke(this, value);
+            }
+
+            this.pendingCloseStartElement = true;
+
+            this.indentLevel++;
+            foreach (var elementWriter in map.Elements)
+            {
+                elementWriter.Write(this, value);
+            }
+
+            this.indentLevel--;
+            if (this.pendingCloseStartElement)
+            {
+                this.TextWriter.Write(" />");
+                this.pendingCloseStartElement = false;
+            }
+            else
+            {
+                this.WriteIndentation();
+                this.TextWriter.WriteMany("</", name, ">");
             }
         }
 
