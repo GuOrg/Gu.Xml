@@ -17,7 +17,6 @@
             {
                 var value = new int[0];
                 var actual = Xml.Serialize(value);
-                Console.WriteLine(actual);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<ArrayOfInt32 />";
                 Assert.AreEqual(expected, actual);

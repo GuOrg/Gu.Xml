@@ -1,7 +1,9 @@
-﻿namespace Gu.Xml.Tests
+﻿// ReSharper disable UnusedMember.Global
+namespace Gu.Xml.Tests
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.IO;
     using System.Linq;
@@ -9,13 +11,30 @@
 
     public class Dump
     {
-        public static void Xml(string text)
+        public static void XmlAsCode(string text)
         {
-            using (var reader = new StringReader(text))
+            var lines = Lines().ToArray();
+            for (var i = 0; i < lines.Length; i++)
             {
-                while (reader.ReadLine() is string line)
+                Console.Write($"\"{lines[0].Replace("\"", "\\\"")}\"");
+                if (i == lines.Length - 1)
                 {
-                    Console.WriteLine($"\"{line.Replace("\"", "\\\"")}\"" + " + Environment.NewLine +");
+                    Console.WriteLine(";");
+                }
+                else
+                {
+                    Console.WriteLine(" + Environment.NewLine +");
+                }
+            }
+
+            IEnumerable<string> Lines()
+            {
+                using (var reader = new StringReader(text))
+                {
+                    while (reader.ReadLine() is string line)
+                    {
+                        yield return line;
+                    }
                 }
             }
         }
