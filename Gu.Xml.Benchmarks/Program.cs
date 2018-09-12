@@ -1,8 +1,9 @@
 ﻿// ReSharper disable UnusedMember.Local
+// ReSharper disable HeuristicUnreachableCode
+#pragma warning disable 162
 namespace Gu.Xml.Benchmarks
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using BenchmarkDotNet.Reports;
@@ -12,15 +13,18 @@ namespace Gu.Xml.Benchmarks
     {
         public static void Main()
         {
-            foreach (var summary in RunAll())
+            if (true)
             {
-                CopyResult(summary);
+                CopyResult(BenchmarkRunner.Run<Collection>());
+            }
+            else
+            {
+                foreach (var summary in BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).RunAll())
+                {
+                    CopyResult(summary);
+                }
             }
         }
-
-        private static IEnumerable<Summary> RunAll() => BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).RunAll();
-
-        private static IEnumerable<Summary> RunSingle<T>() => new[] { BenchmarkRunner.Run<T>() };
 
         private static void CopyResult(Summary summary)
         {
