@@ -109,14 +109,11 @@
 
         private static bool TryGetElementName(MemberInfo member, out string name)
         {
-            name = null;
-            if (member.TryGetCustomAttribute(out System.Xml.Serialization.XmlElementAttribute xmlAttribute))
+            if (TryGetNameFromAttribute<System.Xml.Serialization.XmlElementAttribute>(member, x => x.ElementName, out name) ||
+                TryGetNameFromAttribute<System.Xml.Serialization.SoapElementAttribute>(member, x => x.ElementName, out name) ||
+                TryGetNameFromAttribute<System.Xml.Serialization.XmlArrayAttribute>(member, x => x.ElementName, out name))
             {
-                name = xmlAttribute.ElementName ?? string.Empty;
-            }
-            else if (member.TryGetCustomAttribute(out System.Xml.Serialization.SoapElementAttribute soapAttribute))
-            {
-                name = soapAttribute.ElementName ?? string.Empty;
+                return true;
             }
 
             if (name == null)
@@ -139,6 +136,18 @@
             }
 
             return true;
+        }
+
+        private static bool TryGetNameFromAttribute<TAttribute>(MemberInfo member, Func<TAttribute, string> getName, out string name)
+            where TAttribute : Attribute
+        {
+            name = null;
+            if (member.TryGetCustomAttribute(out TAttribute attribute))
+            {
+                name = getName(attribute);
+            }
+
+            return !string.IsNullOrEmpty(name);
         }
     }
 }

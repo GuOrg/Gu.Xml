@@ -31,6 +31,18 @@
             writer.Write(this.cache.GetOrAdd(value, x => this.ToString(x)));
         }
 
+        private static bool TryGetNameFromAttribute<TAttribute>(MemberInfo member, Func<TAttribute, string> getName, out string name)
+            where TAttribute : Attribute
+        {
+            name = null;
+            if (member.TryGetCustomAttribute(out TAttribute attribute))
+            {
+                name = getName(attribute);
+            }
+
+            return !string.IsNullOrEmpty(name);
+        }
+
         private string ToString(T value)
         {
             if (typeof(T).GetMember(value.ToString()).TryFirst(out var member))
@@ -43,18 +55,6 @@
             }
 
             return Enum.Format(typeof(T), value, this.format).Replace(",", string.Empty);
-        }
-
-        private static bool TryGetNameFromAttribute<T>(MemberInfo type, Func<T, string> getName, out string name)
-            where T : Attribute
-        {
-            name = null;
-            if (type.TryGetCustomAttribute(out T attribute))
-            {
-                name = getName(attribute);
-            }
-
-            return !string.IsNullOrEmpty(name);
         }
     }
 }

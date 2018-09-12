@@ -29,6 +29,7 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new FieldWithXmlAttributeAttributeExplicitName { Value = 1 }),
                 new TestCaseData(new With<WithXmlEnumAttribute> { Value = WithXmlEnumAttribute.One }),
                 new TestCaseData(new With<WithXmlEnumAttribute> { Value = WithXmlEnumAttribute.Two }),
+                new TestCaseData(new WithXmlArrayAttribute { Ints = new[] { 1, 2, 3 } }),
             };
 
             [TestCaseSource(nameof(Values))]
@@ -93,6 +94,13 @@ namespace Gu.Xml.Tests
             {
                 [XmlElement("Name")]
                 public int Value = 1;
+            }
+
+            public class WithXmlArrayAttribute
+            {
+                [XmlArray(ElementName = "Numbers")]
+                [XmlArrayItem(ElementName = "Int32")]
+                public int[] Ints { get; set; }
             }
 
             public interface IValue

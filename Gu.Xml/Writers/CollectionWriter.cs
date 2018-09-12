@@ -95,8 +95,7 @@
         {
             foreach (var item in enumerable)
             {
-                var name = item == null ? "NULL" : RootName.Get(item.GetType());
-                writer.WriteElement(name, item);
+                writer.WriteElement(item == null ? "NULL" : RootName.Get(item.GetType()), item);
                 writer.WriteLine();
             }
         }
