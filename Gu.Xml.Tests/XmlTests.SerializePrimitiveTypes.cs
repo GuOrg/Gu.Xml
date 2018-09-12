@@ -44,20 +44,6 @@ namespace Gu.Xml.Tests
                 Assert.AreEqual(expected, actual);
             }
 
-            [TestCase(sbyte.MinValue)]
-            [TestCase(-1)]
-            [TestCase(-0)]
-            [TestCase(0)]
-            [TestCase(1)]
-            [TestCase(sbyte.MaxValue)]
-            public void SByte(sbyte value)
-            {
-                var with = new WithMutable<sbyte> { Value = value };
-                var actual = Xml.Serialize(with);
-                var expected = Reference.XmlSerializer(with);
-                Assert.AreEqual(expected, actual);
-            }
-
             [TestCase(true)]
             [TestCase(false)]
             public void Boolean(bool value)
@@ -272,6 +258,29 @@ namespace Gu.Xml.Tests
             public void Int64(long value)
             {
                 var with = new WithMutable<long> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.XmlSerializer(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void Object()
+            {
+                var with = new WithMutable<object> { Value = new object() };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.XmlSerializer(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(sbyte.MinValue)]
+            [TestCase(-1)]
+            [TestCase(-0)]
+            [TestCase(0)]
+            [TestCase(1)]
+            [TestCase(sbyte.MaxValue)]
+            public void SByte(sbyte value)
+            {
+                var with = new WithMutable<sbyte> { Value = value };
                 var actual = Xml.Serialize(with);
                 var expected = Reference.XmlSerializer(with);
                 Assert.AreEqual(expected, actual);

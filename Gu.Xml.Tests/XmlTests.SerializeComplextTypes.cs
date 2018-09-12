@@ -18,6 +18,7 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new WithTwoPublicMutableProperties { Value1 = 1, Value2 = 2 }),
                 new TestCaseData(new WithTwoPublicMutableBoxedProperties { Value1 = 1, Value2 = 2 }),
                 new TestCaseData(new WithTwoPublicMutableBoxedProperties { Value1 = 1, Value2 = 2.1 }),
+                new TestCaseData(new WithTwoPublicMutableBoxedProperties { Value1 = new object(), Value2 = 2.1 }),
                 new TestCaseData(new WithFieldBeforeProperty { Value1 = 1, Value2 = 2 }),
                 new TestCaseData(new WithPropertyBeforeField { Value1 = 1, Value2 = 2 }),
                 new TestCaseData(new ConcreteWithProperties { Value1 = 1, Value2 = 2, Value3 = 3, Value4 = 4 }),
