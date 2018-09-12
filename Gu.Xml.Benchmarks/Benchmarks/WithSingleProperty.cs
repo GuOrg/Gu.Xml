@@ -8,7 +8,7 @@
 
     public class WithSingleProperty
     {
-        private static readonly WithInt Value = new WithInt { Value = 1 };
+        private static readonly WithInt Value = new WithInt { Number = 1 };
         private static readonly XmlSerializer XmlSerializer = new XmlSerializer(Value.GetType());
         private static readonly StringBuilder StringBuilder = new StringBuilder(Xml.Serialize(Value));
 
@@ -41,7 +41,7 @@
 
         public class WithInt
         {
-            public int Value { get; set; }
+            public int Number { get; set; }
         }
     }
 }

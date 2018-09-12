@@ -33,6 +33,7 @@
         {
             if (TryGetAttributeName(property, out var name))
             {
+                // ReSharper disable once PossibleNullReferenceException
                 writer = (AttributeWriter)typeof(AttributeWriter)
                                         .GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
                                         .MakeGenericMethod(property.ReflectedType, property.PropertyType)
@@ -48,6 +49,7 @@
         {
             if (TryGetAttributeName(field, out var name))
             {
+                // ReSharper disable once PossibleNullReferenceException
                 writer = (AttributeWriter)typeof(AttributeWriter)
                                           .GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
                                           .MakeGenericMethod(field.ReflectedType, field.FieldType)

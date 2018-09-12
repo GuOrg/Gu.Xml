@@ -3,7 +3,6 @@
     using System;
     using System.Globalization;
     using System.IO;
-    using Gu.Xml.Internals;
 
     /// <summary>
     /// Wraps a <see cref="TextWriter"/> and exposes methods for writing XML.

@@ -9,7 +9,7 @@
 
     public class WithSingleEnumProperty
     {
-        private static readonly WithCultureTypes Value = new WithCultureTypes { Value = CultureTypes.AllCultures };
+        private static readonly WithCultureTypes Value = new WithCultureTypes { CultureTypes = CultureTypes.AllCultures };
         private static readonly XmlSerializer XmlSerializer = new XmlSerializer(Value.GetType());
         private static readonly StringBuilder StringBuilder = new StringBuilder(Xml.Serialize(Value));
 
@@ -42,7 +42,7 @@
 
         public class WithCultureTypes
         {
-            public CultureTypes Value { get; set; }
+            public CultureTypes CultureTypes { get; set; }
         }
     }
 }

@@ -22,6 +22,7 @@
                 !IsIgnoredCalculated() &&
                 TryGetElementName(property, out var name))
             {
+                // ReSharper disable once PossibleNullReferenceException
                 writer = (ElementWriter)typeof(ElementWriter)
                                                 .GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
                                                 .MakeGenericMethod(property.ReflectedType, property.PropertyType)
@@ -79,6 +80,7 @@
                 !field.IsFamily &&
                 TryGetElementName(field, out var name))
             {
+                // ReSharper disable once PossibleNullReferenceException
                 writer = (ElementWriter)typeof(ElementWriter)
                                         .GetMethod(nameof(CreateWriter), BindingFlags.Static | BindingFlags.NonPublic)
                                         .MakeGenericMethod(field.ReflectedType, field.FieldType)

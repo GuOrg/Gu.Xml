@@ -1,4 +1,4 @@
-﻿namespace Gu.Xml.Internals
+﻿namespace Gu.Xml
 {
     using System;
     using System.Globalization;
