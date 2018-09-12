@@ -21,7 +21,7 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new PropertyWithXmlElementAttributeExplicitName { Value = 1 }),
                 new TestCaseData(new PropertyWithXmlAttributeAttribute { Value = 1 }),
                 new TestCaseData(new PropertyWithXmlAttributeAttributeExplicitName { Value = 1 }),
-                new TestCaseData(new ExplicitInterfaceWithXmlElementAttribute()),
+                ////new TestCaseData(new ExplicitInterfaceWithXmlElementAttribute()),
                 new TestCaseData(new FieldWithXmlIgnoreAttribute { Value = 1 }),
                 new TestCaseData(new FieldWithXmlElementAttribute { Value = 1 }),
                 new TestCaseData(new FieldWithXmlElementAttributeExplicitName { Value = 1 }),

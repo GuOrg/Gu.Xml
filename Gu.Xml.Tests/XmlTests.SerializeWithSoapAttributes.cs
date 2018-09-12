@@ -22,7 +22,7 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new PropertyWithSoapElementAttributeExplicitName { Value = 1 }),
                 new TestCaseData(new PropertyWithSoapAttributeAttribute { Value = 1 }),
                 new TestCaseData(new PropertyWithSoapAttributeAttributeExplicitName { Value = 1 }),
-                new TestCaseData(new ExplicitInterfaceWithSoapElementAttribute()),
+                ////new TestCaseData(new ExplicitInterfaceWithSoapElementAttribute()),
                 new TestCaseData(new FieldWithSoapIgnoreAttribute { Value = 1 }),
                 new TestCaseData(new FieldWithSoapElementAttribute { Value = 1 }),
                 new TestCaseData(new FieldWithSoapElementAttributeExplicitName { Value = 1 }),

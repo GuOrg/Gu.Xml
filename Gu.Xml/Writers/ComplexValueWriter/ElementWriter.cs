@@ -17,8 +17,7 @@
             if (property.GetMethod is MethodInfo getMethod &&
                 property.GetIndexParameters().Length == 0 &&
                 !getMethod.IsStatic &&
-                !getMethod.IsPrivate &&
-                !getMethod.IsFamily &&
+                !IsIgnoredAccessibility() &&
                 !IsIgnoredCalculated() &&
                 TryGetElementName(property, out var name))
             {
@@ -32,6 +31,20 @@
 
             writer = null;
             return false;
+
+            bool IsIgnoredAccessibility()
+            {
+                if (getMethod.IsPrivate ||
+                    getMethod.IsFamily)
+                {
+                    return !property.TryGetCustomAttribute<System.Xml.Serialization.XmlElementAttribute>(out _) &&
+                           !property.TryGetCustomAttribute<System.Xml.Serialization.XmlArrayAttribute>(out _) &&
+                           !property.TryGetCustomAttribute<System.Xml.Serialization.SoapElementAttribute>(out _) &&
+                           !property.TryGetCustomAttribute<System.Runtime.Serialization.DataMemberAttribute>(out _);
+                }
+
+                return false;
+            }
 
             bool IsIgnoredCalculated()
             {
@@ -111,7 +124,8 @@
         {
             if (TryGetNameFromAttribute<System.Xml.Serialization.XmlElementAttribute>(member, x => x.ElementName, out name) ||
                 TryGetNameFromAttribute<System.Xml.Serialization.SoapElementAttribute>(member, x => x.ElementName, out name) ||
-                TryGetNameFromAttribute<System.Xml.Serialization.XmlArrayAttribute>(member, x => x.ElementName, out name))
+                TryGetNameFromAttribute<System.Xml.Serialization.XmlArrayAttribute>(member, x => x.ElementName, out name) ||
+                TryGetNameFromAttribute<System.Runtime.Serialization.DataMemberAttribute>(member, x => x.Name, out name))
             {
                 return true;
             }
@@ -129,13 +143,17 @@
 
                 name = member.Name;
             }
-
-            if (name == string.Empty)
+            else if (name == string.Empty)
             {
                 name = member.Name;
             }
 
-            return true;
+            if (name.TryLastIndexOf('.', out var i))
+            {
+                name = name.Substring(i + 1);
+            }
+
+            return name.Length > 0;
         }
 
         private static bool TryGetNameFromAttribute<TAttribute>(MemberInfo member, Func<TAttribute, string> getName, out string name)

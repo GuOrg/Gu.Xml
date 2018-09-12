@@ -70,24 +70,28 @@ namespace Gu.Xml.Tests
                 public int Value { get; set; } = 1;
             }
 
+            [DataContract]
             public class PropertyWithDataMemberAttribute
             {
                 [DataMember]
                 public int Value { get; set; }
             }
 
+            [DataContract]
             public class PropertyWithDataMemberAttributeExplicitName
             {
                 [DataMember(Name = "Name")]
                 public int Value { get; set; }
             }
 
+            [DataContract]
             public class FieldWithDataMemberAttribute
             {
                 [DataMember]
                 public int Value = 1;
             }
 
+            [DataContract]
             public class FieldWithDataMemberAttributeExplicitName
             {
                 [DataMember(Name = "Name")]
@@ -98,30 +102,36 @@ namespace Gu.Xml.Tests
             {
                 // ReSharper disable once UnusedMember.Global
                 // ReSharper disable UnusedMemberInSuper.Global
+                [DataMember(Name = "Value")]
                 int Value { get; set; }
                 //// ReSharper restore UnusedMemberInSuper.Global
             }
 
+            [DataContract]
             public class ExplicitInterfaceWithDataMemberAttribute : IValue
             {
-                [DataMember]
+                [DataMember(Name = "Value")]
                 int IValue.Value { get; set; }
             }
 
+            [DataContract]
             public class PropertyWithIgnoreDataMemberAttribute
             {
                 [IgnoreDataMember]
                 public int Value { get; set; }
             }
 
+            [DataContract]
             public class FieldWithIgnoreDataMemberAttribute
             {
                 [IgnoreDataMember]
                 public int Value { get; set; }
             }
 
+            [DataContract]
             public class WithWithEnumMemberAttribute
             {
+                [DataMember]
                 public WithEnumMemberAttribute Value { get; set; }
             }
 
