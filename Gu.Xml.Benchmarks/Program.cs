@@ -13,7 +13,7 @@ namespace Gu.Xml.Benchmarks
     {
         public static void Main()
         {
-            if (true)
+            if (false)
             {
                 CopyResult(BenchmarkRunner.Run<Collection>());
             }
