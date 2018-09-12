@@ -10,6 +10,27 @@
     {
         private readonly ConcurrentDictionary<Type, object> actions = new ConcurrentDictionary<Type, object>();
 
+        internal bool IsSimple(Type type, out CastAction<TextWriter> castAction)
+        {
+            if (this.actions.TryGetValue(type, out var action) && action is CastAction<TextWriter> match)
+            {
+                castAction = match;
+                return true;
+            }
+
+            if (type.IsEnum)
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                _ = typeof(XmlWriterActions).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
+                                            .MakeGenericMethod(type)
+                                            .Invoke(this, null);
+                return this.IsSimple(type, out castAction);
+            }
+
+            castAction = null;
+            return false;
+        }
+
         internal bool TryGetSimple<TMember>(TMember value, out Action<TextWriter, TMember> writer)
         {
             if (TryGetType(out var type))
@@ -65,13 +86,18 @@
         internal bool TryGetCollection<T>(T value, out Action<XmlWriter, T> writer)
         {
             if (value is IEnumerable &&
-                this.actions.GetOrAdd(value.GetType(), x => CollectionWriter.Create(x)) is CastAction<XmlWriter> castAction)
+                this.actions.GetOrAdd(value.GetType(), x => Create(x)) is CastAction<XmlWriter> castAction)
             {
                 return castAction.TryGet(out writer);
             }
 
             writer = null;
             return false;
+
+            object Create(Type x)
+            {
+                return CollectionWriter.Create(x, this);
+            }
         }
 
         internal bool TryGetWriteMap<T>(T value, out WriteMap map)

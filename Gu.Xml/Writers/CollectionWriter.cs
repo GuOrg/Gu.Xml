@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.IO;
     using System.Reflection;
 
     public static class CollectionWriter
@@ -10,7 +11,7 @@
         private static readonly CastAction<XmlWriter> EnumerableItemWriter = CastAction<XmlWriter>.Create<IEnumerable>(WriteItems);
         private static readonly CastAction<XmlWriter> DictionaryItemWriter = CastAction<XmlWriter>.Create<IDictionary>(WriteItems);
 
-        internal static CastAction<XmlWriter> Create(Type type)
+        internal static CastAction<XmlWriter> Create(Type type, XmlWriterActions actions)
         {
             if (typeof(IDictionary).IsAssignableFrom(type))
             {
@@ -50,10 +51,19 @@
 
             bool TryCreateGenericEnumerableWriter(out CastAction<XmlWriter> result)
             {
-                if (type.IsGenericType &&
-                    type.GetInterface("IEnumerable`1") is Type enumerableType &&
+                if (type.IsGenericEnumerable(out var enumerableType) &&
                     enumerableType.GenericTypeArguments.TrySingle(out var elementType))
                 {
+                    if (type.IsSealed &&
+                        actions.IsSimple(elementType, out var castAction))
+                    {
+                        // ReSharper disable once PossibleNullReferenceException
+                        result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateCachingGenericSimpleEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                                                                                .MakeGenericMethod(type, elementType)
+                                                                                .Invoke(null, new object[] { RootName.Get(elementType), castAction });
+                        return true;
+                    }
+
                     // ReSharper disable once PossibleNullReferenceException
                     result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateGenericEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                             .MakeGenericMethod(type, elementType)
@@ -106,6 +116,47 @@
                 {
                     writer.WriteElement(RootName.Get(item?.GetType() ?? typeof(TValue)), item);
                     writer.WriteLine();
+                }
+            });
+        }
+
+        /// <summary>
+        /// This is an optimization for collections of sealed simple types.
+        /// </summary>
+        /// <typeparam name="TEnumerable"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <returns></returns>
+        private static CastAction<XmlWriter> CreateCachingGenericSimpleEnumerableWriter<TEnumerable, TValue>(string elementName, CastAction<TextWriter> castAction)
+            where TEnumerable : IEnumerable<TValue>
+        {
+            if (!castAction.TryGet<TValue>(out var cachedWrite))
+            {
+                throw new InvalidOperationException("Could not get write action. Bug in Gu.Xml.");
+            }
+
+            return CastAction<XmlWriter>.Create<TEnumerable>((writer, enumerable) =>
+            {
+                var textWriter = writer.TextWriter;
+                using (var enumerator = enumerable.GetEnumerator())
+                {
+                    if (enumerator.MoveNext())
+                    {
+                        writer.ClosePendingStart();
+                        writer.WriteIndentation();
+                        textWriter.WriteMany("<", elementName, ">");
+                        cachedWrite(textWriter, enumerator.Current);
+                        textWriter.WriteMany("</", elementName, ">");
+                        textWriter.WriteLine();
+                    }
+
+                    while (enumerator.MoveNext())
+                    {
+                        writer.WriteIndentation();
+                        textWriter.WriteMany("<", elementName, ">");
+                        cachedWrite(textWriter, enumerator.Current);
+                        textWriter.WriteMany("</", elementName, ">");
+                        textWriter.WriteLine();
+                    }
                 }
             });
         }

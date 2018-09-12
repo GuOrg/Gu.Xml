@@ -162,6 +162,7 @@ namespace Gu.Xml
                     {
                         if (predicate(source[j]))
                         {
+                            result = default(T);
                             return false;
                         }
                     }
