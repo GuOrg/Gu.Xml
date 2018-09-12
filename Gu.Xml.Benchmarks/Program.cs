@@ -15,7 +15,7 @@ namespace Gu.Xml.Benchmarks
         {
             if (false)
             {
-                CopyResult(BenchmarkRunner.Run<Collection>());
+                CopyResult(BenchmarkRunner.Run<CollectionOfComplexTypes>());
             }
             else
             {
