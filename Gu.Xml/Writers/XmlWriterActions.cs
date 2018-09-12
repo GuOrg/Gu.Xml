@@ -97,7 +97,14 @@
             this.actions[typeof(T)] = CastAction<TextWriter>.Create(action);
             if (!this.actions.ContainsKey(typeof(T?)))
             {
-                this.actions[typeof(T?)] = CastAction<TextWriter>.Create(new Action<TextWriter, T?>((writer, value) => action(writer, value.Value)));
+                this.actions[typeof(T?)] = CastAction<TextWriter>.Create(new Action<TextWriter, T?>((writer, value) =>
+                {
+                    if (value.HasValue)
+                    {
+                        // Using GetValueOrDefault() here as it is a little faster.
+                        action(writer, value.GetValueOrDefault());
+                    }
+                }));
             }
 
             return this;
