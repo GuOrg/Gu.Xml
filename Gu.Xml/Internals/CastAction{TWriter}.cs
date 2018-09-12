@@ -59,7 +59,8 @@
             }
             else
             {
-                throw new InvalidOperationException($"Calling invoke on a cast action for {this.raw.GetType()} with a value of type {typeof(TValue)} is illegal. Bug in Gu.Xml");
+                throw new InvalidOperationException($"Calling invoke on a cast action with wrong argument types. Expected <{typeof(TWriter).FullName}, {this.raw.GetType().GenericTypeArguments[1].FullName}> was <{typeof(TWriter).FullName}, {typeof(TValue).FullName}>.\r\n" +
+                                                    $"Bug in Gu.Xml.");
             }
         }
     }
