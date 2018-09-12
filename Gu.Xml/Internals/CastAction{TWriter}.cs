@@ -50,5 +50,17 @@
             action = null;
             return false;
         }
+
+        internal void Invoke<TValue>(TWriter writer, TValue value)
+        {
+            if (this.TryGet<TValue>(out var action))
+            {
+                action.Invoke(writer, value);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Calling invoke on a cast action for {this.raw.GetType()} with a value of type {typeof(TValue)} is illegal. Bug in Gu.Xml");
+            }
+        }
     }
 }

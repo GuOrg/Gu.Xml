@@ -5,10 +5,14 @@
     using System.IO;
 
     /// <summary>
-    /// Wraps a <see cref="TextWriter"/> and exposes methods for writing XML.
+    /// Wraps a <see cref="System.IO.TextWriter"/> and exposes methods for writing XML.
     /// </summary>
     public sealed class XmlWriter : IDisposable
     {
+#pragma warning disable SA1401 // Fields should be private cheating here, maybe we can clean it up later.
+        internal readonly TextWriter TextWriter;
+#pragma warning restore SA1401 // Fields should be private
+
         private static readonly XmlWriterActions DefaultWriterActions = new XmlWriterActions()
             .SimpleClass<string>((writer, value) => writer.Write(value))
             .SimpleStruct<bool>((writer, value) => writer.Write(value ? "true" : "false"))
@@ -31,18 +35,16 @@
             .SimpleStruct<UIntPtr>((writer, value) => writer.Write(value.ToString()))
             .SimpleStruct<ushort>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
 
-        private readonly TextWriter writer;
-
         private int indentLevel;
         private bool pendingCloseStartElement;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlWriter"/> class.
         /// </summary>
-        /// <param name="writer">The inner <see cref="TextWriter"/>.</param>
+        /// <param name="writer">The inner <see cref="System.IO.TextWriter"/>.</param>
         public XmlWriter(TextWriter writer)
         {
-            this.writer = writer;
+            this.TextWriter = writer;
         }
 
         /// <summary>
@@ -50,7 +52,7 @@
         /// </summary>
         public void WriteXmlDeclaration()
         {
-            this.writer.WriteLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            this.TextWriter.WriteLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         }
 
         /// <summary>
@@ -78,30 +80,30 @@
             {
                 if (this.pendingCloseStartElement)
                 {
-                    this.writer.WriteLine(">");
+                    this.TextWriter.WriteLine(">");
                     this.pendingCloseStartElement = false;
                 }
 
                 this.WriteIndentation();
-                this.writer.Write("<");
-                this.writer.Write(name);
-                this.writer.Write(">");
-                simple(this.writer, value);
-                this.writer.Write("</");
-                this.writer.Write(name);
-                this.writer.Write(">");
+                this.TextWriter.Write("<");
+                this.TextWriter.Write(name);
+                this.TextWriter.Write(">");
+                simple(this.TextWriter, value);
+                this.TextWriter.Write("</");
+                this.TextWriter.Write(name);
+                this.TextWriter.Write(">");
             }
             else if (DefaultWriterActions.TryGetCollection(value, out var itemWriter))
             {
                 if (this.pendingCloseStartElement)
                 {
-                    this.writer.WriteLine(">");
+                    this.TextWriter.WriteLine(">");
                     this.pendingCloseStartElement = false;
                 }
 
                 this.WriteIndentation();
-                this.writer.Write("<");
-                this.writer.Write(name);
+                this.TextWriter.Write("<");
+                this.TextWriter.Write(name);
                 this.pendingCloseStartElement = true;
 
                 this.indentLevel++;
@@ -110,31 +112,31 @@
 
                 if (this.pendingCloseStartElement)
                 {
-                    this.writer.Write(" />");
+                    this.TextWriter.Write(" />");
                     this.pendingCloseStartElement = false;
                 }
                 else
                 {
                     this.WriteIndentation();
-                    this.writer.Write("</");
-                    this.writer.Write(name);
-                    this.writer.Write(">");
+                    this.TextWriter.Write("</");
+                    this.TextWriter.Write(name);
+                    this.TextWriter.Write(">");
                 }
             }
             else if (DefaultWriterActions.TryGetWriteMap(value, out var complex))
             {
                 if (this.pendingCloseStartElement)
                 {
-                    this.writer.WriteLine(">");
+                    this.TextWriter.WriteLine(">");
                     this.pendingCloseStartElement = false;
                 }
 
                 this.WriteIndentation();
-                this.writer.Write("<");
-                this.writer.Write(name);
-                foreach (var attributeWriter in complex.Attributes)
+                this.TextWriter.Write("<");
+                this.TextWriter.Write(name);
+                foreach (var castAction in complex.Attributes)
                 {
-                    attributeWriter.Write(DefaultWriterActions, this.writer, value);
+                    castAction.Invoke(this, value);
                 }
 
                 this.pendingCloseStartElement = true;
@@ -148,15 +150,15 @@
                 this.indentLevel--;
                 if (this.pendingCloseStartElement)
                 {
-                    this.writer.Write(" />");
+                    this.TextWriter.Write(" />");
                     this.pendingCloseStartElement = false;
                 }
                 else
                 {
                     this.WriteIndentation();
-                    this.writer.Write("</");
-                    this.writer.Write(name);
-                    this.writer.Write(">");
+                    this.TextWriter.Write("</");
+                    this.TextWriter.Write(name);
+                    this.TextWriter.Write(">");
                 }
             }
             else
@@ -165,15 +167,35 @@
             }
         }
 
+        public void Write(string text) => this.TextWriter.Write(text);
+
+        public void Write(string text1, string text2)
+        {
+            this.TextWriter.Write(text1);
+            this.TextWriter.Write(text2);
+        }
+
+        public void Write(string text1, string text2, string text3)
+        {
+            this.TextWriter.Write(text1);
+            this.TextWriter.Write(text2);
+            this.TextWriter.Write(text3);
+        }
+
         public void WriteLine()
         {
-            this.writer.WriteLine();
+            this.TextWriter.WriteLine();
+        }
+
+        public bool TryGetSimple<TValue>(TValue value, out Action<TextWriter, TValue> writer)
+        {
+            return DefaultWriterActions.TryGetSimple(value, out writer);
         }
 
         public void Dispose()
         {
 #pragma warning disable IDISP007 // Don't dispose injected.
-            this.writer.Dispose();
+            this.TextWriter.Dispose();
 #pragma warning restore IDISP007 // Don't dispose injected.
         }
 
@@ -189,7 +211,7 @@
         {
             for (var i = 0; i < this.indentLevel; i++)
             {
-                this.writer.Write("  ");
+                this.TextWriter.Write("  ");
             }
         }
     }

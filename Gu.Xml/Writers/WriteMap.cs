@@ -3,18 +3,19 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
 
-    public class WriteMap
+    internal class WriteMap
     {
-        public WriteMap(IReadOnlyList<AttributeWriter> attributes, IReadOnlyList<ElementWriter> elements)
+        internal WriteMap(IReadOnlyList<CastAction<XmlWriter>> attributes, IReadOnlyList<ElementWriter> elements)
         {
             this.Attributes = attributes;
             this.Elements = elements;
         }
 
-        public IReadOnlyList<AttributeWriter> Attributes { get; }
+        public IReadOnlyList<CastAction<XmlWriter>> Attributes { get; }
 
         public IReadOnlyList<ElementWriter> Elements { get; }
 
@@ -33,11 +34,11 @@
                 Attributes().ToArray(),
                 Elements().ToArray());
 
-            IEnumerable<AttributeWriter> Attributes()
+            IEnumerable<CastAction<XmlWriter>> Attributes()
             {
                 foreach (var field in fields)
                 {
-                    if (AttributeWriter.TryCreate(field, out var writer))
+                    if (TryCreateAttributeWriter(field, out var writer))
                     {
                         yield return writer;
                     }
@@ -45,7 +46,7 @@
 
                 foreach (var property in properties)
                 {
-                    if (AttributeWriter.TryCreate(property, out var writer))
+                    if (TryCreateAttributeWriter(property, out var writer))
                     {
                         yield return writer;
                     }
@@ -70,6 +71,103 @@
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Check if <paramref name="property"/> has any attributes like [XmlAttribute].
+        /// </summary>
+        /// <param name="property">The <see cref="PropertyInfo"/>.</param>
+        /// <param name="writer">The <see cref="AttributeWriter"/>.</param>
+        /// <returns>True if an <see cref="AttributeWriter"/> was created.</returns>
+        private static bool TryCreateAttributeWriter(PropertyInfo property, out CastAction<XmlWriter> writer)
+        {
+            if (TryGetAttributeName(property, out var name))
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                writer = (CastAction<XmlWriter>)typeof(WriteMap)
+                                          .GetMethod(nameof(CreateAttributeWriter), BindingFlags.Static | BindingFlags.NonPublic)
+                                          .MakeGenericMethod(property.ReflectedType, property.PropertyType)
+                                          .Invoke(null, new object[] { name, property });
+                return true;
+            }
+
+            writer = null;
+            return false;
+        }
+
+        private static bool TryCreateAttributeWriter(FieldInfo field, out CastAction<XmlWriter> writer)
+        {
+            if (TryGetAttributeName(field, out var name))
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                writer = (CastAction<XmlWriter>)typeof(WriteMap)
+                                     .GetMethod(nameof(CreateAttributeWriter), BindingFlags.Static | BindingFlags.NonPublic)
+                                     .MakeGenericMethod(field.ReflectedType, field.FieldType)
+                                     .Invoke(null, new object[] { name, field });
+                return true;
+            }
+
+            writer = null;
+            return false;
+        }
+
+        private static CastAction<XmlWriter> CreateAttributeWriter<TSource, TValue>(string name, MemberInfo member)
+        {
+            var getter = CreateGetter();
+            return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
+            {
+                if (getter(source) is TValue value)
+                {
+                    if (writer.TryGetSimple(value, out var valueWriter))
+                    {
+                        writer.Write(" ", name, "=\"");
+                        valueWriter(writer.TextWriter, value);
+                        writer.Write("\"");
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"Could not find a Action<TextWriter, {nameof(TValue)}> for {value} of type {value.GetType()}");
+                    }
+                }
+            });
+
+            Func<TSource, TValue> CreateGetter()
+            {
+                switch (member)
+                {
+                    case PropertyInfo property:
+                        return property.CreateGetter<TSource, TValue>();
+                    case FieldInfo field:
+                        return field.CreateGetter<TSource, TValue>();
+                    default:
+                        throw new InvalidOperationException($"Not handling {member}. Bug in Gu.Xml.");
+                }
+            }
+        }
+
+        private static bool TryGetAttributeName(MemberInfo member, out string name)
+        {
+            name = null;
+            if (member.TryGetCustomAttribute(out System.Xml.Serialization.XmlAttributeAttribute xmlAttribute))
+            {
+                name = xmlAttribute.AttributeName ?? string.Empty;
+            }
+            else if (member.TryGetCustomAttribute(out System.Xml.Serialization.SoapAttributeAttribute soapAttribute))
+            {
+                name = soapAttribute.AttributeName ?? string.Empty;
+            }
+
+            if (name == null)
+            {
+                return false;
+            }
+
+            if (name == string.Empty)
+            {
+                name = member.Name;
+            }
+
+            return true;
         }
 
         private sealed class BaseTypeCountComparer : IComparer<MemberInfo>, IComparer

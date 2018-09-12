@@ -6,11 +6,11 @@
     using System.IO;
     using System.Reflection;
 
-    public class XmlWriterActions
+    internal class XmlWriterActions
     {
         private readonly ConcurrentDictionary<Type, object> actions = new ConcurrentDictionary<Type, object>();
 
-        public bool TryGetSimple<TMember>(TMember value, out Action<TextWriter, TMember> writer)
+        internal bool TryGetSimple<TMember>(TMember value, out Action<TextWriter, TMember> writer)
         {
             if (value == null)
             {
@@ -59,7 +59,7 @@
             }
         }
 
-        public bool TryGetCollection<T>(T value, out Action<XmlWriter, T> writer)
+        internal bool TryGetCollection<T>(T value, out Action<XmlWriter, T> writer)
         {
             if (value is IEnumerable &&
                 this.actions.GetOrAdd(value.GetType(), x => CollectionWriter.Create(x)) is CastAction<XmlWriter> castAction)
@@ -71,7 +71,7 @@
             return false;
         }
 
-        public bool TryGetWriteMap<T>(T value, out WriteMap map)
+        internal bool TryGetWriteMap<T>(T value, out WriteMap map)
         {
             if (value?.GetType() is Type type &&
                 this.actions.GetOrAdd(type, x => WriteMap.Create(x)) is WriteMap match)
@@ -84,14 +84,14 @@
             return false;
         }
 
-        public XmlWriterActions SimpleClass<T>(Action<TextWriter, T> action)
+        internal XmlWriterActions SimpleClass<T>(Action<TextWriter, T> action)
             where T : class
         {
             this.actions[typeof(T)] = CastAction<TextWriter>.Create(action);
             return this;
         }
 
-        public XmlWriterActions SimpleStruct<T>(Action<TextWriter, T> action)
+        internal XmlWriterActions SimpleStruct<T>(Action<TextWriter, T> action)
             where T : struct
         {
             this.actions[typeof(T)] = CastAction<TextWriter>.Create(action);
