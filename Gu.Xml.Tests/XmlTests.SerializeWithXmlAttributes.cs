@@ -27,6 +27,15 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new FieldWithXmlElementAttributeExplicitName { Value = 1 }),
                 new TestCaseData(new FieldWithXmlAttributeAttribute { Value = 1 }),
                 new TestCaseData(new FieldWithXmlAttributeAttributeExplicitName { Value = 1 }),
+                new TestCaseData(new FieldsWithXmlAttributeAttributeExplicitName { Value1 = 1, Value2 = 2 }),
+                new TestCaseData(new WithArrayWithFieldsWithXmlAttributeAttributeExplicitName
+                {
+                    Items = new []
+                    {
+                        new FieldsWithXmlAttributeAttributeExplicitName { Value1 = 1, Value2 = 2 },
+                        new FieldsWithXmlAttributeAttributeExplicitName { Value1 = 3, Value2 = 4 },
+                    },
+                }),
                 new TestCaseData(new With<WithXmlEnumAttribute> { Value = WithXmlEnumAttribute.One }),
                 new TestCaseData(new With<WithXmlEnumAttribute> { Value = WithXmlEnumAttribute.Two }),
                 new TestCaseData(new WithXmlArrayAttribute { Ints = new[] { 1, 2, 3 } }),
@@ -137,6 +146,20 @@ namespace Gu.Xml.Tests
             {
                 [XmlAttribute("Name")]
                 public int Value;
+            }
+
+            public class FieldsWithXmlAttributeAttributeExplicitName
+            {
+                [XmlAttribute("Value1")]
+                public int Value1;
+
+                [XmlAttribute("Value2")]
+                public int Value2;
+            }
+
+            public class WithArrayWithFieldsWithXmlAttributeAttributeExplicitName
+            {
+                public FieldsWithXmlAttributeAttributeExplicitName[] Items { get; set; }
             }
 
             public class PropertyWithXmlIgnoreAttribute

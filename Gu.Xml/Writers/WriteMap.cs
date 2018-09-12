@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
 
@@ -112,21 +113,30 @@
 
         private static CastAction<XmlWriter> CreateAttributeWriter<TSource, TValue>(string name, MemberInfo member)
         {
+            // Caching via closure here.
             var getter = CreateGetter();
+            Action<TextWriter, TValue> valueWriter = null;
+
             return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
             {
                 if (getter(source) is TValue value)
                 {
-                    if (writer.TryGetSimple(value, out var valueWriter))
+                    if (valueWriter != null ||
+                        writer.TryGetSimple(value, out valueWriter))
                     {
                         var textWriter = writer.TextWriter;
                         textWriter.WriteMany(" ", name, "=\"");
                         valueWriter(textWriter, value);
                         textWriter.Write("\"");
+                        if (!typeof(TValue).IsSealed)
+                        {
+                            // We can't cache it as we are not sure it is the same type.
+                            valueWriter = null;
+                        }
                     }
                     else
                     {
-                        throw new InvalidOperationException($"Could not find a Action<TextWriter, {nameof(TValue)}> for {value} of type {value.GetType()}");
+                        throw new InvalidOperationException($"Could not find an Action<TextWriter, {nameof(TValue)}> for {value} of type {value.GetType()}");
                     }
                 }
             });
