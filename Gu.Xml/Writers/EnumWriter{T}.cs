@@ -48,7 +48,8 @@
             if (typeof(T).GetMember(value.ToString()).TryFirst(out var member))
             {
                 if (TryGetNameFromAttribute<System.Xml.Serialization.XmlEnumAttribute>(member, x => x.Name, out var name) ||
-                    TryGetNameFromAttribute<System.Xml.Serialization.SoapEnumAttribute>(member, x => x.Name, out name))
+                    TryGetNameFromAttribute<System.Xml.Serialization.SoapEnumAttribute>(member, x => x.Name, out name) ||
+                    TryGetNameFromAttribute<System.Runtime.Serialization.EnumMemberAttribute>(member, x => x.Value, out name))
                 {
                     return name;
                 }

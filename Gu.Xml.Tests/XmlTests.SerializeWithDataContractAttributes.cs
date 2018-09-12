@@ -23,6 +23,8 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new FieldWithIgnoreDataMemberAttribute { Value = 1 }),
                 new TestCaseData(new FieldWithDataMemberAttribute { Value = 1 }),
                 new TestCaseData(new FieldWithDataMemberAttributeExplicitName { Value = 1 }),
+                new TestCaseData(new WithWithEnumMemberAttribute { Value = WithEnumMemberAttribute.One }),
+                new TestCaseData(new WithWithEnumMemberAttribute { Value = WithEnumMemberAttribute.Two }),
             };
 
             [TestCaseSource(nameof(Values))]
@@ -116,6 +118,20 @@ namespace Gu.Xml.Tests
             {
                 [IgnoreDataMember]
                 public int Value { get; set; }
+            }
+
+            public class WithWithEnumMemberAttribute
+            {
+                public WithEnumMemberAttribute Value { get; set; }
+            }
+
+            [DataContract]
+            public enum WithEnumMemberAttribute
+            {
+                [EnumMember(Value = "Single")]
+                One,
+                [EnumMember(Value = "Double")]
+                Two,
             }
         }
     }
