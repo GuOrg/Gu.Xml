@@ -78,17 +78,14 @@
         private static CastAction<XmlWriter> CreateGenericDictionaryWriter<TDictionary, TKey, TValue>()
             where TDictionary : ICollection<KeyValuePair<TKey, TValue>>
         {
-            return CastAction<XmlWriter>.Create<TDictionary>(WriteItems<TDictionary, TKey, TValue>);
-        }
-
-        private static void WriteItems<TDictionary, TKey, TValue>(XmlWriter writer, TDictionary dictionary)
-            where TDictionary : ICollection<KeyValuePair<TKey, TValue>>
-        {
-            foreach (var item in dictionary)
+            return CastAction<XmlWriter>.Create<TDictionary>((writer, dictionary) =>
             {
-                writer.WriteElement("Entry", item);
-                writer.WriteLine();
-            }
+                foreach (var item in dictionary)
+                {
+                    writer.WriteElement("Entry", item);
+                    writer.WriteLine();
+                }
+            });
         }
 
         private static void WriteItems(XmlWriter writer, IEnumerable enumerable)
@@ -103,17 +100,14 @@
         private static CastAction<XmlWriter> CreateGenericEnumerableWriter<TEnumerable, TValue>()
             where TEnumerable : IEnumerable<TValue>
         {
-            return CastAction<XmlWriter>.Create<TEnumerable>(WriteItems<TEnumerable, TValue>);
-        }
-
-        private static void WriteItems<TEnumerable, TValue>(XmlWriter writer, TEnumerable enumerable)
-            where TEnumerable : IEnumerable<TValue>
-        {
-            foreach (var item in enumerable)
+            return CastAction<XmlWriter>.Create<TEnumerable>((writer, enumerable) =>
             {
-                writer.WriteElement(RootName.Get(item?.GetType() ?? typeof(TValue)), item);
-                writer.WriteLine();
-            }
+                foreach (var item in enumerable)
+                {
+                    writer.WriteElement(RootName.Get(item?.GetType() ?? typeof(TValue)), item);
+                    writer.WriteLine();
+                }
+            });
         }
     }
 }
