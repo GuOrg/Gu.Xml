@@ -118,6 +118,23 @@
             }
         }
 
+        public void WriteLine()
+        {
+            this.TextWriter.WriteLine();
+        }
+
+        public bool TryGetSimple<TValue>(TValue value, out Action<TextWriter, TValue> writer)
+        {
+            return DefaultWriterActions.TryGetSimple(value, out writer);
+        }
+
+        public void Dispose()
+        {
+#pragma warning disable IDISP007 // Don't dispose injected.
+            this.TextWriter.Dispose();
+#pragma warning restore IDISP007 // Don't dispose injected.
+        }
+
         internal void ClosePendingStart()
         {
             if (this.pendingCloseStartElement)
@@ -158,23 +175,6 @@
                 this.WriteIndentation();
                 this.TextWriter.WriteMany("</", name, ">");
             }
-        }
-
-        public void WriteLine()
-        {
-            this.TextWriter.WriteLine();
-        }
-
-        public bool TryGetSimple<TValue>(TValue value, out Action<TextWriter, TValue> writer)
-        {
-            return DefaultWriterActions.TryGetSimple(value, out writer);
-        }
-
-        public void Dispose()
-        {
-#pragma warning disable IDISP007 // Don't dispose injected.
-            this.TextWriter.Dispose();
-#pragma warning restore IDISP007 // Don't dispose injected.
         }
 
         internal void Reset()
