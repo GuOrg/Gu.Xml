@@ -9,7 +9,7 @@
 
     public class ComplexValueWriter
     {
-        private static readonly ConcurrentDictionary<Type, ComplexValueWriter> Default = new ConcurrentDictionary<Type, ComplexValueWriter>();
+        private static readonly ConcurrentDictionary<Type, ComplexValueWriter> Cache = new ConcurrentDictionary<Type, ComplexValueWriter>();
 
         public ComplexValueWriter(IReadOnlyList<AttributeWriter> attributes, IReadOnlyList<ElementWriter> elements)
         {
@@ -23,7 +23,7 @@
 
         public static ComplexValueWriter GetOrCreate<T>(T value)
         {
-            return Default.GetOrAdd(value.GetType(), x => Create(x));
+            return Cache.GetOrAdd(value.GetType(), x => Create(x));
         }
 
         public static ComplexValueWriter Create(Type type)
