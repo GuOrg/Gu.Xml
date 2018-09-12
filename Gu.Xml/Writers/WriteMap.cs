@@ -2,16 +2,13 @@
 {
     using System;
     using System.Collections;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
-    public class ComplexValueWriter
+    public class WriteMap
     {
-        private static readonly ConcurrentDictionary<Type, ComplexValueWriter> Cache = new ConcurrentDictionary<Type, ComplexValueWriter>();
-
-        public ComplexValueWriter(IReadOnlyList<AttributeWriter> attributes, IReadOnlyList<ElementWriter> elements)
+        public WriteMap(IReadOnlyList<AttributeWriter> attributes, IReadOnlyList<ElementWriter> elements)
         {
             this.Attributes = attributes;
             this.Elements = elements;
@@ -21,12 +18,7 @@
 
         public IReadOnlyList<ElementWriter> Elements { get; }
 
-        public static ComplexValueWriter GetOrCreate<T>(T value)
-        {
-            return Cache.GetOrAdd(value.GetType(), x => Create(x));
-        }
-
-        public static ComplexValueWriter Create(Type type)
+        public static WriteMap Create(Type type)
         {
             var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.FlattenHierarchy);
             var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetProperty | BindingFlags.FlattenHierarchy);
@@ -37,7 +29,7 @@
                 Array.Sort(properties, BaseTypeCountComparer.Default);
             }
 
-            return new ComplexValueWriter(
+            return new WriteMap(
                 Attributes().ToArray(),
                 Elements().ToArray());
 

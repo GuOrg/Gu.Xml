@@ -121,7 +121,7 @@
                     this.writer.Write(">");
                 }
             }
-            else if (ComplexValueWriter.GetOrCreate(value) is ComplexValueWriter complex)
+            else if (DefaultWriterActions.TryGetWriteMap(value, out var complex))
             {
                 if (this.pendingCloseStartElement)
                 {

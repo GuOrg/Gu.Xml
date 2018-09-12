@@ -10,6 +10,7 @@
     {
         private readonly CastActions<TextWriter> simpleActions = new CastActions<TextWriter>();
         private readonly ConcurrentDictionary<Type, CastAction<XmlWriter>> collectionActions = new ConcurrentDictionary<Type, CastAction<XmlWriter>>();
+        private readonly ConcurrentDictionary<Type, WriteMap> writeMaps = new ConcurrentDictionary<Type, WriteMap>();
 
         public bool TryGetSimple<TMember>(TMember value, out Action<TextWriter, TMember> writer)
         {
@@ -31,6 +32,18 @@
             }
 
             writer = null;
+            return false;
+        }
+
+        public bool TryGetWriteMap<T>(T value, out WriteMap map)
+        {
+            if (value?.GetType() is Type type)
+            {
+                map = this.writeMaps.GetOrAdd(type, x => WriteMap.Create(x));
+                return true;
+            }
+
+            map = null;
             return false;
         }
 
