@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.IO;
+    using System.Xml.Serialization;
 
     public sealed class EnumWriter<T>
         where T : struct, Enum
@@ -27,7 +28,21 @@
 
         public void Write(TextWriter writer, T value)
         {
-            writer.Write(this.cache.GetOrAdd(value, Enum.Format(typeof(T), value, this.format).Replace(",", string.Empty)));
+            writer.Write(this.cache.GetOrAdd(value, x => this.ToString(x)));
+        }
+
+        private string ToString(T value)
+        {
+            if (typeof(T).GetMember(value.ToString())
+                         .TryFirst(out var member) &&
+                member.TryGetCustomAttribute<XmlEnumAttribute>(out var attribute) &&
+                attribute.Name is string text &&
+                !string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
+            return Enum.Format(typeof(T), value, this.format).Replace(",", string.Empty);
         }
     }
 }

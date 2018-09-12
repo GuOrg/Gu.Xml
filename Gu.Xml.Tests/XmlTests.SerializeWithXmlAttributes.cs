@@ -1,4 +1,6 @@
-﻿#pragma warning disable SA1201 // Elements should appear in the correct order
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+#pragma warning disable SA1201 // Elements should appear in the correct order
 namespace Gu.Xml.Tests
 {
     using System;
@@ -25,6 +27,8 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new FieldWithXmlElementAttributeExplicitName { Value = 1 }),
                 new TestCaseData(new FieldWithXmlAttributeAttribute { Value = 1 }),
                 new TestCaseData(new FieldWithXmlAttributeAttributeExplicitName { Value = 1 }),
+                new TestCaseData(new With<WithXmlEnumAttribute> { Value = WithXmlEnumAttribute.One }),
+                new TestCaseData(new With<WithXmlEnumAttribute> { Value = WithXmlEnumAttribute.Two }),
             };
 
             [TestCaseSource(nameof(Values))]
@@ -137,6 +141,19 @@ namespace Gu.Xml.Tests
             {
                 [XmlIgnore]
                 public int Value { get; set; }
+            }
+
+            public class With<T>
+            {
+                public T Value { get; set; }
+            }
+
+            public enum WithXmlEnumAttribute
+            {
+                [XmlEnum(Name = "Single")]
+                One,
+                [XmlEnum(Name = "Double")]
+                Two,
             }
         }
     }
