@@ -8,9 +8,7 @@
 
     public class XmlWriterActions
     {
-        private readonly ConcurrentDictionary<Type, CastAction<TextWriter>> simpleActions = new ConcurrentDictionary<Type, CastAction<TextWriter>>();
-        private readonly ConcurrentDictionary<Type, CastAction<XmlWriter>> collectionActions = new ConcurrentDictionary<Type, CastAction<XmlWriter>>();
-        private readonly ConcurrentDictionary<Type, WriteMap> writeMaps = new ConcurrentDictionary<Type, WriteMap>();
+        private readonly ConcurrentDictionary<Type, object> actions = new ConcurrentDictionary<Type, object>();
 
         public bool TryGetSimple<TMember>(TMember value, out Action<TextWriter, TMember> writer)
         {
@@ -26,7 +24,7 @@
         public bool TryGetCollection<T>(T value, out Action<XmlWriter, T> writer)
         {
             if (value is IEnumerable &&
-                this.collectionActions.GetOrAdd(value.GetType(), x => CollectionWriter.Create(x)) is CastAction<XmlWriter> castAction)
+                this.actions.GetOrAdd(value.GetType(), x => CollectionWriter.Create(x)) is CastAction<XmlWriter> castAction)
             {
                 return castAction.TryGet(out writer);
             }
@@ -37,9 +35,10 @@
 
         public bool TryGetWriteMap<T>(T value, out WriteMap map)
         {
-            if (value?.GetType() is Type type)
+            if (value?.GetType() is Type type &&
+                this.actions.GetOrAdd(type, x => WriteMap.Create(x)) is WriteMap match)
             {
-                map = this.writeMaps.GetOrAdd(type, x => WriteMap.Create(x));
+                map = match;
                 return true;
             }
 
@@ -50,17 +49,17 @@
         public XmlWriterActions SimpleClass<T>(Action<TextWriter, T> action)
             where T : class
         {
-            this.simpleActions[typeof(T)] = CastAction<TextWriter>.Create(action);
+            this.actions[typeof(T)] = CastAction<TextWriter>.Create(action);
             return this;
         }
 
         public XmlWriterActions SimpleStruct<T>(Action<TextWriter, T> action)
             where T : struct
         {
-            this.simpleActions[typeof(T)] = CastAction<TextWriter>.Create(action);
-            if (!this.simpleActions.ContainsKey(typeof(T?)))
+            this.actions[typeof(T)] = CastAction<TextWriter>.Create(action);
+            if (!this.actions.ContainsKey(typeof(T?)))
             {
-                this.simpleActions[typeof(T?)] = CastAction<TextWriter>.Create(new Action<TextWriter, T?>((writer, value) => action(writer, value.Value)));
+                this.actions[typeof(T?)] = CastAction<TextWriter>.Create(new Action<TextWriter, T?>((writer, value) => action(writer, value.Value)));
             }
 
             return this;
@@ -78,7 +77,8 @@
         /// <returns>True if a writer was found for <paramref name="type"/></returns>
         private bool TryGetSimple<TMember>(Type type, out Action<TextWriter, TMember> writer)
         {
-            if (this.simpleActions.TryGetValue(type, out var castAction))
+            if (this.actions.TryGetValue(type, out var value) &&
+                value is CastAction<TextWriter> castAction)
             {
                 if (castAction.TryGet(out writer))
                 {
