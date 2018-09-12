@@ -18,7 +18,45 @@
                 return false;
             }
 
-            return this.TryGetSimple(value.GetType(), out writer);
+            var type = value.GetType();
+            if (TryGet(type, out writer))
+            {
+                return writer != null;
+            }
+
+            var memberType = typeof(TMember);
+            if (memberType.IsNullable())
+            {
+                return TryGet(memberType, out writer) && writer != null;
+            }
+
+            if (type.IsEnum)
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                _ = typeof(XmlWriterActions).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
+                                            .MakeGenericMethod(type)
+                                            .Invoke(this, null);
+                return TryGet(typeof(TMember), out writer);
+            }
+
+            writer = null;
+            return false;
+
+            bool TryGet(Type current, out Action<TextWriter, TMember> result)
+            {
+                result = null;
+                if (this.actions.TryGetValue(current, out var match))
+                {
+                    if (match is CastAction<TextWriter> castAction)
+                    {
+                        return castAction.TryGet(out result);
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         public bool TryGetCollection<T>(T value, out Action<XmlWriter, T> writer)
@@ -63,42 +101,6 @@
             }
 
             return this;
-        }
-
-        /// <summary>
-        /// Try getting a writer for writing the element contents as a string.
-        /// </summary>
-        /// <typeparam name="TMember">
-        /// The type of the member.
-        /// If an int is stored in a property of type object <typeparamref name="TMember"/> will be <see cref="object"/> and <paramref name="type"/> will be <see cref="int"/>
-        /// </typeparam>
-        /// <param name="type">The type of the value.</param>
-        /// <param name="writer"></param>
-        /// <returns>True if a writer was found for <paramref name="type"/></returns>
-        private bool TryGetSimple<TMember>(Type type, out Action<TextWriter, TMember> writer)
-        {
-            if (this.actions.TryGetValue(type, out var value) &&
-                value is CastAction<TextWriter> castAction)
-            {
-                if (castAction.TryGet(out writer))
-                {
-                    return true;
-                }
-
-                return this.TryGetSimple(typeof(TMember), out writer);
-            }
-
-            if (type.IsEnum)
-            {
-                // ReSharper disable once PossibleNullReferenceException
-                _ = typeof(XmlWriterActions).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
-                                             .MakeGenericMethod(type)
-                                             .Invoke(this, null);
-                return this.TryGetSimple(typeof(TMember), out writer);
-            }
-
-            writer = null;
-            return false;
         }
 
         private void RegisterEnum<T>()
