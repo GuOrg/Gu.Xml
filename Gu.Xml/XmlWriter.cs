@@ -23,6 +23,7 @@
             .SimpleStruct<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<long>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<short>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))
+            .SimpleStruct<TimeSpan>((writer, value) => writer.Write(value.ToString("c", NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<sbyte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<ulong>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<uint>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))

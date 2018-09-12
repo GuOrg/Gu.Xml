@@ -50,6 +50,17 @@ namespace Gu.Xml.Tests
                 int.MaxValue,
             };
 
+            private static readonly TestCaseData[] TimeSpanSource =
+            {
+                new TestCaseData(System.TimeSpan.MinValue, "-10675199.02:48:05.4775808"),
+                new TestCaseData(System.TimeSpan.FromMilliseconds(123), "00:00:00.1230000"),
+                new TestCaseData(System.TimeSpan.FromSeconds(123), "00:02:03"),
+                new TestCaseData(System.TimeSpan.FromMinutes(123), "02:03:00"),
+                new TestCaseData(System.TimeSpan.FromHours(123), "5.03:00:00"),
+                new TestCaseData(System.TimeSpan.FromDays(123), "123.00:00:00"),
+                new TestCaseData(System.TimeSpan.MaxValue, "10675199.02:48:05.4775807"),
+            };
+
             [TestCase(byte.MinValue)]
             [TestCase(0)]
             [TestCase(1)]
@@ -130,8 +141,6 @@ namespace Gu.Xml.Tests
                               $"  <Value>{text}</Value>" + Environment.NewLine +
                                "</WithMutableOfDateTime>";
                 var actual = Xml.Serialize(with);
-                Dump.Xml(actual);
-
                 Assert.AreEqual(expected, actual);
             }
 
@@ -342,6 +351,19 @@ namespace Gu.Xml.Tests
                 var with = new WithMutable<string> { Value = value };
                 var actual = Xml.Serialize(with);
                 var expected = Reference.XmlSerializer(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCaseSource(nameof(TimeSpanSource))]
+            public void TimeSpan(TimeSpan value, string text)
+            {
+                var with = new WithMutable<TimeSpan> { Value = value };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableOfTimeSpan>" + Environment.NewLine +
+                               $"  <Value>{text}</Value>" + Environment.NewLine +
+                               "</WithMutableOfTimeSpan>";
+                var actual = Xml.Serialize(with);
+                Dump.Xml(actual);
                 Assert.AreEqual(expected, actual);
             }
 
