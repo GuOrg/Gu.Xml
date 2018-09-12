@@ -54,13 +54,12 @@
                 if (type.IsGenericEnumerable(out var enumerableType) &&
                     enumerableType.GenericTypeArguments.TrySingle(out var elementType))
                 {
-                    if (type.IsSealed &&
-                        actions.IsSimple(elementType, out var castAction))
+                    if (actions.TryGetSimpleCached(type, out var cached))
                     {
                         // ReSharper disable once PossibleNullReferenceException
                         result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateCachingGenericSimpleEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                                 .MakeGenericMethod(type, elementType)
-                                                                                .Invoke(null, new object[] { RootName.Get(elementType), castAction });
+                                                                                .Invoke(null, new object[] { RootName.Get(elementType), cached });
                         return true;
                     }
 

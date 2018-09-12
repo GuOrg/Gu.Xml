@@ -10,24 +10,33 @@
     {
         private readonly ConcurrentDictionary<Type, object> actions = new ConcurrentDictionary<Type, object>();
 
-        internal bool IsSimple(Type type, out CastAction<TextWriter> castAction)
+        /// <summary>
+        /// If the type is sealed and has a simple action it can be cached to avoid lookups for example when writing collections.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="castAction"></param>
+        /// <returns></returns>
+        internal bool TryGetSimpleCached(Type type, out CastAction<TextWriter> castAction)
         {
-            if (this.actions.TryGetValue(type, out var action) && action is CastAction<TextWriter> match)
-            {
-                castAction = match;
-                return true;
-            }
-
-            if (type.IsEnum)
-            {
-                // ReSharper disable once PossibleNullReferenceException
-                _ = typeof(XmlWriterActions).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
-                                            .MakeGenericMethod(type)
-                                            .Invoke(this, null);
-                return this.IsSimple(type, out castAction);
-            }
-
             castAction = null;
+            if (!type.IsSealed)
+            {
+                if (this.actions.TryGetValue(type, out var action) && action is CastAction<TextWriter> match)
+                {
+                    castAction = match;
+                    return true;
+                }
+
+                if (type.IsEnum)
+                {
+                    // ReSharper disable once PossibleNullReferenceException
+                    _ = typeof(XmlWriterActions).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
+                                                .MakeGenericMethod(type)
+                                                .Invoke(this, null);
+                    return this.TryGetSimpleCached(type, out castAction);
+                }
+            }
+
             return false;
         }
 
