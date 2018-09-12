@@ -10,6 +10,15 @@ namespace Gu.Xml.Tests
     {
         public class SerializePrimitiveTypes
         {
+            private static readonly TestCaseData[] DateTimeSource =
+            {
+                new TestCaseData(System.DateTime.MinValue, "0001-01-01T00:00:00.0000000"),
+                new TestCaseData(new DateTime(2018, 09, 01, 09, 43, 15, 123, DateTimeKind.Local), "2018-09-01T09:43:15.1230000+02:00"),
+                new TestCaseData(new DateTime(2018, 09, 02, 09, 43, 15, 123, DateTimeKind.Unspecified), "2018-09-02T09:43:15.1230000"),
+                new TestCaseData(new DateTime(2018, 09, 03, 09, 43, 15, 123, DateTimeKind.Utc), "2018-09-03T09:43:15.1230000Z"),
+                new TestCaseData(System.DateTime.MaxValue, "9999-12-31T23:59:59.9999999"),
+            };
+
             private static readonly decimal[] DecimalSource =
             {
                 decimal.MinValue,
@@ -100,6 +109,19 @@ namespace Gu.Xml.Tests
                 var with = new WithMutable<char> { Value = value };
                 var actual = Xml.Serialize(with);
                 var expected = Reference.XmlSerializer(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCaseSource(nameof(DateTimeSource))]
+            public void DateTime(DateTime value, string text)
+            {
+                var with = new WithMutable<DateTime> { Value = value };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableOfDateTime>" + Environment.NewLine +
+                              $"  <Value>{text}</Value>" + Environment.NewLine +
+                               "</WithMutableOfDateTime>";
+                var actual = Xml.Serialize(with);
+                Dump.Xml(actual);
                 Assert.AreEqual(expected, actual);
             }
 

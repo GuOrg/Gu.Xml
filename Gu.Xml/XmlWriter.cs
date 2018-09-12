@@ -14,6 +14,7 @@
             .SimpleStruct<bool>((writer, value) => writer.Write(value ? "true" : "false"))
             .SimpleStruct<byte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<char>((writer, value) => writer.Write((int)value))
+            .SimpleStruct<DateTime>((writer, value) => writer.Write(value.ToString("O", NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<decimal>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<double>((writer, value) => writer.Write(XmlFormat.ToString(value)))
             .SimpleStruct<float>((writer, value) => writer.Write(XmlFormat.ToString(value)))
