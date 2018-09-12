@@ -76,13 +76,19 @@
         private static bool TryGetNameFromAttribute<TAttribute>(MemberInfo member, Func<TAttribute, string> getName, out string name)
             where TAttribute : Attribute
         {
-            name = null;
             if (member.TryGetCustomAttribute(out TAttribute attribute))
             {
                 name = getName(attribute);
+                if (string.IsNullOrEmpty(name))
+                {
+                    name = member.Name;
+                }
+
+                return true;
             }
 
-            return !string.IsNullOrEmpty(name);
+            name = null;
+            return false;
         }
 
         private static class ElementAction
