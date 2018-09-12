@@ -129,11 +129,7 @@
         private static CastAction<XmlWriter> CreateCachingGenericSimpleEnumerableWriter<TEnumerable, TValue>(string elementName, CastAction<TextWriter> castAction)
             where TEnumerable : IEnumerable<TValue>
         {
-            if (!castAction.TryGet<TValue>(out var cachedWrite))
-            {
-                throw new InvalidOperationException("Could not get write action. Bug in Gu.Xml.");
-            }
-
+            var cachedWrite = castAction.Get<TValue>();
             return CastAction<XmlWriter>.Create<TEnumerable>((writer, enumerable) =>
             {
                 var textWriter = writer.TextWriter;

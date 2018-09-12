@@ -26,6 +26,17 @@
                 (writer, value) => action(writer, (T)value));
         }
 
+        internal Action<TWriter, T> Get<T>()
+        {
+            if (this.TryGet<T>(out var action))
+            {
+                return action;
+            }
+
+            throw new InvalidOperationException($"Calling CastAction.Get<{typeof(T).Name}> wrong argument types. Expected <{typeof(T).FullName}>.\r\n" +
+                                                $"Bug in Gu.Xml.");
+        }
+
         /// <summary>
         /// Try casting the inner action and boxing action  to <see cref="Action{TWriter, T}"/>.
         /// Returns true if any of the casts are successful.
