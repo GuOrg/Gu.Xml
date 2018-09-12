@@ -12,37 +12,27 @@
 
         internal bool TryGetSimple<TMember>(TMember value, out Action<TextWriter, TMember> writer)
         {
-            if (value == null)
+            if (TryGetType(out var type))
             {
-                writer = null;
-                return false;
-            }
+                if (TryGetWriter(type, out writer))
+                {
+                    return writer != null;
+                }
 
-            var type = value.GetType();
-            if (TryGet(type, out writer))
-            {
-                return writer != null;
-            }
-
-            var memberType = typeof(TMember);
-            if (memberType.IsNullable())
-            {
-                return TryGet(memberType, out writer) && writer != null;
-            }
-
-            if (type.IsEnum)
-            {
-                // ReSharper disable once PossibleNullReferenceException
-                _ = typeof(XmlWriterActions).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
-                                            .MakeGenericMethod(type)
-                                            .Invoke(this, null);
-                return TryGet(typeof(TMember), out writer);
+                if (type.IsEnum)
+                {
+                    // ReSharper disable once PossibleNullReferenceException
+                    _ = typeof(XmlWriterActions).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
+                                                .MakeGenericMethod(type)
+                                                .Invoke(this, null);
+                    return TryGetWriter(typeof(TMember), out writer);
+                }
             }
 
             writer = null;
             return false;
 
-            bool TryGet(Type current, out Action<TextWriter, TMember> result)
+            bool TryGetWriter(Type current, out Action<TextWriter, TMember> result)
             {
                 result = null;
                 if (this.actions.TryGetValue(current, out var match))
@@ -56,6 +46,19 @@
                 }
 
                 return false;
+            }
+
+            bool TryGetType(out Type result)
+            {
+                var candidate = typeof(TMember);
+                if (candidate.IsSealed)
+                {
+                    result = candidate;
+                    return true;
+                }
+
+                result = value?.GetType();
+                return result != null;
             }
         }
 
