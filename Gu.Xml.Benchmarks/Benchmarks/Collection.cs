@@ -9,7 +9,7 @@
 
     public class Collection
     {
-        private static readonly WithInt[] Value = Enumerable.Range(1, 1000).Select(x => new WithInt { Number = x }).ToArray();
+        private static readonly WithInt[] Value = Enumerable.Range(1, 100000).Select(x => new WithInt { Number = x }).ToArray();
         private static readonly XmlSerializer XmlSerializer = new XmlSerializer(Value.GetType());
         private static readonly StringBuilder StringBuilder = new StringBuilder(Xml.Serialize(Value));
 
