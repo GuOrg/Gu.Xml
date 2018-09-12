@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.IO;
-    using System.Xml.Serialization;
+    using System.Reflection;
 
     public sealed class EnumWriter<T>
         where T : struct, Enum
@@ -33,16 +33,28 @@
 
         private string ToString(T value)
         {
-            if (typeof(T).GetMember(value.ToString())
-                         .TryFirst(out var member) &&
-                member.TryGetCustomAttribute<XmlEnumAttribute>(out var attribute) &&
-                attribute.Name is string text &&
-                !string.IsNullOrEmpty(text))
+            if (typeof(T).GetMember(value.ToString()).TryFirst(out var member))
             {
-                return text;
+                if (TryGetNameFromAttribute<System.Xml.Serialization.XmlEnumAttribute>(member, x => x.Name, out var name) ||
+                    TryGetNameFromAttribute<System.Xml.Serialization.SoapEnumAttribute>(member, x => x.Name, out name))
+                {
+                    return name;
+                }
             }
 
             return Enum.Format(typeof(T), value, this.format).Replace(",", string.Empty);
+        }
+
+        private static bool TryGetNameFromAttribute<T>(MemberInfo type, Func<T, string> getName, out string name)
+            where T : Attribute
+        {
+            name = null;
+            if (type.TryGetCustomAttribute(out T attribute))
+            {
+                name = getName(attribute);
+            }
+
+            return !string.IsNullOrEmpty(name);
         }
     }
 }

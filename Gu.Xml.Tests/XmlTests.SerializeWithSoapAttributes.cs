@@ -28,12 +28,14 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new FieldWithSoapElementAttributeExplicitName { Value = 1 }),
                 new TestCaseData(new FieldWithSoapAttributeAttribute { Value = 1 }),
                 new TestCaseData(new FieldWithSoapAttributeAttributeExplicitName { Value = 1 }),
+                new TestCaseData(new With<WithSoapEnumAttribute> { Value = WithSoapEnumAttribute.One }),
+                new TestCaseData(new With<WithSoapEnumAttribute> { Value = WithSoapEnumAttribute.Two }),
             };
 
             [TestCaseSource(nameof(Values))]
             public void Serialize(object value)
             {
-                var expected = Reference.XmlSerializerSoap(value);
+                var expected = Reference.XmlSerializerSoap(value).Replace(" xsi:type=\"WithSoapEnumAttribute\"", string.Empty);
                 var actual = Xml.Serialize(value);
                 if (actual == expected)
                 {
@@ -140,6 +142,19 @@ namespace Gu.Xml.Tests
             {
                 [SoapIgnore]
                 public int Value { get; set; }
+            }
+
+            public class With<T>
+            {
+                public T Value { get; set; }
+            }
+
+            public enum WithSoapEnumAttribute
+            {
+                [SoapEnum(Name = "Single")]
+                One,
+                [SoapEnum(Name = "Double")]
+                Two,
             }
         }
     }
