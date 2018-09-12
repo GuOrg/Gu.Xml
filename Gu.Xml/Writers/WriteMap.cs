@@ -15,11 +15,11 @@
             this.Elements = elements;
         }
 
-        public IReadOnlyList<CastAction<XmlWriter>> Attributes { get; }
+        internal IReadOnlyList<CastAction<XmlWriter>> Attributes { get; }
 
-        public IReadOnlyList<ElementWriter> Elements { get; }
+        internal IReadOnlyList<ElementWriter> Elements { get; }
 
-        public static WriteMap Create(Type type)
+        internal static WriteMap Create(Type type)
         {
             var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.FlattenHierarchy);
             var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetProperty | BindingFlags.FlattenHierarchy);
@@ -38,7 +38,7 @@
             {
                 foreach (var field in fields)
                 {
-                    if (TryCreateAttributeWriter(field, out var writer))
+                    if (AttributeAction.TryCreate(field, out var writer))
                     {
                         yield return writer;
                     }
@@ -46,7 +46,7 @@
 
                 foreach (var property in properties)
                 {
-                    if (TryCreateAttributeWriter(property, out var writer))
+                    if (AttributeAction.TryCreate(property, out var writer))
                     {
                         yield return writer;
                     }
@@ -73,111 +73,115 @@
             }
         }
 
-        /// <summary>
-        /// Check if <paramref name="property"/> has any attributes like [XmlAttribute].
-        /// </summary>
-        /// <param name="property">The <see cref="PropertyInfo"/>.</param>
-        /// <param name="writer">The <see cref="AttributeWriter"/>.</param>
-        /// <returns>True if an <see cref="AttributeWriter"/> was created.</returns>
-        private static bool TryCreateAttributeWriter(PropertyInfo property, out CastAction<XmlWriter> writer)
+        private static class AttributeAction
         {
-            if (TryGetAttributeName(property, out var name))
+            /// <summary>
+            /// Check if <paramref name="property"/> has any attributes like [XmlAttribute].
+            /// </summary>
+            /// <param name="property">The <see cref="PropertyInfo"/>.</param>
+            /// <param name="writer">The <see cref="AttributeAction"/>.</param>
+            /// <returns>True if an <see cref="AttributeAction"/> was created.</returns>
+            internal static bool TryCreate(PropertyInfo property, out CastAction<XmlWriter> writer)
             {
-                // ReSharper disable once PossibleNullReferenceException
-                writer = (CastAction<XmlWriter>)typeof(WriteMap)
-                                          .GetMethod(nameof(CreateAttributeWriter), BindingFlags.Static | BindingFlags.NonPublic)
-                                          .MakeGenericMethod(property.ReflectedType, property.PropertyType)
-                                          .Invoke(null, new object[] { name, property });
-                return true;
-            }
-
-            writer = null;
-            return false;
-        }
-
-        private static bool TryCreateAttributeWriter(FieldInfo field, out CastAction<XmlWriter> writer)
-        {
-            if (TryGetAttributeName(field, out var name))
-            {
-                // ReSharper disable once PossibleNullReferenceException
-                writer = (CastAction<XmlWriter>)typeof(WriteMap)
-                                     .GetMethod(nameof(CreateAttributeWriter), BindingFlags.Static | BindingFlags.NonPublic)
-                                     .MakeGenericMethod(field.ReflectedType, field.FieldType)
-                                     .Invoke(null, new object[] { name, field });
-                return true;
-            }
-
-            writer = null;
-            return false;
-        }
-
-        private static CastAction<XmlWriter> CreateAttributeWriter<TSource, TValue>(string name, MemberInfo member)
-        {
-            // Caching via closure here.
-            var cachedGetter = CreateGetter();
-            Action<TextWriter, TValue> cachedWriter = null;
-
-            return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
-            {
-                if (cachedGetter(source) is TValue value)
+                if (TryGetName(property, out var name))
                 {
-                    if (cachedWriter != null ||
-                        writer.TryGetSimple(value, out cachedWriter))
-                    {
-                        var textWriter = writer.TextWriter;
-                        textWriter.WriteMany(" ", name, "=\"");
-                        cachedWriter(textWriter, value);
-                        textWriter.Write("\"");
-                        if (!typeof(TValue).IsSealed)
-                        {
-                            // We can't cache it as we are not sure it is the same type.
-                            cachedWriter = null;
-                        }
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException($"Could not find an Action<TextWriter, {nameof(TValue)}> for {value} of type {value.GetType()}");
-                    }
+                    // ReSharper disable once PossibleNullReferenceException
+                    writer = (CastAction<XmlWriter>)typeof(AttributeAction)
+                                              .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
+                                              .MakeGenericMethod(property.ReflectedType, property.PropertyType)
+                                              .Invoke(null, new object[] { name, property });
+                    return true;
                 }
-            });
 
-            Func<TSource, TValue> CreateGetter()
-            {
-                switch (member)
-                {
-                    case PropertyInfo property:
-                        return property.CreateGetter<TSource, TValue>();
-                    case FieldInfo field:
-                        return field.CreateGetter<TSource, TValue>();
-                    default:
-                        throw new InvalidOperationException($"Not handling {member}. Bug in Gu.Xml.");
-                }
-            }
-        }
-
-        private static bool TryGetAttributeName(MemberInfo member, out string name)
-        {
-            name = null;
-            if (member.TryGetCustomAttribute(out System.Xml.Serialization.XmlAttributeAttribute xmlAttribute))
-            {
-                name = xmlAttribute.AttributeName ?? string.Empty;
-            }
-            else if (member.TryGetCustomAttribute(out System.Xml.Serialization.SoapAttributeAttribute soapAttribute))
-            {
-                name = soapAttribute.AttributeName ?? string.Empty;
-            }
-
-            if (name == null)
-            {
+                writer = null;
                 return false;
             }
 
-            if (name == string.Empty)
+            internal static bool TryCreate(FieldInfo field, out CastAction<XmlWriter> writer)
             {
-                name = member.Name;
+                if (TryGetName(field, out var name))
+                {
+                    // ReSharper disable once PossibleNullReferenceException
+                    writer = (CastAction<XmlWriter>)typeof(AttributeAction)
+                                         .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
+                                         .MakeGenericMethod(field.ReflectedType, field.FieldType)
+                                         .Invoke(null, new object[] { name, field });
+                    return true;
+                }
+
+                writer = null;
+                return false;
             }
 
-            return true;
+            private static CastAction<XmlWriter> Create<TSource, TValue>(string name, MemberInfo member)
+            {
+                // Caching via closure here.
+                var cachedGetter = CreateGetter();
+                Action<TextWriter, TValue> cachedWriter = null;
+
+                return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
+                {
+                    if (cachedGetter(source) is TValue value)
+                    {
+                        if (cachedWriter != null ||
+                            writer.TryGetSimple(value, out cachedWriter))
+                        {
+                            var textWriter = writer.TextWriter;
+                            textWriter.WriteMany(" ", name, "=\"");
+                            cachedWriter(textWriter, value);
+                            textWriter.Write("\"");
+                            if (!typeof(TValue).IsSealed)
+                            {
+                                // We can't cache it as we are not sure it is the same type.
+                                cachedWriter = null;
+                            }
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"Could not find an Action<TextWriter, {nameof(TValue)}> for {value} of type {value.GetType()}");
+                        }
+                    }
+                });
+
+                Func<TSource, TValue> CreateGetter()
+                {
+                    switch (member)
+                    {
+                        case PropertyInfo property:
+                            return property.CreateGetter<TSource, TValue>();
+                        case FieldInfo field:
+                            return field.CreateGetter<TSource, TValue>();
+                        default:
+                            throw new InvalidOperationException($"Not handling {member}. Bug in Gu.Xml.");
+                    }
+                }
+            }
+
+            private static bool TryGetName(MemberInfo member, out string name)
+            {
+                name = null;
+                if (member.TryGetCustomAttribute(out System.Xml.Serialization.XmlAttributeAttribute xmlAttribute))
+                {
+                    name = xmlAttribute.AttributeName ?? string.Empty;
+                }
+                else if (member.TryGetCustomAttribute(out System.Xml.Serialization.SoapAttributeAttribute soapAttribute))
+                {
+                    name = soapAttribute.AttributeName ?? string.Empty;
+                }
+
+                if (name == null)
+                {
+                    return false;
+                }
+
+                if (name == string.Empty)
+                {
+                    name = member.Name;
+                }
+
+                return true;
+            }
+
         }
 
         private sealed class BaseTypeCountComparer : IComparer<MemberInfo>, IComparer
