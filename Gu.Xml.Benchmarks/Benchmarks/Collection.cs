@@ -40,7 +40,7 @@
             return JsonConvert.SerializeObject(Value);
         }
 
-        public class WithInt
+        public sealed class WithInt
         {
             public int Number { get; set; }
         }
