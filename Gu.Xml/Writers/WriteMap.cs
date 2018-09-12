@@ -114,24 +114,24 @@
         private static CastAction<XmlWriter> CreateAttributeWriter<TSource, TValue>(string name, MemberInfo member)
         {
             // Caching via closure here.
-            var getter = CreateGetter();
-            Action<TextWriter, TValue> valueWriter = null;
+            var cachedGetter = CreateGetter();
+            Action<TextWriter, TValue> cachedWriter = null;
 
             return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
             {
-                if (getter(source) is TValue value)
+                if (cachedGetter(source) is TValue value)
                 {
-                    if (valueWriter != null ||
-                        writer.TryGetSimple(value, out valueWriter))
+                    if (cachedWriter != null ||
+                        writer.TryGetSimple(value, out cachedWriter))
                     {
                         var textWriter = writer.TextWriter;
                         textWriter.WriteMany(" ", name, "=\"");
-                        valueWriter(textWriter, value);
+                        cachedWriter(textWriter, value);
                         textWriter.Write("\"");
                         if (!typeof(TValue).IsSealed)
                         {
                             // We can't cache it as we are not sure it is the same type.
-                            valueWriter = null;
+                            cachedWriter = null;
                         }
                     }
                     else
