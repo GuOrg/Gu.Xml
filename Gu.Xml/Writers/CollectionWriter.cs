@@ -51,12 +51,11 @@
 
             bool TryCreateGenericEnumerableWriter(out CastAction<XmlWriter> result)
             {
-                if (type.IsGenericType &&
-                    type.GetInterface("IEnumerable`1") is Type enumerableType &&
+                if (type.IsGenericEnumerable(out var enumerableType) &&
                     enumerableType.GenericTypeArguments.TrySingle(out var elementType))
                 {
                     if (type.IsSealed &&
-                        actions.IsSimple(type, out var castAction))
+                        actions.IsSimple(elementType, out var castAction))
                     {
                         // ReSharper disable once PossibleNullReferenceException
                         result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateCachingGenericSimpleEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
