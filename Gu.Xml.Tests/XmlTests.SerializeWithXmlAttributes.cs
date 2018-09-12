@@ -30,7 +30,7 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new FieldsWithXmlAttributeAttributeExplicitName { Value1 = 1, Value2 = 2 }),
                 new TestCaseData(new WithArrayWithFieldsWithXmlAttributeAttributeExplicitName
                 {
-                    Items = new []
+                    Items = new[]
                     {
                         new FieldsWithXmlAttributeAttributeExplicitName { Value1 = 1, Value2 = 2 },
                         new FieldsWithXmlAttributeAttributeExplicitName { Value1 = 3, Value2 = 4 },
