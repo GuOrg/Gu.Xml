@@ -1,5 +1,5 @@
 ﻿// ReSharper disable RedundantCast
-namespace Gu.Xml.Tests
+namespace Gu.Xml.Tests.Internals
 {
     using System;
     using System.IO;
