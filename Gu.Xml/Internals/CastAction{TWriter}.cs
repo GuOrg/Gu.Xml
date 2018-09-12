@@ -8,7 +8,7 @@
     /// </summary>
     /// <typeparam name="TWriter"></typeparam>
     [DebuggerDisplay("{this.raw}")]
-    public class CastAction<TWriter>
+    internal class CastAction<TWriter>
     {
         private readonly Delegate raw;
         private readonly Action<TWriter, object> boxing;
@@ -19,7 +19,7 @@
             this.boxing = boxing;
         }
 
-        public static CastAction<TWriter> Create<T>(Action<TWriter, T> action)
+        internal static CastAction<TWriter> Create<T>(Action<TWriter, T> action)
         {
             return new CastAction<TWriter>(
                 action,
@@ -33,7 +33,7 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="action"></param>
         /// <returns></returns>
-        public bool TryGet<T>(out Action<TWriter, T> action)
+        internal bool TryGet<T>(out Action<TWriter, T> action)
         {
             if (this.raw is Action<TWriter, T> rawMatch)
             {

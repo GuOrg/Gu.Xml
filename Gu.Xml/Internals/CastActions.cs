@@ -6,17 +6,17 @@
     /// <summary>
     /// A cache of <see cref="CastAction{TWriter}"/>
     /// </summary>
-    public class CastActions<TWriter>
+    internal class CastActions<TWriter>
     {
         private readonly ConcurrentDictionary<Type, CastAction<TWriter>> cache = new ConcurrentDictionary<Type, CastAction<TWriter>>();
 
-        public void RegisterClass<T>(Action<TWriter, T> action)
+        internal void RegisterClass<T>(Action<TWriter, T> action)
             where T : class
         {
             this.cache[typeof(T)] = CastAction<TWriter>.Create(action);
         }
 
-        public void RegisterStruct<T>(Action<TWriter, T> action)
+        internal void RegisterStruct<T>(Action<TWriter, T> action)
             where T : struct
         {
             this.cache[typeof(T)] = CastAction<TWriter>.Create(action);
@@ -26,7 +26,7 @@
             }
         }
 
-        public bool TryGet(Type type, out CastAction<TWriter> castAction)
+        internal bool TryGet(Type type, out CastAction<TWriter> castAction)
         {
             return this.cache.TryGetValue(type, out castAction);
         }

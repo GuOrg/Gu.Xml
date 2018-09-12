@@ -10,7 +10,7 @@
         private static readonly CastAction<XmlWriter> EnumerableItemWriter = CastAction<XmlWriter>.Create<IEnumerable>(WriteItems);
         private static readonly CastAction<XmlWriter> DictionaryItemWriter = CastAction<XmlWriter>.Create<IDictionary>(WriteItems);
 
-        public static CastAction<XmlWriter> Create(Type type)
+        internal static CastAction<XmlWriter> Create(Type type)
         {
             if (typeof(IDictionary).IsAssignableFrom(type))
             {

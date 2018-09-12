@@ -73,7 +73,7 @@
             if (type.IsEnum)
             {
                 // ReSharper disable once PossibleNullReferenceException
-                _ = typeof(CastActionsExt).GetMethod(nameof(CastActionsExt.RegisterEnum), BindingFlags.Public | BindingFlags.Static)
+                _ = typeof(CastActionsExt).GetMethod(nameof(CastActionsExt.RegisterEnum), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
                                              .MakeGenericMethod(type)
                                              .Invoke(null, new[] { this.simpleActions });
                 return this.TryGetSimple(typeof(TMember), out writer);
