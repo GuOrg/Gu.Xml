@@ -76,31 +76,22 @@
             if (value == null)
             {
             }
-            else if (DefaultWriterActions.TryGetSimple(value, out var simple))
-            {
-                if (this.pendingCloseStartElement)
-                {
-                    this.TextWriter.WriteLine(">");
-                    this.pendingCloseStartElement = false;
-                }
 
+            if (this.pendingCloseStartElement)
+            {
+                this.TextWriter.WriteLine(">");
+                this.pendingCloseStartElement = false;
+            }
+
+            if (DefaultWriterActions.TryGetSimple(value, out var simple))
+            {
                 this.WriteIndentation();
-                this.TextWriter.Write("<");
-                this.TextWriter.Write(name);
-                this.TextWriter.Write(">");
+                this.TextWriter.WriteMany("<", name, ">");
                 simple(this.TextWriter, value);
-                this.TextWriter.Write("</");
-                this.TextWriter.Write(name);
-                this.TextWriter.Write(">");
+                this.TextWriter.WriteMany("</", name, ">");
             }
             else if (DefaultWriterActions.TryGetCollection(value, out var itemWriter))
             {
-                if (this.pendingCloseStartElement)
-                {
-                    this.TextWriter.WriteLine(">");
-                    this.pendingCloseStartElement = false;
-                }
-
                 this.WriteIndentation();
                 this.TextWriter.Write("<");
                 this.TextWriter.Write(name);
@@ -118,19 +109,11 @@
                 else
                 {
                     this.WriteIndentation();
-                    this.TextWriter.Write("</");
-                    this.TextWriter.Write(name);
-                    this.TextWriter.Write(">");
+                    this.TextWriter.WriteMany("</", name, ">");
                 }
             }
             else if (DefaultWriterActions.TryGetWriteMap(value, out var complex))
             {
-                if (this.pendingCloseStartElement)
-                {
-                    this.TextWriter.WriteLine(">");
-                    this.pendingCloseStartElement = false;
-                }
-
                 this.WriteIndentation();
                 this.TextWriter.Write("<");
                 this.TextWriter.Write(name);
@@ -156,30 +139,13 @@
                 else
                 {
                     this.WriteIndentation();
-                    this.TextWriter.Write("</");
-                    this.TextWriter.Write(name);
-                    this.TextWriter.Write(">");
+                    this.TextWriter.WriteMany("</", name, ">");
                 }
             }
             else
             {
                 throw new InvalidOperationException($"Failed getting a value writer for {value}");
             }
-        }
-
-        public void Write(string text) => this.TextWriter.Write(text);
-
-        public void Write(string text1, string text2)
-        {
-            this.TextWriter.Write(text1);
-            this.TextWriter.Write(text2);
-        }
-
-        public void Write(string text1, string text2, string text3)
-        {
-            this.TextWriter.Write(text1);
-            this.TextWriter.Write(text2);
-            this.TextWriter.Write(text3);
         }
 
         public void WriteLine()

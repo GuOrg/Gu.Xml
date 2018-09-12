@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
 
@@ -120,9 +119,10 @@
                 {
                     if (writer.TryGetSimple(value, out var valueWriter))
                     {
-                        writer.Write(" ", name, "=\"");
-                        valueWriter(writer.TextWriter, value);
-                        writer.Write("\"");
+                        var textWriter = writer.TextWriter;
+                        textWriter.WriteMany(" ", name, "=\"");
+                        valueWriter(textWriter, value);
+                        textWriter.Write("\"");
                     }
                     else
                     {
