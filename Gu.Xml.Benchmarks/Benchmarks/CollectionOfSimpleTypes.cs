@@ -7,9 +7,9 @@
     using BenchmarkDotNet.Attributes;
     using Newtonsoft.Json;
 
-    public class Collection
+    public class CollectionOfSimpleTypes
     {
-        private static readonly WithInt[] Value = Enumerable.Range(1, 100000).Select(x => new WithInt { Number = x }).ToArray();
+        private static readonly int[] Value = Enumerable.Range(1, 100000).ToArray();
         private static readonly XmlSerializer XmlSerializer = new XmlSerializer(Value.GetType());
         private static readonly StringBuilder StringBuilder = new StringBuilder(Xml.Serialize(Value));
 
@@ -38,11 +38,6 @@
         public string JsonConvertSerializeObject()
         {
             return JsonConvert.SerializeObject(Value);
-        }
-
-        public sealed class WithInt
-        {
-            public int Number { get; set; }
         }
     }
 }
