@@ -75,14 +75,10 @@
         {
             if (value == null)
             {
+                return;
             }
 
-            if (this.pendingCloseStartElement)
-            {
-                this.TextWriter.WriteLine(">");
-                this.pendingCloseStartElement = false;
-            }
-
+            this.ClosePendingStart();
             if (DefaultWriterActions.TryGetSimple(value, out var simple))
             {
                 this.WriteIndentation();
@@ -122,13 +118,18 @@
             }
         }
 
-        internal void WriteElement<T>(string name, T value, WriteMap map)
+        internal void ClosePendingStart()
         {
             if (this.pendingCloseStartElement)
             {
                 this.TextWriter.WriteLine(">");
                 this.pendingCloseStartElement = false;
             }
+        }
+
+        internal void WriteElement<T>(string name, T value, WriteMap map)
+        {
+            this.ClosePendingStart();
 
             this.WriteIndentation();
             this.TextWriter.Write("<");
@@ -184,7 +185,7 @@
             this.pendingCloseStartElement = false;
         }
 
-        private void WriteIndentation()
+        internal void WriteIndentation()
         {
             for (var i = 0; i < this.indentLevel; i++)
             {
