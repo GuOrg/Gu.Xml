@@ -13,10 +13,19 @@ namespace Gu.Xml.Tests
             private static readonly TestCaseData[] DateTimeSource =
             {
                 new TestCaseData(System.DateTime.MinValue, "0001-01-01T00:00:00.0000000"),
-                new TestCaseData(new DateTime(2018, 09, 01, 09, 43, 15, 123, DateTimeKind.Local), "2018-09-01T09:43:15.1230000+02:00"),
-                new TestCaseData(new DateTime(2018, 09, 02, 09, 43, 15, 123, DateTimeKind.Unspecified), "2018-09-02T09:43:15.1230000"),
+                new TestCaseData(System.DateTime.ParseExact("2018-09-01T09:43:15.1230000+02:00", "O", NumberFormatInfo.InvariantInfo), "2018-09-01T09:43:15.1230000+02:00"),
+                new TestCaseData(System.DateTime.ParseExact("2018-09-02T09:43:15.1230000", "O", NumberFormatInfo.InvariantInfo), "2018-09-02T09:43:15.1230000"),
                 new TestCaseData(new DateTime(2018, 09, 03, 09, 43, 15, 123, DateTimeKind.Utc), "2018-09-03T09:43:15.1230000Z"),
                 new TestCaseData(System.DateTime.MaxValue, "9999-12-31T23:59:59.9999999"),
+            };
+
+            private static readonly TestCaseData[] DateTimeOffsetSource =
+            {
+                new TestCaseData(System.DateTimeOffset.MinValue, "0001-01-01T00:00:00.0000000+00:00"),
+                new TestCaseData(System.DateTimeOffset.ParseExact("2018-09-01T09:43:15.1230000+00:00", "O", NumberFormatInfo.InvariantInfo), "2018-09-01T09:43:15.1230000+00:00"),
+                new TestCaseData(System.DateTimeOffset.ParseExact("2018-09-02T09:43:15.1230000+02:00", "O", NumberFormatInfo.InvariantInfo), "2018-09-02T09:43:15.1230000+02:00"),
+                new TestCaseData(System.DateTimeOffset.ParseExact("2018-09-03T09:43:15.1230000+00:00", "O", NumberFormatInfo.InvariantInfo), "2018-09-03T09:43:15.1230000+00:00"),
+                new TestCaseData(System.DateTimeOffset.MaxValue, "9999-12-31T23:59:59.9999999+00:00"),
             };
 
             private static readonly decimal[] DecimalSource =
@@ -122,6 +131,19 @@ namespace Gu.Xml.Tests
                                "</WithMutableOfDateTime>";
                 var actual = Xml.Serialize(with);
                 Dump.Xml(actual);
+
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCaseSource(nameof(DateTimeOffsetSource))]
+            public void DateTimeOffset(DateTimeOffset value, string text)
+            {
+                var with = new WithMutable<DateTimeOffset> { Value = value };
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableOfDateTimeOffset>" + Environment.NewLine +
+                               $"  <Value>{text}</Value>" + Environment.NewLine +
+                               "</WithMutableOfDateTimeOffset>";
+                var actual = Xml.Serialize(with);
                 Assert.AreEqual(expected, actual);
             }
 
