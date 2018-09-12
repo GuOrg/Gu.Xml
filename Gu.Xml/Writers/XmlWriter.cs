@@ -161,7 +161,7 @@
             this.indentLevel++;
             foreach (var elementWriter in map.Elements)
             {
-                elementWriter.Write(this, value);
+                elementWriter.Invoke(this, value);
             }
 
             this.indentLevel--;
