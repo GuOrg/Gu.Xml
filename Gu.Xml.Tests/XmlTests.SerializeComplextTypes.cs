@@ -1,4 +1,6 @@
-﻿#pragma warning disable SA1201 // Elements should appear in the correct order
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+#pragma warning disable SA1201 // Elements should appear in the correct order
 namespace Gu.Xml.Tests
 {
     using System;
@@ -15,7 +17,7 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new WithPublicMutableField { Value = 1 }),
                 new TestCaseData(new WithTwoPublicMutableProperties { Value1 = 1, Value2 = 2 }),
                 new TestCaseData(new WithTwoPublicMutableBoxedProperties { Value1 = 1, Value2 = 2 }),
-                new TestCaseData(new WithTwoPublicMutableBoxedProperties { Value1 = 1, Value2 = 2.0 }),
+                new TestCaseData(new WithTwoPublicMutableBoxedProperties { Value1 = 1, Value2 = 2.1 }),
                 new TestCaseData(new WithFieldBeforeProperty { Value1 = 1, Value2 = 2 }),
                 new TestCaseData(new WithPropertyBeforeField { Value1 = 1, Value2 = 2 }),
                 new TestCaseData(new ConcreteWithProperties { Value1 = 1, Value2 = 2, Value3 = 3, Value4 = 4 }),
@@ -142,7 +144,7 @@ namespace Gu.Xml.Tests
 
             public class GenericWithPublicMutableProperty<T>
             {
-                public T Value { get; set; } = default(T);
+                public T Value { get; set; }
             }
 
             public class WithTwoPublicMutableProperties

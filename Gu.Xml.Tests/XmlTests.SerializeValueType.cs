@@ -1,4 +1,6 @@
-﻿namespace Gu.Xml.Tests
+﻿// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable NotAccessedField.Global
+namespace Gu.Xml.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -106,6 +108,7 @@
                     this.Value = value;
                 }
 
+                // ReSharper disable once UnusedAutoPropertyAccessor.Global
                 public int Value { get; }
             }
 
@@ -125,7 +128,8 @@
 
             public class With<T>
             {
-                public T Value { get; set; } = default(T);
+                // ReSharper disable once UnusedAutoPropertyAccessor.Global
+                public T Value { get; set; }
             }
         }
     }

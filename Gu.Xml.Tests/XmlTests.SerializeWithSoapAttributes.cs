@@ -1,4 +1,7 @@
-﻿#pragma warning disable SA1201 // Elements should appear in the correct order
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable NotAccessedField.Global
+#pragma warning disable SA1201 // Elements should appear in the correct order
 namespace Gu.Xml.Tests
 {
     using System;

@@ -1,4 +1,6 @@
-﻿#pragma warning disable SA1202
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+#pragma warning disable SA1202
 namespace Gu.Xml.Tests
 {
     using System;
@@ -124,6 +126,7 @@ namespace Gu.Xml.Tests
                     this.Value = value;
                 }
 
+                // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
                 public int Value { get; private set; }
             }
 
@@ -167,11 +170,12 @@ namespace Gu.Xml.Tests
                     this.ProtectedValue = 3;
                 }
 
-                public static int StaticValue { get; set; } = 1;
+                public static int StaticValue { get; set; }
 
-                private int PrivateValue { get; set; } = 2;
+                // ReSharper disable once UnusedAutoPropertyAccessor.Local
+                private int PrivateValue { get; }
 
-                protected int ProtectedValue { get; set; } = 3;
+                protected int ProtectedValue { get; }
             }
         }
     }

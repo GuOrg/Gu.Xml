@@ -1,4 +1,6 @@
-﻿#pragma warning disable SA1201 // Elements should appear in the correct order
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+#pragma warning disable SA1201 // Elements should appear in the correct order
 namespace Gu.Xml.Tests
 {
     using System;
@@ -93,7 +95,9 @@ namespace Gu.Xml.Tests
             public interface IValue
             {
                 // ReSharper disable once UnusedMember.Global
+                // ReSharper disable UnusedMemberInSuper.Global
                 int Value { get; set; }
+                // ReSharper restore UnusedMemberInSuper.Global
             }
 
             public class ExplicitInterfaceWithDataMemberAttribute : IValue

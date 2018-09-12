@@ -1,4 +1,5 @@
-﻿namespace Gu.Xml.Tests
+﻿// ReSharper disable MemberCanBePrivate.Global
+namespace Gu.Xml.Tests
 {
     using System;
     using System.Globalization;
@@ -325,11 +326,13 @@
 
             public class WithMutableBoxed
             {
+                // ReSharper disable once UnusedAutoPropertyAccessor.Global
                 public object Value { get; set; }
             }
 
             public class WithMutable<T>
             {
+                // ReSharper disable once UnusedAutoPropertyAccessor.Global
                 public T Value { get; set; }
             }
         }
