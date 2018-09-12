@@ -103,7 +103,7 @@
             writer = null;
             return false;
 
-            object Create(Type x)
+            CastAction<XmlWriter> Create(Type x)
             {
                 return CollectionWriter.Create(x, this);
             }
