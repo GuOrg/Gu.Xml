@@ -6,5 +6,10 @@
     <CodeAnalysisRuleSet>Gu.Xml.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../Gu.Xml.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

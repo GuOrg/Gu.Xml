@@ -6,6 +6,11 @@
     <CodeAnalysisRuleSet>Gu.Xml.Benchmarks.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../Gu.Xml.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Gu.Xml\Gu.Xml.csproj" />
   </ItemGroup>
