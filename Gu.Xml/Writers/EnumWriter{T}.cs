@@ -9,21 +9,28 @@
         where T : struct, Enum
     {
         /// <summary>
+        /// An <see cref="EnumWriter{T}"/> that serializes with 'G' format string and removes commas.
+        /// </summary>
+        public static readonly EnumWriter<T> Default = new EnumWriter<T>("G", removeCommas: true);
+
+        /// <summary>
         /// An <see cref="EnumWriter{T}"/> that serializes with 'G' format string.
         /// </summary>
-        public static readonly EnumWriter<T> Default = new EnumWriter<T>("G");
+        public static readonly EnumWriter<T> String = new EnumWriter<T>("G", removeCommas: false);
 
         /// <summary>
         /// An <see cref="EnumWriter{T}"/> that serializes with 'D' format string.
         /// </summary>
-        public static readonly EnumWriter<T> Integer = new EnumWriter<T>("D");
+        public static readonly EnumWriter<T> Integer = new EnumWriter<T>("D", removeCommas: false);
 
         private readonly ConcurrentDictionary<T, string> cache = new ConcurrentDictionary<T, string>();
         private readonly string format;
+        private readonly bool removeCommas;
 
-        private EnumWriter(string format)
+        private EnumWriter(string format, bool removeCommas)
         {
             this.format = format;
+            this.removeCommas = removeCommas;
         }
 
         public void Write(TextWriter writer, T value)
@@ -55,7 +62,13 @@
                 }
             }
 
-            return Enum.Format(typeof(T), value, this.format).Replace(",", string.Empty);
+            var text = Enum.Format(typeof(T), value, this.format);
+            if (this.removeCommas)
+            {
+                return text.Replace(",", string.Empty);
+            }
+
+            return text;
         }
     }
 }

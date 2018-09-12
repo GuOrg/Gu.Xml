@@ -18,5 +18,17 @@
                 Assert.AreEqual(text, sb.ToString());
             }
         }
+
+        [TestCase(StringComparison.Ordinal, "Ordinal")]
+        [TestCase(StringComparison.InvariantCulture, "InvariantCulture")]
+        public void StringWrite(StringComparison stringComparison, string text)
+        {
+            var sb = new StringBuilder();
+            using (var writer = new StringWriter(sb))
+            {
+                EnumWriter<StringComparison>.String.Write(writer, stringComparison);
+                Assert.AreEqual(text, sb.ToString());
+            }
+        }
     }
 }

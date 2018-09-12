@@ -8,7 +8,7 @@
 
     public class XmlWriterActions
     {
-        private readonly CastActions<TextWriter> simpleActions = new CastActions<TextWriter>();
+        private readonly ConcurrentDictionary<Type, CastAction<TextWriter>> simpleActions = new ConcurrentDictionary<Type, CastAction<TextWriter>>();
         private readonly ConcurrentDictionary<Type, CastAction<XmlWriter>> collectionActions = new ConcurrentDictionary<Type, CastAction<XmlWriter>>();
         private readonly ConcurrentDictionary<Type, WriteMap> writeMaps = new ConcurrentDictionary<Type, WriteMap>();
 
@@ -50,14 +50,19 @@
         public XmlWriterActions SimpleClass<T>(Action<TextWriter, T> action)
             where T : class
         {
-            this.simpleActions.RegisterClass(action);
+            this.simpleActions[typeof(T)] = CastAction<TextWriter>.Create(action);
             return this;
         }
 
         public XmlWriterActions SimpleStruct<T>(Action<TextWriter, T> action)
             where T : struct
         {
-            this.simpleActions.RegisterStruct(action);
+            this.simpleActions[typeof(T)] = CastAction<TextWriter>.Create(action);
+            if (!this.simpleActions.ContainsKey(typeof(T?)))
+            {
+                this.simpleActions[typeof(T?)] = CastAction<TextWriter>.Create(new Action<TextWriter, T?>((writer, value) => action(writer, value.Value)));
+            }
+
             return this;
         }
 
@@ -73,7 +78,7 @@
         /// <returns>True if a writer was found for <paramref name="type"/></returns>
         private bool TryGetSimple<TMember>(Type type, out Action<TextWriter, TMember> writer)
         {
-            if (this.simpleActions.TryGet(type, out var castAction))
+            if (this.simpleActions.TryGetValue(type, out var castAction))
             {
                 if (castAction.TryGet(out writer))
                 {
@@ -86,14 +91,20 @@
             if (type.IsEnum)
             {
                 // ReSharper disable once PossibleNullReferenceException
-                _ = typeof(CastActionsExt).GetMethod(nameof(CastActionsExt.RegisterEnum), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                _ = typeof(XmlWriterActions).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
                                              .MakeGenericMethod(type)
-                                             .Invoke(null, new[] { this.simpleActions });
+                                             .Invoke(this, null);
                 return this.TryGetSimple(typeof(TMember), out writer);
             }
 
             writer = null;
             return false;
+        }
+
+        private void RegisterEnum<T>()
+            where T : struct, Enum
+        {
+            this.SimpleStruct<T>((writer, value) => EnumWriter<T>.Default.Write(writer, value));
         }
     }
 }
