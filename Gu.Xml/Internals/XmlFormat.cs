@@ -5,9 +5,13 @@
 
     internal static class XmlFormat
     {
+        /// <summary>
+        /// Format a <see cref="double"/> according to: https://www.w3.org/TR/xmlschema-2/#double
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The string representation.</returns>
         internal static string ToString(double value)
         {
-            // https://www.w3.org/TR/xmlschema-2/#double
             if (double.IsNegativeInfinity(value))
             {
                 return "-INF";
@@ -28,6 +32,11 @@
             return value.ToString("R", NumberFormatInfo.InvariantInfo);
         }
 
+        /// <summary>
+        /// Format a <see cref="float"/> according to: https://www.w3.org/TR/xmlschema-2/#double
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The string representation.</returns>
         internal static string ToString(float value)
         {
             // https://www.w3.org/TR/xmlschema-2/#double
