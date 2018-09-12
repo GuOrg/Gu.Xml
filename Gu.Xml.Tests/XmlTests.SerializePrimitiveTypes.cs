@@ -317,6 +317,18 @@ namespace Gu.Xml.Tests
             }
 
             [Test]
+            public void IntPtr()
+            {
+                var with = new WithMutable<IntPtr> { Value = new IntPtr(1) };
+                var actual = Xml.Serialize(with);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableOfIntPtr>" + Environment.NewLine +
+                               "  <Value>1</Value>" + Environment.NewLine +
+                               "</WithMutableOfIntPtr>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
             public void Object()
             {
                 var with = new WithMutable<object> { Value = new object() };
@@ -395,6 +407,18 @@ namespace Gu.Xml.Tests
                 var with = new WithMutable<ulong> { Value = value };
                 var actual = Xml.Serialize(with);
                 var expected = Reference.XmlSerializer(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void UIntPtr()
+            {
+                var with = new WithMutable<UIntPtr> { Value = new UIntPtr(1) };
+                var actual = Xml.Serialize(with);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableOfUIntPtr>" + Environment.NewLine +
+                               "  <Value>1</Value>" + Environment.NewLine +
+                               "</WithMutableOfUIntPtr>";
                 Assert.AreEqual(expected, actual);
             }
 

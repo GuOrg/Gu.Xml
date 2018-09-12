@@ -21,12 +21,14 @@
             .SimpleStruct<float>((writer, value) => writer.Write(XmlFormat.ToString(value)))
             .SimpleStruct<Guid>((writer, value) => writer.Write(value.ToString()))
             .SimpleStruct<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
+            .SimpleStruct<IntPtr>((writer, value) => writer.Write(value.ToString()))
             .SimpleStruct<long>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<short>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<TimeSpan>((writer, value) => writer.Write(value.ToString("c", NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<sbyte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<ulong>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))
             .SimpleStruct<uint>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))
+            .SimpleStruct<UIntPtr>((writer, value) => writer.Write(value.ToString()))
             .SimpleStruct<ushort>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)));
 
         private readonly TextWriter writer;
