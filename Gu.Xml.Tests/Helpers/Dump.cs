@@ -16,7 +16,7 @@ namespace Gu.Xml.Tests
             var lines = Lines().ToArray();
             for (var i = 0; i < lines.Length; i++)
             {
-                Console.Write($"\"{lines[0].Replace("\"", "\\\"")}\"");
+                Console.Write($"\"{lines[i].Replace("\"", "\\\"")}\"");
                 if (i == lines.Length - 1)
                 {
                     Console.WriteLine(";");
