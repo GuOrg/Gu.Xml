@@ -57,7 +57,7 @@
                     if (actions.TryGetSimpleCached(type, out var cached))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateCachingGenericSimpleEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                        result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateCachedGenericSimpleEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                                 .MakeGenericMethod(type, elementType)
                                                                                 .Invoke(null, new object[] { RootName.Get(elementType), cached });
                         return true;
@@ -125,7 +125,7 @@
         /// <typeparam name="TEnumerable"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <returns></returns>
-        private static CastAction<XmlWriter> CreateCachingGenericSimpleEnumerableWriter<TEnumerable, TValue>(string elementName, CastAction<TextWriter> castAction)
+        private static CastAction<XmlWriter> CreateCachedGenericSimpleEnumerableWriter<TEnumerable, TValue>(string elementName, CastAction<TextWriter> castAction)
             where TEnumerable : IEnumerable<TValue>
         {
             var cachedWrite = castAction.Get<TValue>();

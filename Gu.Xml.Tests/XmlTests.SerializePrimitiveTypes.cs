@@ -225,6 +225,34 @@ namespace Gu.Xml.Tests
                 Assert.AreEqual(expected, actual);
             }
 
+            [TestCase(CultureTypes.NeutralCultures)]
+            [TestCase(CultureTypes.SpecificCultures)]
+            [TestCase(CultureTypes.NeutralCultures | CultureTypes.SpecificCultures)]
+            [TestCase(CultureTypes.AllCultures)]
+            public void EnumCultureTypesNullable(CultureTypes? value)
+            {
+                var with = new WithMutable<CultureTypes?> { Value = value };
+                var actual = Xml.Serialize(with);
+                var expected = Reference.XmlSerializer(with);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestCase(CultureTypes.NeutralCultures, "NeutralCultures")]
+            [TestCase(CultureTypes.SpecificCultures, "SpecificCultures")]
+            [TestCase(CultureTypes.NeutralCultures | CultureTypes.SpecificCultures, "NeutralCultures SpecificCultures")]
+            [TestCase(CultureTypes.AllCultures, "AllCultures")]
+            public void EnumCultureTypesNullableBoxed(CultureTypes? value, string text)
+            {
+                var with = new WithMutable<object> { Value = value };
+                var actual = Xml.Serialize(with);
+                Dump.XmlAsCode(actual);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<WithMutableOfObject>" + Environment.NewLine +
+                              $"  <Value>{text}</Value>" + Environment.NewLine +
+                               "</WithMutableOfObject>";
+                Assert.AreEqual(expected, actual);
+            }
+
             [TestCase(float.NegativeInfinity)]
             [TestCase(float.MinValue)]
             [TestCase(int.MinValue)]
