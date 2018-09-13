@@ -27,6 +27,12 @@
                 (writer, value) => action(writer, (T)value));
         }
 
+        internal static CastAction<TextWriter> CreateUnderlying<T>(Action<TextWriter, T?> action)
+            where T : struct
+        {
+            return CastAction<TextWriter>.Create(new Action<TextWriter, T>((writer, value) => action(writer, value)));
+        }
+
         internal static CastAction<TextWriter> CreateNullable<T>(Action<TextWriter, T> action)
             where T : struct
         {

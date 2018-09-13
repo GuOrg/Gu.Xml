@@ -138,17 +138,30 @@
         internal XmlWriterActions RegisterSimple<T>(Action<TextWriter, T> action)
         {
             this.actions[typeof(T)] = CastAction<TextWriter>.Create(action);
-            if (typeof(T).IsValueType &&
-                !typeof(T).IsNullable())
+            if (typeof(T).IsValueType)
             {
-                var nullableType = typeof(Nullable<>).MakeGenericType(typeof(T));
-                if (!this.actions.ContainsKey(nullableType))
+                if (Nullable.GetUnderlyingType(typeof(T)) is Type underlying)
                 {
-                    // ReSharper disable once PossibleNullReferenceException
-                    this.actions[nullableType] = typeof(CastAction<TextWriter>)
-                                                 .GetMethod(nameof(CastAction<TextWriter>.CreateNullable), BindingFlags.Static | BindingFlags.NonPublic)
-                                                 .MakeGenericMethod(typeof(T))
-                                                 .Invoke(null, new[] { action });
+                    if (!this.actions.ContainsKey(underlying))
+                    {
+                        // ReSharper disable once PossibleNullReferenceException
+                        this.actions[underlying] = typeof(CastAction<TextWriter>)
+                                                     .GetMethod(nameof(CastAction<TextWriter>.CreateUnderlying), BindingFlags.Static | BindingFlags.NonPublic)
+                                                     .MakeGenericMethod(underlying)
+                                                     .Invoke(null, new[] { action });
+                    }
+                }
+                else
+                {
+                    var nullableType = typeof(Nullable<>).MakeGenericType(typeof(T));
+                    if (!this.actions.ContainsKey(nullableType))
+                    {
+                        // ReSharper disable once PossibleNullReferenceException
+                        this.actions[nullableType] = typeof(CastAction<TextWriter>)
+                                                     .GetMethod(nameof(CastAction<TextWriter>.CreateNullable), BindingFlags.Static | BindingFlags.NonPublic)
+                                                     .MakeGenericMethod(typeof(T))
+                                                     .Invoke(null, new[] { action });
+                    }
                 }
             }
 

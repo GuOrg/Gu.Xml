@@ -14,11 +14,16 @@
             using (var stringWriter = new StringWriter(sb))
             {
                 var actions = new XmlWriterActions().RegisterSimple<int?>((writer, value) => writer.Write(value?.ToString(NumberFormatInfo.InvariantInfo)));
-                int? writeValue = 1;
+                int? nullableValue = 1;
 
-                Assert.AreEqual(true, actions.TryGetSimple(writeValue, out var action));
-                action(stringWriter, writeValue);
+                Assert.AreEqual(true, actions.TryGetSimple(nullableValue, out var action));
+                action(stringWriter, nullableValue);
                 Assert.AreEqual("1", sb.ToString());
+
+                var intValue = 2;
+                Assert.AreEqual(true, actions.TryGetSimple(intValue, out var intAction));
+                intAction(stringWriter, intValue);
+                Assert.AreEqual("12", sb.ToString());
             }
         }
 
