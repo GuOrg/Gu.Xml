@@ -252,7 +252,7 @@
                     writer = (CastAction<XmlWriter>)typeof(AttributeAction)
                                               .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
                                               .MakeGenericMethod(property.ReflectedType, property.PropertyType)
-                                              .Invoke(null, new object[] { name, property });
+                                              .Invoke(null, new object[] { name, property.CreateGetter() });
                     return true;
                 }
 
@@ -268,7 +268,7 @@
                     writer = (CastAction<XmlWriter>)typeof(AttributeAction)
                                          .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
                                          .MakeGenericMethod(field.ReflectedType, field.FieldType)
-                                         .Invoke(null, new object[] { name, field });
+                                         .Invoke(null, new object[] { name, field.CreateGetter() });
                     return true;
                 }
 
@@ -276,15 +276,14 @@
                 return false;
             }
 
-            private static CastAction<XmlWriter> Create<TSource, TValue>(string name, MemberInfo member)
+            private static CastAction<XmlWriter> Create<TSource, TValue>(string name, Func<TSource, TValue> getter)
             {
                 // Caching via closure here.
-                var cachedGetter = CreateGetter();
                 Action<TextWriter, TValue> cachedWriter = null;
 
                 return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
                 {
-                    if (cachedGetter(source) is TValue value)
+                    if (getter(source) is TValue value)
                     {
                         if (cachedWriter != null ||
                             writer.TryGetSimple(value, out cachedWriter))
@@ -305,19 +304,6 @@
                         }
                     }
                 });
-
-                Func<TSource, TValue> CreateGetter()
-                {
-                    switch (member)
-                    {
-                        case PropertyInfo property:
-                            return property.CreateGetter<TSource, TValue>();
-                        case FieldInfo field:
-                            return field.CreateGetter<TSource, TValue>();
-                        default:
-                            throw new InvalidOperationException($"Not handling {member}. Bug in Gu.Xml.");
-                    }
-                }
             }
 
             private static bool TryGetName(MemberInfo member, out string name)
