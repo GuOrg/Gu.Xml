@@ -51,6 +51,48 @@
             }
 
             [Test]
+            public void ArrayOfFoo()
+            {
+                var value = new[] { new Foo(1), new Foo(2), new Foo(3) };
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ArrayOfFoo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>1</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>2</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "  <Foo>" + Environment.NewLine +
+                               "    <Value>3</Value>" + Environment.NewLine +
+                               "  </Foo>" + Environment.NewLine +
+                               "</ArrayOfFoo>";
+                Dump.XmlAsCode(actual);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void ArrayOfSealedFoo()
+            {
+                var value = new[] { new SealedFoo(1), new SealedFoo(2), new SealedFoo(3) };
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ArrayOfSealedFoo>" + Environment.NewLine +
+                               "  <SealedFoo>" + Environment.NewLine +
+                               "    <Value>1</Value>" + Environment.NewLine +
+                               "  </SealedFoo>" + Environment.NewLine +
+                               "  <SealedFoo>" + Environment.NewLine +
+                               "    <Value>2</Value>" + Environment.NewLine +
+                               "  </SealedFoo>" + Environment.NewLine +
+                               "  <SealedFoo>" + Environment.NewLine +
+                               "    <Value>3</Value>" + Environment.NewLine +
+                               "  </SealedFoo>" + Environment.NewLine +
+                               "</ArrayOfSealedFoo>";
+                Dump.XmlAsCode(actual);
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
             public void ArrayList()
             {
                 var value = new ArrayList { new Foo(1), new Foo(2), new Foo(3) };
@@ -601,6 +643,23 @@
                 public int Value { get; }
 
                 public int CompareTo(Foo other) => this.Value.CompareTo(other.Value);
+            }
+
+            public sealed class SealedFoo : IComparable<SealedFoo>
+            {
+                public SealedFoo(int value)
+                {
+                    this.Value = value;
+                }
+
+                // ReSharper disable once UnusedMember.Local for XmlSerializer
+                private SealedFoo()
+                {
+                }
+
+                public int Value { get; }
+
+                public int CompareTo(SealedFoo other) => this.Value.CompareTo(other.Value);
             }
         }
     }

@@ -6,7 +6,7 @@
     using System.IO;
     using System.Reflection;
 
-    public static class CollectionWriter
+    internal static class CollectionWriter
     {
         private static readonly CastAction<XmlWriter> EnumerableItemWriter = CastAction<XmlWriter>.Create<IEnumerable>(WriteItems);
         private static readonly CastAction<XmlWriter> DictionaryItemWriter = CastAction<XmlWriter>.Create<IDictionary>(WriteItems);
@@ -38,6 +38,15 @@
                     type.GetInterface("ICollection`1") is Type collectionType &&
                     collectionType.GenericTypeArguments.TrySingle(out var kvpType))
                 {
+                    if (actions.TryGetWriteMapCached(kvpType, out var map))
+                    {
+                        // ReSharper disable once PossibleNullReferenceException
+                        result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateCachedGenericComplexEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic)
+                                                                                .MakeGenericMethod(type, kvpType)
+                                                                                .Invoke(null, new object[] { "Entry", map });
+                        return true;
+                    }
+
                     // ReSharper disable once PossibleNullReferenceException
                     result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateGenericDictionaryWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                  .MakeGenericMethod(type, kvpType.GenericTypeArguments[0], kvpType.GenericTypeArguments[1])
@@ -54,12 +63,21 @@
                 if (type.IsGenericEnumerable(out var enumerableType) &&
                     enumerableType.GenericTypeArguments.TrySingle(out var elementType))
                 {
-                    if (actions.TryGetSimpleCached(type, out var cached))
+                    if (actions.TryGetSimpleCached(elementType, out var castAction))
                     {
                         // ReSharper disable once PossibleNullReferenceException
                         result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateCachedGenericSimpleEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                                 .MakeGenericMethod(type, elementType)
-                                                                                .Invoke(null, new object[] { RootName.Get(elementType), cached });
+                                                                                .Invoke(null, new object[] { RootName.Get(elementType), castAction });
+                        return true;
+                    }
+
+                    if (actions.TryGetWriteMapCached(elementType, out var map))
+                    {
+                        // ReSharper disable once PossibleNullReferenceException
+                        result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateCachedGenericComplexEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                                                                                .MakeGenericMethod(type, elementType)
+                                                                                .Invoke(null, new object[] { RootName.Get(elementType), map });
                         return true;
                     }
 
@@ -152,6 +170,25 @@
                         textWriter.WriteMany("</", elementName, ">");
                         textWriter.WriteLine();
                     }
+                }
+            });
+        }
+
+        /// <summary>
+        /// This is an optimization for collections of sealed simple types.
+        /// </summary>
+        /// <typeparam name="TEnumerable"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <returns></returns>
+        private static CastAction<XmlWriter> CreateCachedGenericComplexEnumerableWriter<TEnumerable, TValue>(string elementName, WriteMap map)
+            where TEnumerable : IEnumerable<TValue>
+        {
+            return CastAction<XmlWriter>.Create<TEnumerable>((writer, enumerable) =>
+            {
+                foreach (var item in enumerable)
+                {
+                    writer.WriteElement(elementName, item, map);
+                    writer.WriteLine();
                 }
             });
         }

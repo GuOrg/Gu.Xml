@@ -110,6 +110,25 @@
             return false;
         }
 
+        /// <summary>
+        /// If the type is sealed and has a simple action it can be cached to avoid lookups for example when writing collections.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        internal bool TryGetWriteMapCached(Type type, out WriteMap map)
+        {
+            map = null;
+            if (type.IsSealed &&
+                this.actions.GetOrAdd(type, x => WriteMap.Create(x)) is WriteMap match)
+            {
+                map = match;
+                return true;
+            }
+
+            return false;
+        }
+
         internal XmlWriterActions RegisterSimple<T>(Action<TextWriter, T> action)
         {
             this.actions[typeof(T)] = CastAction<TextWriter>.Create(action);
