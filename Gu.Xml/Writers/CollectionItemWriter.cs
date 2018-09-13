@@ -6,7 +6,7 @@
     using System.IO;
     using System.Reflection;
 
-    internal static class CollectionWriter
+    internal static class CollectionItemWriter
     {
         private static readonly CastAction<XmlWriter> EnumerableItemWriter = CastAction<XmlWriter>.Create<IEnumerable>(WriteItems);
         private static readonly CastAction<XmlWriter> DictionaryItemWriter = CastAction<XmlWriter>.Create<IDictionary>(WriteItems);
@@ -34,22 +34,21 @@
 
             bool TryCreateGenericDictionaryWriter(out CastAction<XmlWriter> result)
             {
-                if (type.IsGenericType &&
-                    type.GetInterface("ICollection`1") is Type collectionType &&
-                    collectionType.GenericTypeArguments.TrySingle(out var kvpType))
+                if (type.IsGenericEnumerable(out var enumerableType) &&
+                    enumerableType.GenericTypeArguments.TrySingle(out var entryType))
                 {
-                    if (actions.TryGetWriteMapCached(kvpType, out var map))
+                    if (actions.TryGetWriteMapCached(entryType, out var map))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateCachedGenericComplexEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic)
-                                                                                .MakeGenericMethod(type, kvpType)
+                        result = (CastAction<XmlWriter>)typeof(CollectionItemWriter).GetMethod(nameof(CreateCachedGenericComplexEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic)
+                                                                                .MakeGenericMethod(type, entryType)
                                                                                 .Invoke(null, new object[] { "Entry", map });
                         return true;
                     }
 
                     // ReSharper disable once PossibleNullReferenceException
-                    result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateGenericDictionaryWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
-                                                                 .MakeGenericMethod(type, kvpType.GenericTypeArguments[0], kvpType.GenericTypeArguments[1])
+                    result = (CastAction<XmlWriter>)typeof(CollectionItemWriter).GetMethod(nameof(CreateGenericDictionaryWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                                                                 .MakeGenericMethod(type, entryType.GenericTypeArguments[0], entryType.GenericTypeArguments[1])
                                                                  .Invoke(null, null);
                     return true;
                 }
@@ -66,7 +65,7 @@
                     if (actions.TryGetSimpleCached(elementType, out var castAction))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateCachedGenericSimpleEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                        result = (CastAction<XmlWriter>)typeof(CollectionItemWriter).GetMethod(nameof(CreateCachedGenericSimpleEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                                 .MakeGenericMethod(type, elementType)
                                                                                 .Invoke(null, new object[] { RootName.Get(elementType), castAction });
                         return true;
@@ -75,14 +74,14 @@
                     if (actions.TryGetWriteMapCached(elementType, out var map))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateCachedGenericComplexEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                        result = (CastAction<XmlWriter>)typeof(CollectionItemWriter).GetMethod(nameof(CreateCachedGenericComplexEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                                 .MakeGenericMethod(type, elementType)
                                                                                 .Invoke(null, new object[] { RootName.Get(elementType), map });
                         return true;
                     }
 
                     // ReSharper disable once PossibleNullReferenceException
-                    result = (CastAction<XmlWriter>)typeof(CollectionWriter).GetMethod(nameof(CreateGenericEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                    result = (CastAction<XmlWriter>)typeof(CollectionItemWriter).GetMethod(nameof(CreateGenericEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                             .MakeGenericMethod(type, elementType)
                                                                             .Invoke(null, null);
                     return true;

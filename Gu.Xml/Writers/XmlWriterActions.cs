@@ -93,7 +93,7 @@
 
             CastAction<XmlWriter> Create(Type x)
             {
-                return CollectionWriter.Create(x, this);
+                return CollectionItemWriter.Create(x, this);
             }
         }
 
