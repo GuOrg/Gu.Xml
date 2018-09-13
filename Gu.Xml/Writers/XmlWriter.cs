@@ -81,10 +81,7 @@
             this.ClosePendingStart();
             if (DefaultWriterActions.TryGetSimple(value, out var simple))
             {
-                this.WriteIndentation();
-                this.TextWriter.WriteMany("<", name, ">");
-                simple(this.TextWriter, value);
-                this.TextWriter.WriteMany("</", name, ">");
+                this.WriteElement(name, value, simple);
             }
             else if (DefaultWriterActions.TryGetCollection(value, out var itemWriter))
             {
@@ -147,7 +144,6 @@
         internal void WriteElement<T>(string name, T value, WriteMap map)
         {
             this.ClosePendingStart();
-
             this.WriteIndentation();
             this.TextWriter.Write("<");
             this.TextWriter.Write(name);
@@ -175,6 +171,15 @@
                 this.WriteIndentation();
                 this.TextWriter.WriteMany("</", name, ">");
             }
+        }
+
+        internal void WriteElement<T>(string name, T value, Action<TextWriter, T> simple)
+        {
+            this.ClosePendingStart();
+            this.WriteIndentation();
+            this.TextWriter.WriteMany("<", name, ">");
+            simple(this.TextWriter, value);
+            this.TextWriter.WriteMany("</", name, ">");
         }
 
         internal void Reset()

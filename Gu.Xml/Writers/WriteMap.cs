@@ -57,7 +57,7 @@
             {
                 foreach (var field in fields)
                 {
-                    if (ElementAction.TryCreate(field, out var action))
+                    if (ElementAction.TryCreate(field, actions, out var action))
                     {
                         yield return action;
                     }
@@ -65,7 +65,7 @@
 
                 foreach (var property in properties)
                 {
-                    if (ElementAction.TryCreate(property, out var action))
+                    if (ElementAction.TryCreate(property, actions, out var action))
                     {
                         yield return action;
                     }
@@ -93,7 +93,7 @@
 
         private static class ElementAction
         {
-            internal static bool TryCreate(PropertyInfo property, out CastAction<XmlWriter> writer)
+            internal static bool TryCreate(PropertyInfo property, XmlWriterActions actions, out CastAction<XmlWriter> writer)
             {
                 writer = null;
                 return property.GetMethod is MethodInfo getMethod &&
@@ -102,7 +102,7 @@
                        !IsIgnoredAccessibility() &&
                        !IsIgnoredCalculated() &&
                        TryGetName(property, out var name) &&
-                       TryCreate(new FieldOrProperty(property), name, out writer);
+                       TryCreate(new FieldOrProperty(property), name, actions, out writer);
 
                 bool IsIgnoredAccessibility()
                 {
@@ -158,18 +158,28 @@
                 }
             }
 
-            internal static bool TryCreate(FieldInfo field, out CastAction<XmlWriter> writer)
+            internal static bool TryCreate(FieldInfo field, XmlWriterActions actions, out CastAction<XmlWriter> writer)
             {
                 writer = null;
                 return !field.IsStatic &&
                        !field.IsPrivate &&
                        !field.IsFamily &&
                        TryGetName(field, out var name) &&
-                       TryCreate(new FieldOrProperty(field), name, out writer);
+                       TryCreate(new FieldOrProperty(field), name, actions, out writer);
             }
 
-            private static bool TryCreate(FieldOrProperty fieldOrProperty, string name, out CastAction<XmlWriter> castAction)
+            private static bool TryCreate(FieldOrProperty fieldOrProperty, string name, XmlWriterActions actions, out CastAction<XmlWriter> castAction)
             {
+                if (actions.TryGetSimpleCached(fieldOrProperty.ValueType, out var valueAction))
+                {
+                    // ReSharper disable once PossibleNullReferenceException
+                    castAction = (CastAction<XmlWriter>)typeof(ElementAction)
+                                                        .GetMethod(nameof(CreateSimpleCached), BindingFlags.Static | BindingFlags.NonPublic)
+                                                        .MakeGenericMethod(fieldOrProperty.SourceType, fieldOrProperty.ValueType)
+                                                        .Invoke(null, new object[] { name, fieldOrProperty.CreateGetter(), valueAction });
+                    return true;
+                }
+
                 // ReSharper disable once PossibleNullReferenceException
                 castAction = (CastAction<XmlWriter>)typeof(ElementAction)
                                                        .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
@@ -178,9 +188,21 @@
                 return true;
             }
 
+            private static CastAction<XmlWriter> CreateSimpleCached<TSource, TValue>(string name, Func<TSource, TValue> getter, CastAction<TextWriter> castAction)
+            {
+                var action = castAction.Get<TValue>();
+                return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
+                {
+                    if (getter(source) is TValue value)
+                    {
+                        writer.WriteElement(name, value, action);
+                        writer.WriteLine();
+                    }
+                });
+            }
+
             private static CastAction<XmlWriter> Create<TSource, TValue>(string name, Func<TSource, TValue> getter)
             {
-                // Caching via closure here.
                 return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
                 {
                     if (getter(source) is TValue value)
