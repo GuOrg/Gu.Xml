@@ -13,7 +13,7 @@
         internal readonly TextWriter TextWriter;
 #pragma warning restore SA1401 // Fields should be private
 
-        private static readonly WriteMaps DefaultWriteMaps = new WriteMaps()
+        private static readonly WriteMaps DefaultMaps = new WriteMaps()
             .RegisterSimple<string>((writer, value) => writer.Write(value))
             .RegisterSimple<bool>((writer, value) => writer.Write(value ? "true" : "false"))
             .RegisterSimple<byte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
@@ -79,11 +79,11 @@
             }
 
             this.ClosePendingStart();
-            if (DefaultWriteMaps.TryGetSimple(value, out var simple))
+            if (DefaultMaps.TryGetSimple(value, out var simple))
             {
                 simple.WriteElement(this, name, value);
             }
-            else if (DefaultWriteMaps.TryGetCollection(value, out var items))
+            else if (DefaultMaps.TryGetCollection(value, out var items))
             {
                 this.WriteIndentation();
                 this.TextWriter.Write("<");
@@ -105,7 +105,7 @@
                     this.TextWriter.WriteMany("</", name, ">");
                 }
             }
-            else if (DefaultWriteMaps.TryGetComplex(value, out var map))
+            else if (DefaultMaps.TryGetComplex(value, out var map))
             {
                 this.WriteElement(name, value, map);
             }
@@ -172,7 +172,7 @@
         {
             this.ClosePendingStart();
             this.WriteIndentation();
-            this.TextWriter.WriteMany("</", name, ">");
+            this.TextWriter.WriteMany("<", name, " />");
         }
 
         internal void Reset()
@@ -193,7 +193,7 @@
 
         internal bool TryGetSimple<TValue>(TValue value, out SimpleWriteMap map)
         {
-            return DefaultWriteMaps.TryGetSimple(value, out map);
+            return DefaultMaps.TryGetSimple(value, out map);
         }
     }
 }

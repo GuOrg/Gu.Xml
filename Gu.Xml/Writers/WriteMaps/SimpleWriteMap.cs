@@ -4,14 +4,14 @@
 
     internal class SimpleWriteMap : WriteMap
     {
-        public SimpleWriteMap(CastAction<TextWriter> write)
+        internal readonly CastAction<TextWriter> Write;
+
+        internal SimpleWriteMap(CastAction<TextWriter> write)
         {
             this.Write = write;
         }
 
-        public CastAction<TextWriter> Write { get; }
-
-        public void WriteElement<TValue>(XmlWriter writer, string name, TValue value)
+        internal void WriteElement<TValue>(XmlWriter writer, string name, TValue value)
         {
             writer.ClosePendingStart();
             writer.WriteIndentation();
@@ -21,7 +21,7 @@
             textWriter.WriteMany("</", name, ">");
         }
 
-        public void WriteAttribute<TValue>(TextWriter textWriter, string name, TValue value)
+        internal void WriteAttribute<TValue>(TextWriter textWriter, string name, TValue value)
         {
             textWriter.WriteMany(" ", name, "=\"");
             this.Write.Get<TValue>().Invoke(textWriter, value);
