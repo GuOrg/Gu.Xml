@@ -19,6 +19,7 @@
                 if (item == null)
                 {
                     writer.WriteEmptyElement(Null);
+                    writer.WriteLine();
                 }
                 else
                 {
@@ -35,6 +36,7 @@
                 if (item == null)
                 {
                     writer.WriteEmptyElement(Null);
+                    writer.WriteLine();
                 }
                 else
                 {
@@ -176,6 +178,7 @@
                         if (item == null)
                         {
                             writer.WriteEmptyElement(Null);
+                            writer.WriteLine();
                         }
                         else
                         {
@@ -206,6 +209,7 @@
                             if (enumerator.Current == null)
                             {
                                 writer.WriteEmptyElement(Null);
+                                writer.WriteLine();
                             }
                             else
                             {
@@ -223,6 +227,7 @@
                             if (enumerator.Current == null)
                             {
                                 writer.WriteEmptyElement(Null);
+                                writer.WriteLine();
                             }
                             else
                             {
@@ -247,6 +252,7 @@
                         if (item == null)
                         {
                             writer.WriteEmptyElement(Null);
+                            writer.WriteLine();
                         }
                         else
                         {
