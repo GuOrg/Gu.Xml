@@ -53,39 +53,6 @@
             return false;
         }
 
-        internal bool TryGetItems<T>(T value, out ItemsWriteMap map)
-        {
-            if (value is IEnumerable &&
-                this.maps.GetOrAdd(value.GetType(), x => Create(x)) is ItemsWriteMap match)
-            {
-                map = match;
-                return true;
-            }
-
-            map = null;
-            return false;
-
-            ItemsWriteMap Create(Type x)
-            {
-                return ItemsWriteMap.Create(x, this);
-            }
-        }
-
-        internal bool TryGetComplex<T>(T value, out ComplexWriteMap map)
-        {
-            if (TryGetType(value, out var type) &&
-                this.maps.GetOrAdd(type, x => Create(x)) is ComplexWriteMap match)
-            {
-                map = match;
-                return true;
-            }
-
-            map = null;
-            return false;
-
-            ComplexWriteMap Create(Type x) => ComplexWriteMap.Create(x, this);
-        }
-
         /// <summary>
         /// If the type is sealed and has a simple action it can be cached to avoid lookups for example when writing collections.
         /// </summary>
@@ -183,14 +150,49 @@
             return result != null;
         }
 
+        private bool TryGetItems<T>(T value, out ItemsWriteMap map)
+        {
+            if (value is IEnumerable &&
+                this.maps.GetOrAdd(value.GetType(), x => Create(x)) is ItemsWriteMap match)
+            {
+                map = match;
+                return true;
+            }
+
+            map = null;
+            return false;
+
+            ItemsWriteMap Create(Type x)
+            {
+                return ItemsWriteMap.Create(x, this);
+            }
+        }
+
+        private bool TryGetComplex<T>(T value, out ComplexWriteMap map)
+        {
+            if (TryGetType(value, out var type) &&
+                this.maps.GetOrAdd(type, x => Create(x)) is ComplexWriteMap match)
+            {
+                map = match;
+                return true;
+            }
+
+            map = null;
+            return false;
+
+            ComplexWriteMap Create(Type x) => ComplexWriteMap.Create(x, this);
+        }
+
         private bool TryRegisterEnum(Type type, out SimpleWriteMap map)
         {
             if (type.IsEnum)
             {
                 // ReSharper disable once PossibleNullReferenceException
-                _ = typeof(WriteMaps).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
-                                            .MakeGenericMethod(type)
-                                            .Invoke(this, null);
+                // ReSharper disable once AssignmentIsFullyDiscarded
+                _ = typeof(WriteMaps)
+                    .GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
+                    .MakeGenericMethod(type)
+                    .Invoke(this, null);
                 return this.TryGetSimpleCached(type, out map);
             }
 
