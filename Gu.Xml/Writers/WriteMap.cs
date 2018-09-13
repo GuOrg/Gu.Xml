@@ -240,54 +240,36 @@
         {
             internal static bool TryCreate(PropertyInfo property, XmlWriterActions actions, out CastAction<XmlWriter> writer)
             {
-                if (TryGetName(property, out var name))
-                {
-                    if (actions.TryGetSimpleCached(property.PropertyType, out var castAction))
-                    {
-                        // ReSharper disable once PossibleNullReferenceException
-                        writer = (CastAction<XmlWriter>)typeof(AttributeAction)
-                                                        .GetMethod(nameof(CreateCached), BindingFlags.Static | BindingFlags.NonPublic)
-                                                        .MakeGenericMethod(property.ReflectedType, property.PropertyType)
-                                                        .Invoke(null, new object[] { name, property.CreateGetter(), castAction });
-                        return true;
-                    }
-
-                    // ReSharper disable once PossibleNullReferenceException
-                    writer = (CastAction<XmlWriter>)typeof(AttributeAction)
-                                              .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
-                                              .MakeGenericMethod(property.ReflectedType, property.PropertyType)
-                                              .Invoke(null, new object[] { name, property.CreateGetter() });
-                    return true;
-                }
-
                 writer = null;
-                return false;
+                return TryGetName(property, out var name) &&
+                       TryCreate(property.DeclaringType, property.PropertyType, name, property.CreateGetter(), actions, out writer);
             }
 
             internal static bool TryCreate(FieldInfo field, XmlWriterActions actions, out CastAction<XmlWriter> writer)
             {
-                if (TryGetName(field, out var name))
-                {
-                    if (actions.TryGetSimpleCached(field.FieldType, out var castAction))
-                    {
-                        // ReSharper disable once PossibleNullReferenceException
-                        writer = (CastAction<XmlWriter>)typeof(AttributeAction)
-                                                        .GetMethod(nameof(CreateCached), BindingFlags.Static | BindingFlags.NonPublic)
-                                                        .MakeGenericMethod(field.ReflectedType, field.FieldType)
-                                                        .Invoke(null, new object[] { name, field.CreateGetter(), castAction });
-                        return true;
-                    }
+                writer = null;
+                return TryGetName(field, out var name) &&
+                       TryCreate(field.DeclaringType, field.FieldType, name, field.CreateGetter(), actions, out writer);
+            }
 
+            private static bool TryCreate(Type sourceType, Type valueType, string name, Delegate getter, XmlWriterActions actions, out CastAction<XmlWriter> writer)
+            {
+                if (actions.TryGetSimpleCached(valueType, out var castAction))
+                {
                     // ReSharper disable once PossibleNullReferenceException
                     writer = (CastAction<XmlWriter>)typeof(AttributeAction)
-                                         .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
-                                         .MakeGenericMethod(field.ReflectedType, field.FieldType)
-                                         .Invoke(null, new object[] { name, field.CreateGetter() });
+                                                    .GetMethod(nameof(CreateCached), BindingFlags.Static | BindingFlags.NonPublic)
+                                                    .MakeGenericMethod(sourceType, valueType)
+                                                    .Invoke(null, new object[] { name, getter, castAction });
                     return true;
                 }
 
-                writer = null;
-                return false;
+                // ReSharper disable once PossibleNullReferenceException
+                writer = (CastAction<XmlWriter>)typeof(AttributeAction)
+                                                .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
+                                                .MakeGenericMethod(sourceType, valueType)
+                                                .Invoke(null, new object[] { name, getter });
+                return true;
             }
 
             private static CastAction<XmlWriter> Create<TSource, TValue>(string name, Func<TSource, TValue> getter)
