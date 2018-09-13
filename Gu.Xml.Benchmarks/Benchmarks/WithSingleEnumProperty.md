@@ -1,17 +1,17 @@
 ``` ini
 
-BenchmarkDotNet=v0.11.1, OS=Windows 10.0.17134.228 (1803/April2018Update/Redstone4)
-Intel Xeon CPU E5-2637 v4 3.50GHz (Max: 3.49GHz), 1 CPU, 8 logical and 4 physical cores
-Frequency=3410074 Hz, Resolution=293.2488 ns, Timer=TSC
+BenchmarkDotNet=v0.11.1, OS=Windows 10.0.17134.285 (1803/April2018Update/Redstone4)
+Intel Core i7-7500U CPU 2.70GHz (Max: 0.80GHz) (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
+Frequency=2835934 Hz, Resolution=352.6175 ns, Timer=TSC
 .NET Core SDK=2.1.402
-  [Host]     : .NET Core 2.0.9 (CoreCLR 4.6.26614.01, CoreFX 4.6.26614.01), 64bit RyuJIT
-  DefaultJob : .NET Core 2.0.9 (CoreCLR 4.6.26614.01, CoreFX 4.6.26614.01), 64bit RyuJIT
+  [Host]     : .NET Core 2.1.4 (CoreCLR 4.6.26814.03, CoreFX 4.6.26814.02), 64bit RyuJIT
+  DefaultJob : .NET Core 2.1.4 (CoreCLR 4.6.26814.03, CoreFX 4.6.26814.02), 64bit RyuJIT
 
 
 ```
-|                     Method |        Mean |      Error |     StdDev | Scaled | ScaledSD |  Gen 0 |  Gen 1 | Allocated |
-|--------------------------- |------------:|-----------:|-----------:|-------:|---------:|-------:|-------:|----------:|
-|             GuXmlSerialize |   821.33 ns | 15.9966 ns | 13.3579 ns |   1.00 |     0.00 | 0.0677 |      - |     432 B |
-|      StringBuilderToString |    32.35 ns |  0.0709 ns |  0.0592 ns |   0.04 |     0.00 | 0.0432 |      - |     272 B |
-|     XmlSerializerSerialize | 2,530.90 ns | 47.4989 ns | 78.0421 ns |   3.08 |     0.10 | 0.6294 | 0.0038 |    3984 B |
-| JsonConvertSerializeObject |   581.09 ns |  2.2967 ns |  2.1483 ns |   0.71 |     0.01 | 0.2041 |      - |    1288 B |
+|                     Method |        Mean |      Error |     StdDev | Scaled | ScaledSD |  Gen 0 | Allocated |
+|--------------------------- |------------:|-----------:|-----------:|-------:|---------:|-------:|----------:|
+|             GuXmlSerialize |   777.68 ns |  7.7709 ns |  7.2689 ns |   1.00 |     0.00 | 0.2050 |     432 B |
+|      StringBuilderToString |    34.66 ns |  0.3453 ns |  0.3230 ns |   0.04 |     0.00 | 0.1296 |     272 B |
+|     XmlSerializerSerialize | 2,720.33 ns | 44.5068 ns | 34.7480 ns |   3.50 |     0.05 | 1.8997 |    3992 B |
+| JsonConvertSerializeObject |   552.93 ns |  9.6413 ns |  8.5468 ns |   0.71 |     0.01 | 0.6132 |    1288 B |

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
 
@@ -197,14 +196,13 @@
                 return true;
             }
 
-            private static CastAction<XmlWriter> CreateSimpleCached<TSource, TValue>(string name, Func<TSource, TValue> getter, CastAction<TextWriter> castAction)
+            private static CastAction<XmlWriter> CreateSimpleCached<TSource, TValue>(string name, Func<TSource, TValue> getter, SimpleWriteMap map)
             {
-                var action = castAction.Get<TValue>();
                 return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
                 {
                     if (getter(source) is TValue value)
                     {
-                        writer.WriteElement(name, value, action);
+                        map.WriteElement(writer, name, value);
                         writer.WriteLine();
                     }
                 });
@@ -289,13 +287,13 @@
 
             private static bool TryCreate(FieldOrProperty member, string name, WriteMaps actions, out CastAction<XmlWriter> writer)
             {
-                if (actions.TryGetSimpleCached(member.ValueType, out var castAction))
+                if (actions.TryGetSimpleCached(member.ValueType, out var simpleMap))
                 {
                     // ReSharper disable once PossibleNullReferenceException
                     writer = (CastAction<XmlWriter>)typeof(AttributeAction)
                                                     .GetMethod(nameof(CreateCached), BindingFlags.Static | BindingFlags.NonPublic)
                                                     .MakeGenericMethod(member.SourceType, member.ValueType)
-                                                    .Invoke(null, new object[] { name, member.CreateGetter(), castAction });
+                                                    .Invoke(null, new object[] { name, member.CreateGetter(), simpleMap });
                     return true;
                 }
 
@@ -313,12 +311,9 @@
                 {
                     if (getter(source) is TValue value)
                     {
-                        if (writer.TryGetSimple(value, out var valueWriter))
+                        if (writer.TryGetSimple(value, out var map))
                         {
-                            var textWriter = writer.TextWriter;
-                            textWriter.WriteMany(" ", name, "=\"");
-                            valueWriter.Invoke(textWriter, value);
-                            textWriter.Write("\"");
+                            map.WriteAttribute(writer.TextWriter, name, value);
                         }
                         else
                         {
@@ -328,9 +323,9 @@
                 });
             }
 
-            private static CastAction<XmlWriter> CreateCached<TSource, TValue>(string name, Func<TSource, TValue> getter, CastAction<TextWriter> castAction)
+            private static CastAction<XmlWriter> CreateCached<TSource, TValue>(string name, Func<TSource, TValue> getter, SimpleWriteMap map)
             {
-                var valueWriter = castAction.Get<TValue>();
+                var valueWriter = map.Write.Get<TValue>();
                 return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
                 {
                     if (getter(source) is TValue value)

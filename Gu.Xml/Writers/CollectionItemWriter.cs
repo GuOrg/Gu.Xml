@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.IO;
     using System.Reflection;
 
     internal static class CollectionItemWriter
@@ -68,12 +67,12 @@
                 if (type.IsGenericEnumerable(out var enumerableType) &&
                     enumerableType.GenericTypeArguments.TrySingle(out var elementType))
                 {
-                    if (actions.TryGetSimpleCached(elementType, out var castAction))
+                    if (actions.TryGetSimpleCached(elementType, out var simpleMap))
                     {
                         // ReSharper disable once PossibleNullReferenceException
                         result = (CastAction<XmlWriter>)typeof(CollectionItemWriter).GetMethod(nameof(CreateCachedGenericSimpleEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                                 .MakeGenericMethod(type, elementType)
-                                                                                .Invoke(null, new object[] { RootName.Get(elementType), castAction });
+                                                                                .Invoke(null, new object[] { RootName.Get(elementType), simpleMap });
                         return true;
                     }
 
@@ -148,10 +147,10 @@
         /// <typeparam name="TEnumerable"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <returns></returns>
-        private static CastAction<XmlWriter> CreateCachedGenericSimpleEnumerableWriter<TEnumerable, TValue>(string elementName, CastAction<TextWriter> castAction)
+        private static CastAction<XmlWriter> CreateCachedGenericSimpleEnumerableWriter<TEnumerable, TValue>(string elementName, SimpleWriteMap map)
             where TEnumerable : IEnumerable<TValue>
         {
-            var cachedWrite = castAction.Get<TValue>();
+            var cachedWrite = map.Write.Get<TValue>();
             return CastAction<XmlWriter>.Create<TEnumerable>((writer, enumerable) =>
             {
                 var textWriter = writer.TextWriter;

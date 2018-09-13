@@ -81,7 +81,7 @@
             this.ClosePendingStart();
             if (DefaultWriteMaps.TryGetSimple(value, out var simple))
             {
-                this.WriteElement(name, value, simple);
+                simple.WriteElement(this, name, value);
             }
             else if (DefaultWriteMaps.TryGetCollection(value, out var itemWriter))
             {
@@ -118,11 +118,6 @@
         public void WriteLine()
         {
             this.TextWriter.WriteLine();
-        }
-
-        public bool TryGetSimple<TValue>(TValue value, out Action<TextWriter, TValue> writer)
-        {
-            return DefaultWriteMaps.TryGetSimple(value, out writer);
         }
 
         public void Dispose()
@@ -173,15 +168,6 @@
             }
         }
 
-        internal void WriteElement<T>(string name, T value, Action<TextWriter, T> simple)
-        {
-            this.ClosePendingStart();
-            this.WriteIndentation();
-            this.TextWriter.WriteMany("<", name, ">");
-            simple(this.TextWriter, value);
-            this.TextWriter.WriteMany("</", name, ">");
-        }
-
         internal void Reset()
         {
             System.Diagnostics.Debug.Assert(this.indentLevel == 0, "this.indentLevel == 0");
@@ -196,6 +182,11 @@
             {
                 this.TextWriter.Write("  ");
             }
+        }
+
+        internal bool TryGetSimple<TValue>(TValue value, out SimpleWriteMap map)
+        {
+            return DefaultWriteMaps.TryGetSimple(value, out map);
         }
     }
 }

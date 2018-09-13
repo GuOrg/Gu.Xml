@@ -9,7 +9,7 @@
     internal class WriteMaps
     {
         // Using <Type, object> here as an optimization. Hopefully we can refactor to something nicer.
-        private readonly ConcurrentDictionary<Type, object> actions = new ConcurrentDictionary<Type, object>();
+        private readonly ConcurrentDictionary<Type, object> maps = new ConcurrentDictionary<Type, object>();
 
         /// <summary>
         /// If the type is sealed and has a simple action it can be cached to avoid lookups for example when writing collections.
@@ -17,54 +17,40 @@
         /// <param name="type"></param>
         /// <param name="castAction"></param>
         /// <returns></returns>
-        internal bool TryGetSimpleCached(Type type, out CastAction<TextWriter> castAction)
+        internal bool TryGetSimpleCached(Type type, out SimpleWriteMap map)
         {
-            castAction = null;
             if (type.IsSealed)
             {
-                if (this.actions.TryGetValue(type, out var action) && action is CastAction<TextWriter> match)
+                if (this.maps.TryGetValue(type, out var match) &&
+                    match is SimpleWriteMap temp)
                 {
-                    castAction = match;
+                    map = temp;
                     return true;
                 }
 
-                return this.TryRegisterEnum(type, out castAction);
+                return this.TryRegisterEnum(type, out map);
             }
 
+            map = null;
             return false;
         }
 
-        internal bool TryGetSimple<TMember>(TMember value, out Action<TextWriter, TMember> writer)
+        internal bool TryGetSimple<TMember>(TMember value, out SimpleWriteMap map)
         {
             if (TryGetType(out var type))
             {
-                if (TryGetWriter(type, out writer))
+                if (this.maps.TryGetValue(type, out var match) &&
+                    match is SimpleWriteMap temp)
                 {
-                    return writer != null;
-                }
-
-                return this.TryRegisterEnum(type, out var castAction) &&
-                       castAction.TryGet(out writer);
-            }
-
-            writer = null;
-            return false;
-
-            bool TryGetWriter(Type current, out Action<TextWriter, TMember> result)
-            {
-                result = null;
-                if (this.actions.TryGetValue(current, out var match))
-                {
-                    if (match is CastAction<TextWriter> castAction)
-                    {
-                        return castAction.TryGet(out result);
-                    }
-
+                    map = temp;
                     return true;
                 }
 
-                return false;
+                return this.TryRegisterEnum(type, out map);
             }
+
+            map = null;
+            return false;
 
             bool TryGetType(out Type result)
             {
@@ -83,7 +69,7 @@
         internal bool TryGetCollection<T>(T value, out Action<XmlWriter, T> writer)
         {
             if (value is IEnumerable &&
-                this.actions.GetOrAdd(value.GetType(), x => Create(x)) is CastAction<XmlWriter> castAction)
+                this.maps.GetOrAdd(value.GetType(), x => Create(x)) is CastAction<XmlWriter> castAction)
             {
                 return castAction.TryGet(out writer);
             }
@@ -100,7 +86,7 @@
         internal bool TryGetComplex<T>(T value, out ComplexWriteMap writeMap)
         {
             if (value?.GetType() is Type type &&
-                this.actions.GetOrAdd(type, x => Create(x)) is ComplexWriteMap match)
+                this.maps.GetOrAdd(type, x => Create(x)) is ComplexWriteMap match)
             {
                 writeMap = match;
                 return true;
@@ -124,7 +110,7 @@
             if (!typeof(IEnumerable).IsAssignableFrom(type) &&
                 !type.IsEnum &&
                 type.IsSealed &&
-                this.actions.GetOrAdd(type, x => Create(x)) is ComplexWriteMap match)
+                this.maps.GetOrAdd(type, x => Create(x)) is ComplexWriteMap match)
             {
                 writeMap = match;
                 return true;
@@ -137,30 +123,32 @@
 
         internal WriteMaps RegisterSimple<T>(Action<TextWriter, T> action)
         {
-            this.actions[typeof(T)] = CastAction<TextWriter>.Create(action);
+            this.maps[typeof(T)] = new SimpleWriteMap(CastAction<TextWriter>.Create(action));
             if (typeof(T).IsValueType)
             {
                 if (Nullable.GetUnderlyingType(typeof(T)) is Type underlying)
                 {
-                    if (!this.actions.ContainsKey(underlying))
+                    if (!this.maps.ContainsKey(underlying))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        this.actions[underlying] = typeof(CastAction<TextWriter>)
-                                                     .GetMethod(nameof(CastAction<TextWriter>.CreateUnderlying), BindingFlags.Static | BindingFlags.NonPublic)
-                                                     .MakeGenericMethod(underlying)
-                                                     .Invoke(null, new object[] { action });
+                        this.maps[underlying] = new SimpleWriteMap(
+                            (CastAction<TextWriter>)typeof(CastAction<TextWriter>)
+                                                    .GetMethod(nameof(CastAction<TextWriter>.CreateUnderlying), BindingFlags.Static | BindingFlags.NonPublic)
+                                                    .MakeGenericMethod(underlying)
+                                                    .Invoke(null, new object[] { action }));
                     }
                 }
                 else
                 {
                     var nullableType = typeof(Nullable<>).MakeGenericType(typeof(T));
-                    if (!this.actions.ContainsKey(nullableType))
+                    if (!this.maps.ContainsKey(nullableType))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        this.actions[nullableType] = typeof(CastAction<TextWriter>)
-                                                     .GetMethod(nameof(CastAction<TextWriter>.CreateNullable), BindingFlags.Static | BindingFlags.NonPublic)
-                                                     .MakeGenericMethod(typeof(T))
-                                                     .Invoke(null, new object[] { action });
+                        this.maps[nullableType] = new SimpleWriteMap(
+                            (CastAction<TextWriter>)typeof(CastAction<TextWriter>)
+                                        .GetMethod(nameof(CastAction<TextWriter>.CreateNullable), BindingFlags.Static | BindingFlags.NonPublic)
+                                        .MakeGenericMethod(typeof(T))
+                                        .Invoke(null, new object[] { action }));
                     }
                 }
             }
@@ -168,7 +156,7 @@
             return this;
         }
 
-        private bool TryRegisterEnum(Type type, out CastAction<TextWriter> castAction)
+        private bool TryRegisterEnum(Type type, out SimpleWriteMap map)
         {
             if (type.IsEnum)
             {
@@ -176,10 +164,10 @@
                 _ = typeof(WriteMaps).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
                                             .MakeGenericMethod(type)
                                             .Invoke(this, null);
-                return this.TryGetSimpleCached(type, out castAction);
+                return this.TryGetSimpleCached(type, out map);
             }
 
-            castAction = null;
+            map = null;
             return false;
         }
 
