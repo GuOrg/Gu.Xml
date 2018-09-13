@@ -37,6 +37,20 @@
             }
 
             [Test]
+            public void ArrayOfBoxedInt32()
+            {
+                var value = new object[] { 1, 2, 3 };
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ArrayOfObject>" + Environment.NewLine +
+                               "  <Int32>1</Int32>" + Environment.NewLine +
+                               "  <Int32>2</Int32>" + Environment.NewLine +
+                               "  <Int32>3</Int32>" + Environment.NewLine +
+                               "</ArrayOfObject>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
             public void ArrayList()
             {
                 var value = new ArrayList { new Foo(1), new Foo(2), new Foo(3) };
