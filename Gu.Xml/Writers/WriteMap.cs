@@ -95,23 +95,14 @@
         {
             internal static bool TryCreate(PropertyInfo property, out CastAction<XmlWriter> writer)
             {
-                if (property.GetMethod is MethodInfo getMethod &&
-                    property.GetIndexParameters().Length == 0 &&
-                    !getMethod.IsStatic &&
-                    !IsIgnoredAccessibility() &&
-                    !IsIgnoredCalculated() &&
-                    TryGetName(property, out var name))
-                {
-                    // ReSharper disable once PossibleNullReferenceException
-                    writer = (CastAction<XmlWriter>)typeof(ElementAction)
-                                                    .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
-                                                    .MakeGenericMethod(property.ReflectedType, property.PropertyType)
-                                                    .Invoke(null, new object[] { name, property.CreateGetter() });
-                    return true;
-                }
-
                 writer = null;
-                return false;
+                return property.GetMethod is MethodInfo getMethod &&
+                       property.GetIndexParameters().Length == 0 &&
+                       !getMethod.IsStatic &&
+                       !IsIgnoredAccessibility() &&
+                       !IsIgnoredCalculated() &&
+                       TryGetName(property, out var name) &&
+                       TryCreate(property.ReflectedType, property.PropertyType, name, property.CreateGetter(), out writer);
 
                 bool IsIgnoredAccessibility()
                 {
@@ -169,21 +160,22 @@
 
             internal static bool TryCreate(FieldInfo field, out CastAction<XmlWriter> writer)
             {
-                if (!field.IsStatic &&
-                    !field.IsPrivate &&
-                    !field.IsFamily &&
-                    TryGetName(field, out var name))
-                {
-                    // ReSharper disable once PossibleNullReferenceException
-                    writer = (CastAction<XmlWriter>)typeof(ElementAction)
-                                            .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
-                                            .MakeGenericMethod(field.ReflectedType, field.FieldType)
-                                            .Invoke(null, new object[] { name, field.CreateGetter() });
-                    return true;
-                }
-
                 writer = null;
-                return false;
+                return !field.IsStatic &&
+                       !field.IsPrivate &&
+                       !field.IsFamily &&
+                       TryGetName(field, out var name) &&
+                       TryCreate(field.ReflectedType, field.FieldType, name, field.CreateGetter(), out writer);
+            }
+
+            private static bool TryCreate(Type sourceType, Type valueType, string name, Delegate getter, out CastAction<XmlWriter> castAction)
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                castAction = (CastAction<XmlWriter>)typeof(ElementAction)
+                                                       .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
+                                                       .MakeGenericMethod(sourceType, valueType)
+                                                       .Invoke(null, new object[] { name, getter });
+                return true;
             }
 
             private static CastAction<XmlWriter> Create<TSource, TValue>(string name, Func<TSource, TValue> getter)
@@ -242,14 +234,14 @@
             {
                 writer = null;
                 return TryGetName(property, out var name) &&
-                       TryCreate(property.DeclaringType, property.PropertyType, name, property.CreateGetter(), actions, out writer);
+                       TryCreate(property.ReflectedType, property.PropertyType, name, property.CreateGetter(), actions, out writer);
             }
 
             internal static bool TryCreate(FieldInfo field, XmlWriterActions actions, out CastAction<XmlWriter> writer)
             {
                 writer = null;
                 return TryGetName(field, out var name) &&
-                       TryCreate(field.DeclaringType, field.FieldType, name, field.CreateGetter(), actions, out writer);
+                       TryCreate(field.ReflectedType, field.FieldType, name, field.CreateGetter(), actions, out writer);
             }
 
             private static bool TryCreate(Type sourceType, Type valueType, string name, Delegate getter, XmlWriterActions actions, out CastAction<XmlWriter> writer)
