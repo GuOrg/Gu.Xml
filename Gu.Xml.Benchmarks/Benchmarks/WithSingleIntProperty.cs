@@ -6,7 +6,7 @@
     using BenchmarkDotNet.Attributes;
     using Newtonsoft.Json;
 
-    public class WithSingleProperty
+    public class SealedWithSingleIntProperty
     {
         private static readonly WithInt Value = new WithInt { Number = 1 };
         private static readonly XmlSerializer XmlSerializer = new XmlSerializer(Value.GetType());
@@ -39,7 +39,7 @@
             return JsonConvert.SerializeObject(Value);
         }
 
-        public class WithInt
+        public sealed class WithInt
         {
             public int Number { get; set; }
         }

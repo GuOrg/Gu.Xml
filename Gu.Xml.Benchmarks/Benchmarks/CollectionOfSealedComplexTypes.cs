@@ -1,15 +1,15 @@
 ﻿namespace Gu.Xml.Benchmarks
 {
-    using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Xml.Serialization;
     using BenchmarkDotNet.Attributes;
     using Newtonsoft.Json;
 
-    public class WithSingleEnumProperty
+    public class CollectionOfSealedComplexTypes
     {
-        private static readonly WithCultureTypes Value = new WithCultureTypes { CultureTypes = CultureTypes.AllCultures };
+        private static readonly WithInt[] Value = Enumerable.Range(1, 100000).Select(x => new WithInt { Number = x }).ToArray();
         private static readonly XmlSerializer XmlSerializer = new XmlSerializer(Value.GetType());
         private static readonly StringBuilder StringBuilder = new StringBuilder(Xml.Serialize(Value));
 
@@ -40,9 +40,9 @@
             return JsonConvert.SerializeObject(Value);
         }
 
-        public sealed class WithCultureTypes
+        public sealed class WithInt
         {
-            public CultureTypes CultureTypes { get; set; }
+            public int Number { get; set; }
         }
     }
 }
