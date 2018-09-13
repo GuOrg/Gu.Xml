@@ -20,7 +20,7 @@
         internal bool TryGetSimpleCached(Type type, out CastAction<TextWriter> castAction)
         {
             castAction = null;
-            if (!type.IsSealed)
+            if (type.IsSealed)
             {
                 if (this.actions.TryGetValue(type, out var action) && action is CastAction<TextWriter> match)
                 {
@@ -28,14 +28,7 @@
                     return true;
                 }
 
-                if (type.IsEnum)
-                {
-                    // ReSharper disable once PossibleNullReferenceException
-                    _ = typeof(XmlWriterActions).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
-                                                .MakeGenericMethod(type)
-                                                .Invoke(this, null);
-                    return this.TryGetSimpleCached(type, out castAction);
-                }
+                return this.TryRegisterEnum(type, out castAction);
             }
 
             return false;
@@ -50,14 +43,8 @@
                     return writer != null;
                 }
 
-                if (type.IsEnum)
-                {
-                    // ReSharper disable once PossibleNullReferenceException
-                    _ = typeof(XmlWriterActions).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
-                                                .MakeGenericMethod(type)
-                                                .Invoke(this, null);
-                    return TryGetWriter(typeof(TMember), out writer);
-                }
+                return this.TryRegisterEnum(type, out var castAction) &&
+                       castAction.TryGet(out writer);
             }
 
             writer = null;
@@ -141,6 +128,21 @@
             }
 
             return this;
+        }
+
+        private bool TryRegisterEnum(Type type, out CastAction<TextWriter> castAction)
+        {
+            if (type.IsEnum)
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                _ = typeof(XmlWriterActions).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
+                                            .MakeGenericMethod(type)
+                                            .Invoke(this, null);
+                return this.TryGetSimpleCached(type, out castAction);
+            }
+
+            castAction = null;
+            return false;
         }
 
         private void RegisterEnum<T>()
