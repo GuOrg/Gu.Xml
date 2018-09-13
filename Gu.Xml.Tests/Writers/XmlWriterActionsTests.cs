@@ -13,7 +13,7 @@
             var sb = new StringBuilder();
             using (var stringWriter = new StringWriter(sb))
             {
-                var actions = new XmlWriterActions().RegisterSimple<int?>((writer, value) => writer.Write(value?.ToString(NumberFormatInfo.InvariantInfo)));
+                var actions = new WriteMaps().RegisterSimple<int?>((writer, value) => writer.Write(value?.ToString(NumberFormatInfo.InvariantInfo)));
                 int? nullableValue = 1;
 
                 Assert.AreEqual(true, actions.TryGetSimple(nullableValue, out var action));
@@ -33,7 +33,7 @@
             var sb = new StringBuilder();
             using (var stringWriter = new StringWriter(sb))
             {
-                var actions = new XmlWriterActions().RegisterSimple<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
+                var actions = new WriteMaps().RegisterSimple<int>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)));
 
                 var intValue = 1;
                 Assert.AreEqual(true, actions.TryGetSimple(intValue, out var intAction));

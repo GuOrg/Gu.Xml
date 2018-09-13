@@ -11,7 +11,7 @@
         private static readonly CastAction<XmlWriter> EnumerableItemWriter = CastAction<XmlWriter>.Create<IEnumerable>(WriteItems);
         private static readonly CastAction<XmlWriter> DictionaryItemWriter = CastAction<XmlWriter>.Create<IDictionary>(WriteItems);
 
-        internal static CastAction<XmlWriter> Create(Type type, XmlWriterActions actions)
+        internal static CastAction<XmlWriter> Create(Type type, WriteMaps actions)
         {
             if (type.IsArray &&
                 type.GetArrayRank() > 1)
@@ -185,14 +185,14 @@
         /// <typeparam name="TEnumerable"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <returns></returns>
-        private static CastAction<XmlWriter> CreateCachedGenericComplexEnumerableWriter<TEnumerable, TValue>(string elementName, WriteMap map)
+        private static CastAction<XmlWriter> CreateCachedGenericComplexEnumerableWriter<TEnumerable, TValue>(string elementName, ComplexWriteMap writeMap)
             where TEnumerable : IEnumerable<TValue>
         {
             return CastAction<XmlWriter>.Create<TEnumerable>((writer, enumerable) =>
             {
                 foreach (var item in enumerable)
                 {
-                    writer.WriteElement(elementName, item, map);
+                    writer.WriteElement(elementName, item, writeMap);
                     writer.WriteLine();
                 }
             });

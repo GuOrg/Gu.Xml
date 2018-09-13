@@ -6,7 +6,7 @@
     using System.IO;
     using System.Reflection;
 
-    internal class XmlWriterActions
+    internal class WriteMaps
     {
         // Using <Type, object> here as an optimization. Hopefully we can refactor to something nicer.
         private readonly ConcurrentDictionary<Type, object> actions = new ConcurrentDictionary<Type, object>();
@@ -97,45 +97,45 @@
             }
         }
 
-        internal bool TryGetWriteMap<T>(T value, out WriteMap map)
+        internal bool TryGetComplex<T>(T value, out ComplexWriteMap writeMap)
         {
             if (value?.GetType() is Type type &&
-                this.actions.GetOrAdd(type, x => Create(x)) is WriteMap match)
+                this.actions.GetOrAdd(type, x => Create(x)) is ComplexWriteMap match)
             {
-                map = match;
+                writeMap = match;
                 return true;
             }
 
-            map = null;
+            writeMap = null;
             return false;
 
-            WriteMap Create(Type x) => WriteMap.Create(x, this);
+            ComplexWriteMap Create(Type x) => ComplexWriteMap.Create(x, this);
         }
 
         /// <summary>
         /// If the type is sealed and has a simple action it can be cached to avoid lookups for example when writing collections.
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="map"></param>
+        /// <param name="writeMap"></param>
         /// <returns></returns>
-        internal bool TryGetWriteMapCached(Type type, out WriteMap map)
+        internal bool TryGetWriteMapCached(Type type, out ComplexWriteMap writeMap)
         {
-            map = null;
+            writeMap = null;
             if (!typeof(IEnumerable).IsAssignableFrom(type) &&
                 !type.IsEnum &&
                 type.IsSealed &&
-                this.actions.GetOrAdd(type, x => Create(x)) is WriteMap match)
+                this.actions.GetOrAdd(type, x => Create(x)) is ComplexWriteMap match)
             {
-                map = match;
+                writeMap = match;
                 return true;
             }
 
             return false;
 
-            WriteMap Create(Type x) => WriteMap.Create(x, this);
+            ComplexWriteMap Create(Type x) => ComplexWriteMap.Create(x, this);
         }
 
-        internal XmlWriterActions RegisterSimple<T>(Action<TextWriter, T> action)
+        internal WriteMaps RegisterSimple<T>(Action<TextWriter, T> action)
         {
             this.actions[typeof(T)] = CastAction<TextWriter>.Create(action);
             if (typeof(T).IsValueType)
@@ -173,7 +173,7 @@
             if (type.IsEnum)
             {
                 // ReSharper disable once PossibleNullReferenceException
-                _ = typeof(XmlWriterActions).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
+                _ = typeof(WriteMaps).GetMethod(nameof(this.RegisterEnum), BindingFlags.Instance | BindingFlags.NonPublic)
                                             .MakeGenericMethod(type)
                                             .Invoke(this, null);
                 return this.TryGetSimpleCached(type, out castAction);

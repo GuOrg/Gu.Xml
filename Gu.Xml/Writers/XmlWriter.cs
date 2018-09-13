@@ -13,7 +13,7 @@
         internal readonly TextWriter TextWriter;
 #pragma warning restore SA1401 // Fields should be private
 
-        private static readonly XmlWriterActions DefaultWriterActions = new XmlWriterActions()
+        private static readonly WriteMaps DefaultWriteMaps = new WriteMaps()
             .RegisterSimple<string>((writer, value) => writer.Write(value))
             .RegisterSimple<bool>((writer, value) => writer.Write(value ? "true" : "false"))
             .RegisterSimple<byte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
@@ -79,11 +79,11 @@
             }
 
             this.ClosePendingStart();
-            if (DefaultWriterActions.TryGetSimple(value, out var simple))
+            if (DefaultWriteMaps.TryGetSimple(value, out var simple))
             {
                 this.WriteElement(name, value, simple);
             }
-            else if (DefaultWriterActions.TryGetCollection(value, out var itemWriter))
+            else if (DefaultWriteMaps.TryGetCollection(value, out var itemWriter))
             {
                 this.WriteIndentation();
                 this.TextWriter.Write("<");
@@ -105,7 +105,7 @@
                     this.TextWriter.WriteMany("</", name, ">");
                 }
             }
-            else if (DefaultWriterActions.TryGetWriteMap(value, out var map))
+            else if (DefaultWriteMaps.TryGetComplex(value, out var map))
             {
                 this.WriteElement(name, value, map);
             }
@@ -122,7 +122,7 @@
 
         public bool TryGetSimple<TValue>(TValue value, out Action<TextWriter, TValue> writer)
         {
-            return DefaultWriterActions.TryGetSimple(value, out writer);
+            return DefaultWriteMaps.TryGetSimple(value, out writer);
         }
 
         public void Dispose()
@@ -141,13 +141,13 @@
             }
         }
 
-        internal void WriteElement<T>(string name, T value, WriteMap map)
+        internal void WriteElement<T>(string name, T value, ComplexWriteMap writeMap)
         {
             this.ClosePendingStart();
             this.WriteIndentation();
             this.TextWriter.Write("<");
             this.TextWriter.Write(name);
-            foreach (var castAction in map.Attributes)
+            foreach (var castAction in writeMap.Attributes)
             {
                 castAction.Invoke(this, value);
             }
@@ -155,7 +155,7 @@
             this.pendingCloseStartElement = true;
 
             this.indentLevel++;
-            foreach (var elementWriter in map.Elements)
+            foreach (var elementWriter in writeMap.Elements)
             {
                 elementWriter.Invoke(this, value);
             }
