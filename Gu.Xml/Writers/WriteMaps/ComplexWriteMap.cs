@@ -7,15 +7,15 @@
 
     internal class ComplexWriteMap : WriteMap
     {
+        internal readonly IReadOnlyList<CastAction<XmlWriter>> Attributes;
+
+        internal readonly IReadOnlyList<CastAction<XmlWriter>> Elements;
+
         internal ComplexWriteMap(IReadOnlyList<CastAction<XmlWriter>> attributes, IReadOnlyList<CastAction<XmlWriter>> elements)
         {
             this.Attributes = attributes;
             this.Elements = elements;
         }
-
-        internal IReadOnlyList<CastAction<XmlWriter>> Attributes { get; }
-
-        internal IReadOnlyList<CastAction<XmlWriter>> Elements { get; }
 
         internal static ComplexWriteMap Create(Type type, WriteMaps maps)
         {

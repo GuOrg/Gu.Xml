@@ -79,8 +79,8 @@
                 var actual = Xml.Serialize(value);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<ArrayOfObject>" + Environment.NewLine +
-                               "  <String>1</String>" + Environment.NewLine +
-                               "  <??? />>" + Environment.NewLine +
+                               "  <String>abc</String>" + Environment.NewLine +
+                               "  <null />" + Environment.NewLine +
                                "  <Int32>3</Int32>" + Environment.NewLine +
                                "</ArrayOfObject>";
                 Assert.AreEqual(expected, actual);
@@ -103,12 +103,11 @@
             public void ArrayOfStringWithNull()
             {
                 var value = new[] { "abc", null, "cde" };
-                Dump.XmlAsCode(Reference.XmlSerializer(value));
                 var actual = Xml.Serialize(value);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<ArrayOfString>" + Environment.NewLine +
                                "  <String>abc</String>" + Environment.NewLine +
-                               "  <String />" + Environment.NewLine +
+                               "  <null />" + Environment.NewLine +
                                "  <String>cde</String>" + Environment.NewLine +
                                "</ArrayOfString>";
                 Assert.AreEqual(expected, actual);
