@@ -83,7 +83,7 @@
             {
                 simple.WriteElement(this, name, value);
             }
-            else if (DefaultWriteMaps.TryGetCollection(value, out var itemWriter))
+            else if (DefaultWriteMaps.TryGetCollection(value, out var items))
             {
                 this.WriteIndentation();
                 this.TextWriter.Write("<");
@@ -91,7 +91,7 @@
                 this.pendingCloseStartElement = true;
 
                 this.indentLevel++;
-                itemWriter(this, value);
+                items.Write.Invoke(this, value);
                 this.indentLevel--;
 
                 if (this.pendingCloseStartElement)
@@ -166,6 +166,13 @@
                 this.WriteIndentation();
                 this.TextWriter.WriteMany("</", name, ">");
             }
+        }
+
+        internal void WriteEmptyElement(string name)
+        {
+            this.ClosePendingStart();
+            this.WriteIndentation();
+            this.TextWriter.WriteMany("</", name, ">");
         }
 
         internal void Reset()

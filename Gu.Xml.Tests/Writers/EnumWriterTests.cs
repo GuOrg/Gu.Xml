@@ -14,7 +14,7 @@
             var sb = new StringBuilder();
             using (var writer = new StringWriter(sb))
             {
-                EnumWriter<StringComparison>.Integer.Write(writer, stringComparison);
+                EnumFormatter<StringComparison>.Integer.Write(writer, stringComparison);
                 Assert.AreEqual(text, sb.ToString());
             }
         }
@@ -26,7 +26,7 @@
             var sb = new StringBuilder();
             using (var writer = new StringWriter(sb))
             {
-                EnumWriter<StringComparison>.String.Write(writer, stringComparison);
+                EnumFormatter<StringComparison>.String.Write(writer, stringComparison);
                 Assert.AreEqual(text, sb.ToString());
             }
         }

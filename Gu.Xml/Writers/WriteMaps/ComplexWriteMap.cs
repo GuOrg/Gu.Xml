@@ -178,7 +178,7 @@
                     return true;
                 }
 
-                if (actions.TryGetWriteMapCached(fieldOrProperty.ValueType, out var map))
+                if (actions.TryGetComplexCached(fieldOrProperty.ValueType, out var map))
                 {
                     // ReSharper disable once PossibleNullReferenceException
                     castAction = (CastAction<XmlWriter>)typeof(ElementAction)

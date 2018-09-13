@@ -9,13 +9,13 @@
     internal class WriteMaps
     {
         // Using <Type, object> here as an optimization. Hopefully we can refactor to something nicer.
-        private readonly ConcurrentDictionary<Type, object> maps = new ConcurrentDictionary<Type, object>();
+        private readonly ConcurrentDictionary<Type, WriteMap> maps = new ConcurrentDictionary<Type, WriteMap>();
 
         /// <summary>
         /// If the type is sealed and has a simple action it can be cached to avoid lookups for example when writing collections.
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="castAction"></param>
+        /// <param name="map"></param>
         /// <returns></returns>
         internal bool TryGetSimpleCached(Type type, out SimpleWriteMap map)
         {
@@ -66,33 +66,34 @@
             }
         }
 
-        internal bool TryGetCollection<T>(T value, out Action<XmlWriter, T> writer)
+        internal bool TryGetCollection<T>(T value, out ItemWriteMap map)
         {
             if (value is IEnumerable &&
-                this.maps.GetOrAdd(value.GetType(), x => Create(x)) is CastAction<XmlWriter> castAction)
+                this.maps.GetOrAdd(value.GetType(), x => Create(x)) is ItemWriteMap match)
             {
-                return castAction.TryGet(out writer);
+                map = match;
+                return true;
             }
 
-            writer = null;
+            map = null;
             return false;
 
-            CastAction<XmlWriter> Create(Type x)
+            ItemWriteMap Create(Type x)
             {
-                return CollectionItemWriter.Create(x, this);
+                return ItemWriteMap.Create(x, this);
             }
         }
 
-        internal bool TryGetComplex<T>(T value, out ComplexWriteMap writeMap)
+        internal bool TryGetComplex<T>(T value, out ComplexWriteMap map)
         {
             if (value?.GetType() is Type type &&
                 this.maps.GetOrAdd(type, x => Create(x)) is ComplexWriteMap match)
             {
-                writeMap = match;
+                map = match;
                 return true;
             }
 
-            writeMap = null;
+            map = null;
             return false;
 
             ComplexWriteMap Create(Type x) => ComplexWriteMap.Create(x, this);
@@ -102,17 +103,17 @@
         /// If the type is sealed and has a simple action it can be cached to avoid lookups for example when writing collections.
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="writeMap"></param>
+        /// <param name="map"></param>
         /// <returns></returns>
-        internal bool TryGetWriteMapCached(Type type, out ComplexWriteMap writeMap)
+        internal bool TryGetComplexCached(Type type, out ComplexWriteMap map)
         {
-            writeMap = null;
+            map = null;
             if (!typeof(IEnumerable).IsAssignableFrom(type) &&
                 !type.IsEnum &&
                 type.IsSealed &&
                 this.maps.GetOrAdd(type, x => Create(x)) is ComplexWriteMap match)
             {
-                writeMap = match;
+                map = match;
                 return true;
             }
 
@@ -174,7 +175,7 @@
         private void RegisterEnum<T>()
             where T : struct, Enum
         {
-            this.RegisterSimple<T>((writer, value) => EnumWriter<T>.Default.Write(writer, value));
+            this.RegisterSimple<T>((writer, value) => EnumFormatter<T>.Default.Write(writer, value));
         }
     }
 }

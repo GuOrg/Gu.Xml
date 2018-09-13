@@ -5,29 +5,29 @@
     using System.IO;
     using System.Reflection;
 
-    public sealed class EnumWriter<T>
+    public sealed class EnumFormatter<T>
         where T : struct, Enum
     {
         /// <summary>
-        /// An <see cref="EnumWriter{T}"/> that serializes with 'G' format string and removes commas.
+        /// An <see cref="EnumFormatter{T}"/> that serializes with 'G' format string and removes commas.
         /// </summary>
-        public static readonly EnumWriter<T> Default = new EnumWriter<T>("G", removeCommas: true);
+        public static readonly EnumFormatter<T> Default = new EnumFormatter<T>("G", removeCommas: true);
 
         /// <summary>
-        /// An <see cref="EnumWriter{T}"/> that serializes with 'G' format string.
+        /// An <see cref="EnumFormatter{T}"/> that serializes with 'G' format string.
         /// </summary>
-        public static readonly EnumWriter<T> String = new EnumWriter<T>("G", removeCommas: false);
+        public static readonly EnumFormatter<T> String = new EnumFormatter<T>("G", removeCommas: false);
 
         /// <summary>
-        /// An <see cref="EnumWriter{T}"/> that serializes with 'D' format string.
+        /// An <see cref="EnumFormatter{T}"/> that serializes with 'D' format string.
         /// </summary>
-        public static readonly EnumWriter<T> Integer = new EnumWriter<T>("D", removeCommas: false);
+        public static readonly EnumFormatter<T> Integer = new EnumFormatter<T>("D", removeCommas: false);
 
         private readonly ConcurrentDictionary<T, string> cache = new ConcurrentDictionary<T, string>();
         private readonly string format;
         private readonly bool removeCommas;
 
-        private EnumWriter(string format, bool removeCommas)
+        private EnumFormatter(string format, bool removeCommas)
         {
             this.format = format;
             this.removeCommas = removeCommas;
