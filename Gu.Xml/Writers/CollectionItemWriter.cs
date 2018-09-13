@@ -13,7 +13,8 @@
 
         internal static CastAction<XmlWriter> Create(Type type, XmlWriterActions actions)
         {
-            if (type.GetArrayRank() > 1)
+            if (type.IsArray &&
+                type.GetArrayRank() > 1)
             {
                 throw new NotSupportedException("Multidimensional arrays are not yet supported. Issue #26.");
             }
