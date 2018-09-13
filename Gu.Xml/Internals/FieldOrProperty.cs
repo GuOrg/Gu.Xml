@@ -1,8 +1,10 @@
 ﻿namespace Gu.Xml
 {
     using System;
+    using System.Diagnostics;
     using System.Reflection;
 
+    [DebuggerDisplay("{this.SourceType}{this.member.Name} ({this.ValueType})")]
     internal struct FieldOrProperty
     {
         private readonly MemberInfo member;
