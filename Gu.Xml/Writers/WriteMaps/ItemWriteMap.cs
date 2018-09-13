@@ -7,10 +7,10 @@
 
     internal class ItemWriteMap : WriteMap
     {
+        internal readonly CastAction<XmlWriter> Write;
+
         private const string Null = "null";
         private const string Entry = "Entry";
-
-        internal readonly CastAction<XmlWriter> Write;
 
         private static readonly ItemWriteMap DefaultEnumerableMap = Create<IEnumerable>((writer, enumerable) =>
         {
@@ -49,7 +49,7 @@
             this.Write = write;
         }
 
-        internal static ItemWriteMap Create(Type type, WriteMaps actions)
+        internal static ItemWriteMap Create(Type type, WriteMaps maps)
         {
             if (type.IsArray &&
                 type.GetArrayRank() > 1)
@@ -57,8 +57,8 @@
                 throw new NotSupportedException("Multidimensional arrays are not yet supported. Issue #26.");
             }
 
-            if (DictionaryMap.TryCreate(type, actions, out var map) ||
-                EnumerableMap.TryCreate(type, actions, out map))
+            if (DictionaryMap.TryCreate(type, maps, out var map) ||
+                EnumerableMap.TryCreate(type, maps, out map))
             {
                 return map;
             }
@@ -73,7 +73,7 @@
 
         private static class DictionaryMap
         {
-            internal static bool TryCreate(Type type, WriteMaps actions, out ItemWriteMap result)
+            internal static bool TryCreate(Type type, WriteMaps maps, out ItemWriteMap result)
             {
                 if (!typeof(IDictionary).IsAssignableFrom(type))
                 {
@@ -84,7 +84,7 @@
                 if (type.IsGenericEnumerable(out var enumerableType) &&
                     enumerableType.GenericTypeArguments.TrySingle(out var entryType))
                 {
-                    if (actions.TryGetComplexCached(entryType, out var map))
+                    if (maps.TryGetComplexCached(entryType, out var map))
                     {
                         // ReSharper disable once PossibleNullReferenceException
                         result = (ItemWriteMap)typeof(EnumerableMap).GetMethod(nameof(EnumerableMap.CreateCachedComplex), BindingFlags.Static | BindingFlags.NonPublic)
@@ -120,7 +120,7 @@
 
         private static class EnumerableMap
         {
-            internal static bool TryCreate(Type type, WriteMaps actions, out ItemWriteMap result)
+            internal static bool TryCreate(Type type, WriteMaps maps, out ItemWriteMap result)
             {
                 if (!typeof(IEnumerable).IsAssignableFrom(type))
                 {
@@ -131,7 +131,7 @@
                 if (type.IsGenericEnumerable(out var enumerableType) &&
                     enumerableType.GenericTypeArguments.TrySingle(out var elementType))
                 {
-                    if (actions.TryGetSimpleCached(elementType, out var simpleMap))
+                    if (maps.TryGetSimpleCached(elementType, out var simpleMap))
                     {
                         // ReSharper disable once PossibleNullReferenceException
                         result = (ItemWriteMap)typeof(EnumerableMap).GetMethod(nameof(CreateCachedSimple), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
@@ -140,12 +140,12 @@
                         return true;
                     }
 
-                    if (actions.TryGetComplexCached(elementType, out var map))
+                    if (maps.TryGetComplexCached(elementType, out var complexMap))
                     {
                         // ReSharper disable once PossibleNullReferenceException
                         result = (ItemWriteMap)typeof(EnumerableMap).GetMethod(nameof(CreateCachedComplex), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                                 .MakeGenericMethod(type, elementType)
-                                                                                .Invoke(null, new object[] { RootName.Get(elementType), map });
+                                                                                .Invoke(null, new object[] { RootName.Get(elementType), complexMap });
                         return true;
                     }
 

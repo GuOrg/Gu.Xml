@@ -17,7 +17,7 @@
 
         internal IReadOnlyList<CastAction<XmlWriter>> Elements { get; }
 
-        internal static ComplexWriteMap Create(Type type, WriteMaps actions)
+        internal static ComplexWriteMap Create(Type type, WriteMaps maps)
         {
             var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.FlattenHierarchy);
             var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetProperty | BindingFlags.FlattenHierarchy);
@@ -36,7 +36,7 @@
             {
                 foreach (var field in fields)
                 {
-                    if (AttributeAction.TryCreate(field, actions, out var action))
+                    if (AttributeAction.TryCreate(field, maps, out var action))
                     {
                         yield return action;
                     }
@@ -44,7 +44,7 @@
 
                 foreach (var property in properties)
                 {
-                    if (AttributeAction.TryCreate(property, actions, out var action))
+                    if (AttributeAction.TryCreate(property, maps, out var action))
                     {
                         yield return action;
                     }
@@ -55,7 +55,7 @@
             {
                 foreach (var field in fields)
                 {
-                    if (ElementAction.TryCreate(field, actions, out var action))
+                    if (ElementAction.TryCreate(field, maps, out var action))
                     {
                         yield return action;
                     }
@@ -63,7 +63,7 @@
 
                 foreach (var property in properties)
                 {
-                    if (ElementAction.TryCreate(property, actions, out var action))
+                    if (ElementAction.TryCreate(property, maps, out var action))
                     {
                         yield return action;
                     }
@@ -91,7 +91,7 @@
 
         private static class ElementAction
         {
-            internal static bool TryCreate(PropertyInfo property, WriteMaps actions, out CastAction<XmlWriter> writer)
+            internal static bool TryCreate(PropertyInfo property, WriteMaps maps, out CastAction<XmlWriter> writer)
             {
                 writer = null;
                 return property.GetMethod is MethodInfo getMethod &&
@@ -100,7 +100,7 @@
                        !IsIgnoredAccessibility() &&
                        !IsIgnoredCalculated() &&
                        TryGetName(property, out var name) &&
-                       TryCreate(new FieldOrProperty(property), name, actions, out writer);
+                       TryCreate(new FieldOrProperty(property), name, maps, out writer);
 
                 bool IsIgnoredAccessibility()
                 {
@@ -156,19 +156,19 @@
                 }
             }
 
-            internal static bool TryCreate(FieldInfo field, WriteMaps actions, out CastAction<XmlWriter> writer)
+            internal static bool TryCreate(FieldInfo field, WriteMaps maps, out CastAction<XmlWriter> writer)
             {
                 writer = null;
                 return !field.IsStatic &&
                        !field.IsPrivate &&
                        !field.IsFamily &&
                        TryGetName(field, out var name) &&
-                       TryCreate(new FieldOrProperty(field), name, actions, out writer);
+                       TryCreate(new FieldOrProperty(field), name, maps, out writer);
             }
 
-            private static bool TryCreate(FieldOrProperty fieldOrProperty, string name, WriteMaps actions, out CastAction<XmlWriter> castAction)
+            private static bool TryCreate(FieldOrProperty fieldOrProperty, string name, WriteMaps maps, out CastAction<XmlWriter> castAction)
             {
-                if (actions.TryGetSimpleCached(fieldOrProperty.ValueType, out var valueAction))
+                if (maps.TryGetSimpleCached(fieldOrProperty.ValueType, out var valueAction))
                 {
                     // ReSharper disable once PossibleNullReferenceException
                     castAction = (CastAction<XmlWriter>)typeof(ElementAction)
@@ -178,7 +178,7 @@
                     return true;
                 }
 
-                if (actions.TryGetComplexCached(fieldOrProperty.ValueType, out var map))
+                if (maps.TryGetComplexCached(fieldOrProperty.ValueType, out var map))
                 {
                     // ReSharper disable once PossibleNullReferenceException
                     castAction = (CastAction<XmlWriter>)typeof(ElementAction)
@@ -271,29 +271,29 @@
 
         private static class AttributeAction
         {
-            internal static bool TryCreate(PropertyInfo property, WriteMaps actions, out CastAction<XmlWriter> writer)
+            internal static bool TryCreate(PropertyInfo property, WriteMaps maps, out CastAction<XmlWriter> writer)
             {
                 writer = null;
                 return TryGetName(property, out var name) &&
-                       TryCreate(new FieldOrProperty(property), name, actions, out writer);
+                       TryCreate(new FieldOrProperty(property), name, maps, out writer);
             }
 
-            internal static bool TryCreate(FieldInfo field, WriteMaps actions, out CastAction<XmlWriter> writer)
+            internal static bool TryCreate(FieldInfo field, WriteMaps maps, out CastAction<XmlWriter> writer)
             {
                 writer = null;
                 return TryGetName(field, out var name) &&
-                       TryCreate(new FieldOrProperty(field), name, actions, out writer);
+                       TryCreate(new FieldOrProperty(field), name, maps, out writer);
             }
 
-            private static bool TryCreate(FieldOrProperty member, string name, WriteMaps actions, out CastAction<XmlWriter> writer)
+            private static bool TryCreate(FieldOrProperty member, string name, WriteMaps maps, out CastAction<XmlWriter> writer)
             {
-                if (actions.TryGetSimpleCached(member.ValueType, out var simpleMap))
+                if (maps.TryGetSimpleCached(member.ValueType, out var map))
                 {
                     // ReSharper disable once PossibleNullReferenceException
                     writer = (CastAction<XmlWriter>)typeof(AttributeAction)
                                                     .GetMethod(nameof(CreateCached), BindingFlags.Static | BindingFlags.NonPublic)
                                                     .MakeGenericMethod(member.SourceType, member.ValueType)
-                                                    .Invoke(null, new object[] { name, member.CreateGetter(), simpleMap });
+                                                    .Invoke(null, new object[] { name, member.CreateGetter(), map });
                     return true;
                 }
 
