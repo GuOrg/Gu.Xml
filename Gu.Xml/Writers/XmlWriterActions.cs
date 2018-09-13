@@ -148,7 +148,7 @@
                         this.actions[underlying] = typeof(CastAction<TextWriter>)
                                                      .GetMethod(nameof(CastAction<TextWriter>.CreateUnderlying), BindingFlags.Static | BindingFlags.NonPublic)
                                                      .MakeGenericMethod(underlying)
-                                                     .Invoke(null, new[] { action });
+                                                     .Invoke(null, new object[] { action });
                     }
                 }
                 else
@@ -160,7 +160,7 @@
                         this.actions[nullableType] = typeof(CastAction<TextWriter>)
                                                      .GetMethod(nameof(CastAction<TextWriter>.CreateNullable), BindingFlags.Static | BindingFlags.NonPublic)
                                                      .MakeGenericMethod(typeof(T))
-                                                     .Invoke(null, new[] { action });
+                                                     .Invoke(null, new object[] { action });
                     }
                 }
             }

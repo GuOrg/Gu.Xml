@@ -38,7 +38,7 @@ namespace Gu.Xml.Tests
                 }),
                 new TestCaseData(new With<WithXmlEnumAttribute> { Value = WithXmlEnumAttribute.One }),
                 new TestCaseData(new With<WithXmlEnumAttribute> { Value = WithXmlEnumAttribute.Two }),
-                new TestCaseData(new WithXmlArrayAttribute { Ints = new[] { 1, 2, 3 } }),
+                new TestCaseData(new WithXmlArrayAndXmlArrayItemAttribute { Ints = new[] { 1, 2, 3 } }),
             };
 
             [TestCaseSource(nameof(Values))]
@@ -105,7 +105,7 @@ namespace Gu.Xml.Tests
                 public int Value = 1;
             }
 
-            public class WithXmlArrayAttribute
+            public class WithXmlArrayAndXmlArrayItemAttribute
             {
                 [XmlArray(ElementName = "Numbers")]
                 [XmlArrayItem(ElementName = "Int32")]

@@ -15,6 +15,7 @@
 
         internal static Delegate CreateGetter(this PropertyInfo property)
         {
+            // ReSharper disable once AssignNullToNotNullAttribute don't think it can be null here.
             var parameter = Expression.Parameter(property.ReflectedType, "source");
             return Expression.Lambda(
                                  typeof(Func<,>).MakeGenericType(property.ReflectedType, property.PropertyType),

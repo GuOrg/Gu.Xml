@@ -32,7 +32,7 @@
                     case PropertyInfo property:
                         return property.PropertyType;
                     default:
-                        throw new ArgumentOutOfRangeException("Never getting here.");
+                        throw new ArgumentOutOfRangeException(nameof(this.member), "Never getting here.");
                 }
             }
         }
@@ -46,7 +46,7 @@
                 case PropertyInfo property:
                     return property.CreateGetter();
                 default:
-                    throw new ArgumentOutOfRangeException("Never getting here.");
+                    throw new ArgumentOutOfRangeException(nameof(this.member), "Never getting here.");
             }
         }
     }

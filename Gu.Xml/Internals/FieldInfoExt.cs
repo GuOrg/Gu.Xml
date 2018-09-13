@@ -15,6 +15,7 @@
 
         internal static Delegate CreateGetter(this FieldInfo field)
         {
+            // ReSharper disable once AssignNullToNotNullAttribute don't think it can be null here.
             var parameter = Expression.Parameter(field.ReflectedType, "source");
             return Expression.Lambda(
                                  typeof(Func<,>).MakeGenericType(field.ReflectedType, field.FieldType),
