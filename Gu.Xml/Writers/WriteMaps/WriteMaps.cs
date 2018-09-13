@@ -53,10 +53,10 @@
             return false;
         }
 
-        internal bool TryGetCollection<T>(T value, out ItemWriteMap map)
+        internal bool TryGetItems<T>(T value, out ItemsWriteMap map)
         {
             if (value is IEnumerable &&
-                this.maps.GetOrAdd(value.GetType(), x => Create(x)) is ItemWriteMap match)
+                this.maps.GetOrAdd(value.GetType(), x => Create(x)) is ItemsWriteMap match)
             {
                 map = match;
                 return true;
@@ -65,9 +65,9 @@
             map = null;
             return false;
 
-            ItemWriteMap Create(Type x)
+            ItemsWriteMap Create(Type x)
             {
-                return ItemWriteMap.Create(x, this);
+                return ItemsWriteMap.Create(x, this);
             }
         }
 
@@ -107,6 +107,32 @@
             return false;
 
             ComplexWriteMap Create(Type x) => ComplexWriteMap.Create(x, this);
+        }
+
+        internal bool TryGet<T>(T value, out WriteMap map)
+        {
+            if (TryGetType(value, out var type))
+            {
+                if (this.maps.TryGetValue(type, out map))
+                {
+                    return true;
+                }
+
+                if (this.TryGetItems(value, out var items))
+                {
+                    map = items;
+                    return true;
+                }
+
+                if (this.TryGetComplex(value, out var complex))
+                {
+                    map = complex;
+                    return true;
+                }
+            }
+
+            map = null;
+            return false;
         }
 
         internal WriteMaps RegisterSimple<T>(Action<TextWriter, T> action)

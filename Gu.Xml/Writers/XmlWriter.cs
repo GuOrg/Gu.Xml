@@ -78,39 +78,41 @@
             {
                 this.WriteEmptyElement(name);
             }
-            else if (DefaultMaps.TryGetSimple(value, out var simple))
+            else if (DefaultMaps.TryGet(value, out var map))
             {
-                simple.WriteElement(this, name, value);
-            }
-            else if (DefaultMaps.TryGetCollection(value, out var items))
-            {
-                this.WriteIndentation();
-                this.TextWriter.Write("<");
-                this.TextWriter.Write(name);
-                this.pendingCloseStartElement = true;
-
-                this.indentLevel++;
-                items.Write.Invoke(this, value);
-                this.indentLevel--;
-
-                if (this.pendingCloseStartElement)
+                switch (map)
                 {
-                    this.TextWriter.Write(" />");
-                    this.pendingCloseStartElement = false;
+                    case SimpleWriteMap simple:
+                        simple.WriteElement(this, name, value);
+                        break;
+                    case ItemsWriteMap items:
+                        this.WriteIndentation();
+                        this.TextWriter.Write("<");
+                        this.TextWriter.Write(name);
+                        this.pendingCloseStartElement = true;
+
+                        this.indentLevel++;
+                        items.Write.Invoke(this, value);
+                        this.indentLevel--;
+
+                        if (this.pendingCloseStartElement)
+                        {
+                            this.TextWriter.Write(" />");
+                            this.pendingCloseStartElement = false;
+                        }
+                        else
+                        {
+                            this.WriteIndentation();
+                            this.TextWriter.WriteMany("</", name, ">");
+                        }
+
+                        break;
+                    case ComplexWriteMap complex:
+                        this.WriteElement(name, value, complex);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Failed getting a value writer for {value}");
                 }
-                else
-                {
-                    this.WriteIndentation();
-                    this.TextWriter.WriteMany("</", name, ">");
-                }
-            }
-            else if (DefaultMaps.TryGetComplex(value, out var map))
-            {
-                this.WriteElement(name, value, map);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Failed getting a value writer for {value}");
             }
         }
 

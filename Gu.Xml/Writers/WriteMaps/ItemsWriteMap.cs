@@ -5,14 +5,14 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    internal class ItemWriteMap : WriteMap
+    internal class ItemsWriteMap : WriteMap
     {
         internal readonly CastAction<XmlWriter> Write;
 
         private const string Null = "null";
         private const string Entry = "Entry";
 
-        private static readonly ItemWriteMap DefaultEnumerableMap = Create<IEnumerable>((writer, enumerable) =>
+        private static readonly ItemsWriteMap DefaultEnumerableMap = Create<IEnumerable>((writer, enumerable) =>
         {
             foreach (var item in enumerable)
             {
@@ -29,7 +29,7 @@
             }
         });
 
-        private static readonly ItemWriteMap DefaultDictionaryMap = Create<IDictionary>((writer, dictionary) =>
+        private static readonly ItemsWriteMap DefaultDictionaryMap = Create<IDictionary>((writer, dictionary) =>
         {
             foreach (var item in dictionary)
             {
@@ -46,12 +46,12 @@
             }
         });
 
-        private ItemWriteMap(CastAction<XmlWriter> write)
+        private ItemsWriteMap(CastAction<XmlWriter> write)
         {
             this.Write = write;
         }
 
-        internal static ItemWriteMap Create(Type type, WriteMaps maps)
+        internal static ItemsWriteMap Create(Type type, WriteMaps maps)
         {
             if (type.IsArray &&
                 type.GetArrayRank() > 1)
@@ -65,17 +65,17 @@
                 return map;
             }
 
-            throw new InvalidOperationException("Failed creating ItemWriteMap. Bug in Gu.Xml.");
+            throw new InvalidOperationException("Failed creating ItemsWriteMap. Bug in Gu.Xml.");
         }
 
-        private static ItemWriteMap Create<T>(Action<XmlWriter, T> writeItems)
+        private static ItemsWriteMap Create<T>(Action<XmlWriter, T> writeItems)
         {
-            return new ItemWriteMap(CastAction<XmlWriter>.Create(writeItems));
+            return new ItemsWriteMap(CastAction<XmlWriter>.Create(writeItems));
         }
 
         private static class DictionaryMap
         {
-            internal static bool TryCreate(Type type, WriteMaps maps, out ItemWriteMap result)
+            internal static bool TryCreate(Type type, WriteMaps maps, out ItemsWriteMap result)
             {
                 if (!typeof(IDictionary).IsAssignableFrom(type))
                 {
@@ -89,14 +89,14 @@
                     if (maps.TryGetComplexCached(entryType, out var map))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        result = (ItemWriteMap)typeof(EnumerableMap).GetMethod(nameof(EnumerableMap.CreateCachedComplex), BindingFlags.Static | BindingFlags.NonPublic)
+                        result = (ItemsWriteMap)typeof(EnumerableMap).GetMethod(nameof(EnumerableMap.CreateCachedComplex), BindingFlags.Static | BindingFlags.NonPublic)
                                                                                     .MakeGenericMethod(type, entryType)
                                                                                     .Invoke(null, new object[] { "Entry", map });
                         return true;
                     }
 
                     // ReSharper disable once PossibleNullReferenceException
-                    result = (ItemWriteMap)typeof(DictionaryMap).GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                    result = (ItemsWriteMap)typeof(DictionaryMap).GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                                 .MakeGenericMethod(type, entryType.GenericTypeArguments[0], entryType.GenericTypeArguments[1])
                                                                                 .Invoke(null, null);
                     return true;
@@ -106,7 +106,7 @@
                 return true;
             }
 
-            private static ItemWriteMap Create<TDictionary, TKey, TValue>()
+            private static ItemsWriteMap Create<TDictionary, TKey, TValue>()
                 where TDictionary : ICollection<KeyValuePair<TKey, TValue>>
             {
                 return Create<TDictionary>((writer, dictionary) =>
@@ -122,7 +122,7 @@
 
         private static class EnumerableMap
         {
-            internal static bool TryCreate(Type type, WriteMaps maps, out ItemWriteMap result)
+            internal static bool TryCreate(Type type, WriteMaps maps, out ItemsWriteMap result)
             {
                 if (!typeof(IEnumerable).IsAssignableFrom(type))
                 {
@@ -136,7 +136,7 @@
                     if (maps.TryGetSimpleCached(elementType, out var simpleMap))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        result = (ItemWriteMap)typeof(EnumerableMap).GetMethod(nameof(CreateCachedSimple), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                        result = (ItemsWriteMap)typeof(EnumerableMap).GetMethod(nameof(CreateCachedSimple), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                                 .MakeGenericMethod(type, elementType)
                                                                                 .Invoke(null, new object[] { RootName.Get(elementType), simpleMap });
                         return true;
@@ -145,14 +145,14 @@
                     if (maps.TryGetComplexCached(elementType, out var complexMap))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        result = (ItemWriteMap)typeof(EnumerableMap).GetMethod(nameof(CreateCachedComplex), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                        result = (ItemsWriteMap)typeof(EnumerableMap).GetMethod(nameof(CreateCachedComplex), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                                 .MakeGenericMethod(type, elementType)
                                                                                 .Invoke(null, new object[] { RootName.Get(elementType), complexMap });
                         return true;
                     }
 
                     // ReSharper disable once PossibleNullReferenceException
-                    result = (ItemWriteMap)typeof(EnumerableMap).GetMethod(nameof(CreateGenericEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                    result = (ItemsWriteMap)typeof(EnumerableMap).GetMethod(nameof(CreateGenericEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                             .MakeGenericMethod(type, elementType)
                                                                             .Invoke(null, null);
                     return true;
@@ -168,7 +168,7 @@
             /// <typeparam name="TEnumerable"></typeparam>
             /// <typeparam name="TValue"></typeparam>
             /// <returns></returns>
-            internal static ItemWriteMap CreateCachedComplex<TEnumerable, TValue>(string elementName, ComplexWriteMap writeMap)
+            internal static ItemsWriteMap CreateCachedComplex<TEnumerable, TValue>(string elementName, ComplexWriteMap writeMap)
                 where TEnumerable : IEnumerable<TValue>
             {
                 return Create<TEnumerable>((writer, enumerable) =>
@@ -195,7 +195,7 @@
             /// <typeparam name="TEnumerable"></typeparam>
             /// <typeparam name="TValue"></typeparam>
             /// <returns></returns>
-            private static ItemWriteMap CreateCachedSimple<TEnumerable, TValue>(string elementName, SimpleWriteMap map)
+            private static ItemsWriteMap CreateCachedSimple<TEnumerable, TValue>(string elementName, SimpleWriteMap map)
                 where TEnumerable : IEnumerable<TValue>
             {
                 var cachedWrite = map.Write.Get<TValue>();
@@ -242,7 +242,7 @@
                 });
             }
 
-            private static ItemWriteMap CreateGenericEnumerableWriter<TEnumerable, TValue>()
+            private static ItemsWriteMap CreateGenericEnumerableWriter<TEnumerable, TValue>()
                 where TEnumerable : IEnumerable<TValue>
             {
                 return Create<TEnumerable>((writer, enumerable) =>
