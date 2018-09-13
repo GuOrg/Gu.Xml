@@ -1,7 +1,6 @@
 ﻿namespace Gu.Xml
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -170,16 +169,6 @@
 
             private static bool TryCreate(FieldOrProperty fieldOrProperty, string name, XmlWriterActions actions, out CastAction<XmlWriter> castAction)
             {
-                if (actions.TryGetWriteMapCached(fieldOrProperty.ValueType, out var map))
-                {
-                    // ReSharper disable once PossibleNullReferenceException
-                    castAction = (CastAction<XmlWriter>)typeof(ElementAction)
-                                                        .GetMethod(nameof(CreateComplexCached), BindingFlags.Static | BindingFlags.NonPublic)
-                                                        .MakeGenericMethod(fieldOrProperty.SourceType, fieldOrProperty.ValueType)
-                                                        .Invoke(null, new object[] { name, fieldOrProperty.CreateGetter(), map });
-                    return true;
-                }
-
                 if (actions.TryGetSimpleCached(fieldOrProperty.ValueType, out var valueAction))
                 {
                     // ReSharper disable once PossibleNullReferenceException
@@ -187,6 +176,16 @@
                                                         .GetMethod(nameof(CreateSimpleCached), BindingFlags.Static | BindingFlags.NonPublic)
                                                         .MakeGenericMethod(fieldOrProperty.SourceType, fieldOrProperty.ValueType)
                                                         .Invoke(null, new object[] { name, fieldOrProperty.CreateGetter(), valueAction });
+                    return true;
+                }
+
+                if (actions.TryGetWriteMapCached(fieldOrProperty.ValueType, out var map))
+                {
+                    // ReSharper disable once PossibleNullReferenceException
+                    castAction = (CastAction<XmlWriter>)typeof(ElementAction)
+                                                        .GetMethod(nameof(CreateComplexCached), BindingFlags.Static | BindingFlags.NonPublic)
+                                                        .MakeGenericMethod(fieldOrProperty.SourceType, fieldOrProperty.ValueType)
+                                                        .Invoke(null, new object[] { name, fieldOrProperty.CreateGetter(), map });
                     return true;
                 }
 
@@ -361,31 +360,39 @@
             }
         }
 
-        private sealed class BaseTypeCountComparer : IComparer<MemberInfo>, IComparer
+        private sealed class BaseTypeCountComparer : IComparer<FieldInfo>, IComparer<PropertyInfo>
         {
             public static readonly BaseTypeCountComparer Default = new BaseTypeCountComparer();
 
-            public int Compare(MemberInfo x, MemberInfo y)
+            int IComparer<FieldInfo>.Compare(FieldInfo x, FieldInfo y) => Compare(x, y);
+
+            int IComparer<PropertyInfo>.Compare(PropertyInfo x, PropertyInfo y) => Compare(x, y);
+
+            private static int Compare(MemberInfo x, MemberInfo y)
             {
-                var xType = x.DeclaringType;
-                var yType = y.DeclaringType;
+                var xType = x?.DeclaringType;
+                var yType = y?.DeclaringType;
+                if (ReferenceEquals(xType, yType))
+                {
+                    return 0;
+                }
+
+                if (xType == null)
+                {
+                    return -1;
+                }
+
+                if (yType == null)
+                {
+                    return 1;
+                }
+
                 if (xType == yType)
                 {
                     return 0;
                 }
 
                 return Count(xType).CompareTo(Count(yType));
-            }
-
-            int IComparer.Compare(object x, object y)
-            {
-                if (x is MemberInfo xp &&
-                    y is MemberInfo yp)
-                {
-                    return this.Compare(xp, yp);
-                }
-
-                return 0;
             }
 
             private static int Count(Type type)
