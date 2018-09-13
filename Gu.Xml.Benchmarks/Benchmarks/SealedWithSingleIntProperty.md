@@ -9,9 +9,9 @@ Frequency=2835934 Hz, Resolution=352.6175 ns, Timer=TSC
 
 
 ```
-|                     Method |        Mean |      Error |      StdDev |      Median | Scaled | ScaledSD |  Gen 0 | Allocated |
-|--------------------------- |------------:|-----------:|------------:|------------:|-------:|---------:|-------:|----------:|
-|             GuXmlSerialize | 1,122.27 ns | 92.7682 ns | 273.5293 ns | 1,006.52 ns |   1.00 |     0.00 | 0.1516 |     320 B |
-|      StringBuilderToString |    28.93 ns |  0.5151 ns |   0.4301 ns |    28.87 ns |   0.03 |     0.01 | 0.0914 |     192 B |
-|     XmlSerializerSerialize | 2,837.88 ns | 14.6999 ns |  13.7503 ns | 2,836.66 ns |   2.67 |     0.60 | 1.8768 |    3944 B |
-| JsonConvertSerializeObject |   524.49 ns |  9.5231 ns |   8.9079 ns |   520.85 ns |   0.49 |     0.11 | 0.6094 |    1280 B |
+|                     Method |        Mean |     Error |    StdDev | Scaled | ScaledSD |  Gen 0 | Allocated |
+|--------------------------- |------------:|----------:|----------:|-------:|---------:|-------:|----------:|
+|             GuXmlSerialize |   897.50 ns | 26.427 ns | 70.538 ns |   1.00 |     0.00 | 0.1507 |     320 B |
+|      StringBuilderToString |    33.20 ns |  1.749 ns |  4.961 ns |   0.04 |     0.01 | 0.0915 |     192 B |
+|     XmlSerializerSerialize | 2,737.58 ns | 53.598 ns | 61.723 ns |   3.07 |     0.23 | 1.8768 |    3944 B |
+| JsonConvertSerializeObject |   547.35 ns | 11.959 ns | 23.041 ns |   0.61 |     0.05 | 0.6094 |    1280 B |

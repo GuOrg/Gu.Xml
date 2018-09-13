@@ -11,14 +11,14 @@ namespace Gu.Xml.Tests
     {
         public class SerializeProperties
         {
-            private static readonly TestCaseData[] Values =
+            private static readonly TestCaseData[] TestCases =
             {
                 new TestCaseData(new WithPublicGetSet { Value = 1 }),
                 new TestCaseData(new SerializeWithXmlAttributes.PropertyWithXmlIgnoreAttribute { Value = 1 }),
                 new TestCaseData(new WithGetSetAndCalculated { Value = 1 }),
             };
 
-            [TestCaseSource(nameof(Values))]
+            [TestCaseSource(nameof(TestCases))]
             public void Serialize(object value)
             {
                 var expected = Reference.XmlSerializer(value);

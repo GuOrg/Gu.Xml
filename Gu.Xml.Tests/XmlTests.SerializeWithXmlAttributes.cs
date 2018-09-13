@@ -12,7 +12,7 @@ namespace Gu.Xml.Tests
     {
         public class SerializeWithXmlAttributes
         {
-            private static readonly TestCaseData[] Values =
+            private static readonly TestCaseData[] TestCases =
             {
                 new TestCaseData(new WithXmlRootAttribute { Value = 1 }),
                 new TestCaseData(new WithXmlRootAttributeExplicitName { Value = 1 }),
@@ -43,7 +43,7 @@ namespace Gu.Xml.Tests
                 //new TestCaseData(new WithXmlArrayOfObjectAndXmlArrayItemAttribute { Values = new object[] { "abc", null, 3 } }),
             };
 
-            [TestCaseSource(nameof(Values))]
+            [TestCaseSource(nameof(TestCases))]
             public void Serialize(object value)
             {
                 var expected = Reference.XmlSerializer(value);

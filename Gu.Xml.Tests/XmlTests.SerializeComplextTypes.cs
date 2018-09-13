@@ -11,7 +11,7 @@ namespace Gu.Xml.Tests
     {
         public class SerializeComplexTypes
         {
-            private static readonly TestCaseData[] Values =
+            private static readonly TestCaseData[] TestCases =
             {
                 new TestCaseData(new GenericWithPublicMutableProperty<int> { Value = 1 }),
                 new TestCaseData(new GenericWithPublicMutableProperty<string>()),
@@ -39,7 +39,7 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new WithExplicitGetOnly()),
             };
 
-            [TestCaseSource(nameof(Values))]
+            [TestCaseSource(nameof(TestCases))]
             public void Serialize(object value)
             {
                 var expected = Reference.XmlSerializer(value);
