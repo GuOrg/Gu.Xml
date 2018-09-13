@@ -73,13 +73,12 @@
         /// <param name="value">The value.</param>
         public void WriteElement<T>(string name, T value)
         {
+            this.ClosePendingStart();
             if (value == null)
             {
-                return;
+                this.WriteEmptyElement(name);
             }
-
-            this.ClosePendingStart();
-            if (DefaultMaps.TryGetSimple(value, out var simple))
+            else if (DefaultMaps.TryGetSimple(value, out var simple))
             {
                 simple.WriteElement(this, name, value);
             }

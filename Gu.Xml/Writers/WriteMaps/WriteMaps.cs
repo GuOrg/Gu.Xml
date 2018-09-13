@@ -37,7 +37,7 @@
 
         internal bool TryGetSimple<TMember>(TMember value, out SimpleWriteMap map)
         {
-            if (TryGetType(out var type))
+            if (TryGetType(value, out var type))
             {
                 if (this.maps.TryGetValue(type, out var match) &&
                     match is SimpleWriteMap temp)
@@ -51,19 +51,6 @@
 
             map = null;
             return false;
-
-            bool TryGetType(out Type result)
-            {
-                var candidate = typeof(TMember);
-                if (candidate.IsSealed)
-                {
-                    result = candidate;
-                    return true;
-                }
-
-                result = value?.GetType();
-                return result != null;
-            }
         }
 
         internal bool TryGetCollection<T>(T value, out ItemWriteMap map)
@@ -86,7 +73,7 @@
 
         internal bool TryGetComplex<T>(T value, out ComplexWriteMap map)
         {
-            if (value?.GetType() is Type type &&
+            if (TryGetType(value, out var type) &&
                 this.maps.GetOrAdd(type, x => Create(x)) is ComplexWriteMap match)
             {
                 map = match;
@@ -155,6 +142,19 @@
             }
 
             return this;
+        }
+
+        private static bool TryGetType<TMember>(TMember value, out Type result)
+        {
+            var candidate = typeof(TMember);
+            if (candidate.IsSealed)
+            {
+                result = candidate;
+                return true;
+            }
+
+            result = value?.GetType();
+            return result != null;
         }
 
         private bool TryRegisterEnum(Type type, out SimpleWriteMap map)
