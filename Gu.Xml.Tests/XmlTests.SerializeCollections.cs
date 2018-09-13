@@ -13,6 +13,13 @@
         public class SerializeCollections
         {
             [Test]
+            public void ThrowsOnMultidimensionalArray()
+            {
+                var exception = Assert.Throws<NotSupportedException>(() => Xml.Serialize(new int[2, 2]));
+                Assert.AreEqual("Multidimensional arrays are not yet supported. Issue #26.", exception.Message);
+            }
+
+            [Test]
             public void ArrayOfInt32Empty()
             {
                 var value = new int[0];

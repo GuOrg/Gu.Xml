@@ -13,6 +13,11 @@
 
         internal static CastAction<XmlWriter> Create(Type type, XmlWriterActions actions)
         {
+            if (type.GetArrayRank() > 1)
+            {
+                throw new NotSupportedException("Multidimensional arrays are not yet supported. Issue #26.");
+            }
+
             if (typeof(IDictionary).IsAssignableFrom(type))
             {
                 if (TryCreateGenericDictionaryWriter(out var writer))
