@@ -164,7 +164,7 @@
 
             ItemsWriteMap Create(Type x)
             {
-                return ItemsWriteMap.Create(x, this);
+                return ItemsWriteMap.Create(x, this, null);
             }
         }
 

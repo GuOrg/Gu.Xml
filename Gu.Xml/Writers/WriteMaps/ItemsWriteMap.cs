@@ -12,46 +12,16 @@
         private const string Null = "null";
         private const string Entry = "Entry";
 
-        private static readonly ItemsWriteMap DefaultEnumerableMap = Create<IEnumerable>((writer, enumerable) =>
-        {
-            foreach (var item in enumerable)
-            {
-                if (item == null)
-                {
-                    writer.WriteEmptyElement(Null);
-                    writer.WriteLine();
-                }
-                else
-                {
-                    writer.WriteElement(RootName.Get(item.GetType()), item);
-                    writer.WriteLine();
-                }
-            }
-        });
+        private static readonly ItemsWriteMap DefaultEnumerableMap = EnumerableMap.CreateDefault(null);
 
-        private static readonly ItemsWriteMap DefaultDictionaryMap = Create<IDictionary>((writer, dictionary) =>
-        {
-            foreach (var item in dictionary)
-            {
-                if (item == null)
-                {
-                    writer.WriteEmptyElement(Null);
-                    writer.WriteLine();
-                }
-                else
-                {
-                    writer.WriteElement(Entry, item);
-                    writer.WriteLine();
-                }
-            }
-        });
+        private static readonly ItemsWriteMap DefaultDictionaryMap = DictionaryMap.CreateDefault(null);
 
         private ItemsWriteMap(CastAction<XmlWriter> write)
         {
             this.Write = write;
         }
 
-        internal static ItemsWriteMap Create(Type type, WriteMaps maps)
+        internal static ItemsWriteMap Create(Type type, WriteMaps maps, string elementName)
         {
             if (type.IsArray &&
                 type.GetArrayRank() > 1)
@@ -59,8 +29,8 @@
                 throw new NotSupportedException("Multidimensional arrays are not yet supported. Issue #26.");
             }
 
-            if (DictionaryMap.TryCreate(type, maps, out var map) ||
-                EnumerableMap.TryCreate(type, maps, out map))
+            if (DictionaryMap.TryCreate(type, maps, elementName, out var map) ||
+                EnumerableMap.TryCreate(type, maps, elementName, out map))
             {
                 return map;
             }
@@ -75,7 +45,28 @@
 
         private static class DictionaryMap
         {
-            internal static bool TryCreate(Type type, WriteMaps maps, out ItemsWriteMap result)
+            internal static ItemsWriteMap CreateDefault(string elementName)
+            {
+                elementName = elementName ?? Entry;
+                return Create<IDictionary>((writer, dictionary) =>
+                {
+                    foreach (var item in dictionary)
+                    {
+                        if (item == null)
+                        {
+                            writer.WriteEmptyElement(Null);
+                            writer.WriteLine();
+                        }
+                        else
+                        {
+                            writer.WriteElement(elementName, item);
+                            writer.WriteLine();
+                        }
+                    }
+                });
+            }
+
+            internal static bool TryCreate(Type type, WriteMaps maps, string elementName, out ItemsWriteMap result)
             {
                 if (!typeof(IDictionary).IsAssignableFrom(type))
                 {
@@ -91,29 +82,30 @@
                         // ReSharper disable once PossibleNullReferenceException
                         result = (ItemsWriteMap)typeof(EnumerableMap).GetMethod(nameof(EnumerableMap.CreateCachedComplex), BindingFlags.Static | BindingFlags.NonPublic)
                                                                                     .MakeGenericMethod(type, entryType)
-                                                                                    .Invoke(null, new object[] { "Entry", map });
+                                                                                    .Invoke(null, new object[] { elementName ?? "Entry", map });
                         return true;
                     }
 
                     // ReSharper disable once PossibleNullReferenceException
                     result = (ItemsWriteMap)typeof(DictionaryMap).GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
                                                                                 .MakeGenericMethod(type, entryType.GenericTypeArguments[0], entryType.GenericTypeArguments[1])
-                                                                                .Invoke(null, null);
+                                                                                .Invoke(null, new object[] { elementName });
                     return true;
                 }
 
-                result = DefaultDictionaryMap;
+                result = elementName == null ? DefaultDictionaryMap : CreateDefault(elementName);
                 return true;
             }
 
-            private static ItemsWriteMap Create<TDictionary, TKey, TValue>()
+            private static ItemsWriteMap Create<TDictionary, TKey, TValue>(string elementName)
                 where TDictionary : ICollection<KeyValuePair<TKey, TValue>>
             {
+                elementName = elementName ?? Entry;
                 return Create<TDictionary>((writer, dictionary) =>
                 {
                     foreach (var item in dictionary)
                     {
-                        writer.WriteElement("Entry", item);
+                        writer.WriteElement(elementName, item);
                         writer.WriteLine();
                     }
                 });
@@ -122,7 +114,27 @@
 
         private static class EnumerableMap
         {
-            internal static bool TryCreate(Type type, WriteMaps maps, out ItemsWriteMap result)
+            internal static ItemsWriteMap CreateDefault(string elementName)
+            {
+                return Create<IEnumerable>((writer, enumerable) =>
+                {
+                    foreach (var item in enumerable)
+                    {
+                        if (item == null)
+                        {
+                            writer.WriteEmptyElement(Null);
+                            writer.WriteLine();
+                        }
+                        else
+                        {
+                            writer.WriteElement(elementName ?? RootName.Get(item.GetType()), item);
+                            writer.WriteLine();
+                        }
+                    }
+                });
+            }
+
+            internal static bool TryCreate(Type type, WriteMaps maps, string elementName, out ItemsWriteMap result)
             {
                 if (!typeof(IEnumerable).IsAssignableFrom(type))
                 {
@@ -136,29 +148,32 @@
                     if (maps.TryGetSimpleCached(elementType, out var simpleMap))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        result = (ItemsWriteMap)typeof(EnumerableMap).GetMethod(nameof(CreateCachedSimple), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
-                                                                                .MakeGenericMethod(type, elementType)
-                                                                                .Invoke(null, new object[] { RootName.Get(elementType), simpleMap });
+                        result = (ItemsWriteMap)typeof(EnumerableMap)
+                                                .GetMethod(nameof(CreateCachedSimple), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                                                .MakeGenericMethod(type, elementType)
+                                                .Invoke(null, new object[] { elementName ?? RootName.Get(elementType), simpleMap });
                         return true;
                     }
 
                     if (maps.TryGetComplexCached(elementType, out var complexMap))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        result = (ItemsWriteMap)typeof(EnumerableMap).GetMethod(nameof(CreateCachedComplex), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
-                                                                                .MakeGenericMethod(type, elementType)
-                                                                                .Invoke(null, new object[] { RootName.Get(elementType), complexMap });
+                        result = (ItemsWriteMap)typeof(EnumerableMap)
+                                                .GetMethod(nameof(CreateCachedComplex), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                                                .MakeGenericMethod(type, elementType)
+                                                .Invoke(null, new object[] { elementName ?? RootName.Get(elementType), complexMap });
                         return true;
                     }
 
                     // ReSharper disable once PossibleNullReferenceException
-                    result = (ItemsWriteMap)typeof(EnumerableMap).GetMethod(nameof(CreateGenericEnumerableWriter), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
-                                                                            .MakeGenericMethod(type, elementType)
-                                                                            .Invoke(null, null);
+                    result = (ItemsWriteMap)typeof(EnumerableMap)
+                                            .GetMethod(nameof(CreateGeneric), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                                            .MakeGenericMethod(type, elementType)
+                                            .Invoke(null, new object[] { elementName });
                     return true;
                 }
 
-                result = DefaultEnumerableMap;
+                result = elementName == null ? DefaultEnumerableMap : CreateDefault(elementName);
                 return true;
             }
 
@@ -242,7 +257,7 @@
                 });
             }
 
-            private static ItemsWriteMap CreateGenericEnumerableWriter<TEnumerable, TValue>()
+            private static ItemsWriteMap CreateGeneric<TEnumerable, TValue>(string elementName)
                 where TEnumerable : IEnumerable<TValue>
             {
                 return Create<TEnumerable>((writer, enumerable) =>
@@ -256,7 +271,7 @@
                         }
                         else
                         {
-                            writer.WriteElement(RootName.Get(item.GetType()), item);
+                            writer.WriteElement(elementName ?? RootName.Get(item.GetType()), item);
                             writer.WriteLine();
                         }
                     }
