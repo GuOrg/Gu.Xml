@@ -38,7 +38,8 @@ namespace Gu.Xml.Tests
                 }),
                 new TestCaseData(new With<WithXmlEnumAttribute> { Value = WithXmlEnumAttribute.One }),
                 new TestCaseData(new With<WithXmlEnumAttribute> { Value = WithXmlEnumAttribute.Two }),
-                new TestCaseData(new WithXmlArrayAndXmlArrayItemAttribute { Ints = new[] { 1, 2, 3 } }),
+                new TestCaseData(new WithXmlArrayOfIntAndXmlArrayItemAttribute { Values = new[] { 1, 2, 3 } }),
+                new TestCaseData(new WithXmlArrayOfObjectAndXmlArrayItemAttribute { Values = new object[] { 1, 2, 3 } }),
             };
 
             [TestCaseSource(nameof(Values))]
@@ -105,11 +106,18 @@ namespace Gu.Xml.Tests
                 public int Value = 1;
             }
 
-            public class WithXmlArrayAndXmlArrayItemAttribute
+            public class WithXmlArrayOfIntAndXmlArrayItemAttribute
             {
                 [XmlArray(ElementName = "Numbers")]
-                [XmlArrayItem(ElementName = "Int32")]
-                public int[] Ints { get; set; }
+                [XmlArrayItem(ElementName = "Number")]
+                public int[] Values { get; set; }
+            }
+
+            public class WithXmlArrayOfObjectAndXmlArrayItemAttribute
+            {
+                [XmlArray(ElementName = "Numbers")]
+                [XmlArrayItem(ElementName = "Number")]
+                public object[] Values { get; set; }
             }
 
             public interface IValue
