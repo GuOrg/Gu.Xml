@@ -58,6 +58,34 @@
             }
 
             [Test]
+            public void ArrayOfDifferent()
+            {
+                var value = new object[] { "abc", 2, "cde", 4 };
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ArrayOfObject>" + Environment.NewLine +
+                               "  <String>abc</String>" + Environment.NewLine +
+                               "  <Int32>2</Int32>" + Environment.NewLine +
+                               "  <String>cde</String>" + Environment.NewLine +
+                               "  <Int32>4</Int32>" + Environment.NewLine +
+                               "</ArrayOfObject>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
+            public void ArrayOfString()
+            {
+                var value = new [] { "abc", "cde" };
+                var actual = Xml.Serialize(value);
+                var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                               "<ArrayOfString>" + Environment.NewLine +
+                               "  <String>abc</String>" + Environment.NewLine +
+                               "  <String>cde</String>" + Environment.NewLine +
+                               "</ArrayOfString>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [Test]
             public void ArrayOfFoo()
             {
                 var value = new[] { new Foo(1), new Foo(2), new Foo(3) };
