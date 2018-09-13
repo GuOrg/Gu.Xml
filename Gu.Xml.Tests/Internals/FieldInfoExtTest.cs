@@ -8,22 +8,15 @@
         [Test]
         public void CreateGenericGetter()
         {
-            var getter = typeof(Struct).GetProperty(nameof(Struct.Value)).CreateGetter<Struct, int>();
-            Assert.AreEqual(3, getter(new Struct(2)));
+            var getter = typeof(Struct).GetField(nameof(Struct.Value)).CreateGetter<Struct, int>();
+            Assert.AreEqual(3, getter(new Struct(3)));
         }
 
         [Test]
         public void CreateGetter()
         {
-            var getter = (Func<Struct, int>)typeof(string).GetProperty("Length").CreateGetter();
-            Assert.AreEqual(3, getter("abc"));
-        }
-
-        [Test]
-        public void CreateGetterStruct()
-        {
-            var getter = (Func<DateTime, int>)typeof(DateTime).GetProperty("Day").CreateGetter();
-            Assert.AreEqual(3, getter(new DateTime(2018, 09, 3)));
+            var getter = (Func<Struct, int>)typeof(Struct).GetField(nameof(Struct.Value)).CreateGetter();
+            Assert.AreEqual(3, getter(new Struct(3)));
         }
 
         public struct Struct
