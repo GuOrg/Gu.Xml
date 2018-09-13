@@ -19,7 +19,7 @@
 
         internal IReadOnlyList<CastAction<XmlWriter>> Elements { get; }
 
-        internal static WriteMap Create(Type type)
+        internal static WriteMap Create(Type type, XmlWriterActions actions)
         {
             var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.FlattenHierarchy);
             var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetProperty | BindingFlags.FlattenHierarchy);
@@ -38,7 +38,7 @@
             {
                 foreach (var field in fields)
                 {
-                    if (AttributeAction.TryCreate(field, out var action))
+                    if (AttributeAction.TryCreate(field, actions, out var action))
                     {
                         yield return action;
                     }
@@ -46,7 +46,7 @@
 
                 foreach (var property in properties)
                 {
-                    if (AttributeAction.TryCreate(property, out var action))
+                    if (AttributeAction.TryCreate(property, actions, out var action))
                     {
                         yield return action;
                     }
@@ -238,16 +238,20 @@
 
         private static class AttributeAction
         {
-            /// <summary>
-            /// Check if <paramref name="property"/> has any attributes like [XmlAttribute].
-            /// </summary>
-            /// <param name="property">The <see cref="PropertyInfo"/>.</param>
-            /// <param name="writer">The <see cref="AttributeAction"/>.</param>
-            /// <returns>True if an <see cref="AttributeAction"/> was created.</returns>
-            internal static bool TryCreate(PropertyInfo property, out CastAction<XmlWriter> writer)
+            internal static bool TryCreate(PropertyInfo property, XmlWriterActions actions, out CastAction<XmlWriter> writer)
             {
                 if (TryGetName(property, out var name))
                 {
+                    if (actions.TryGetSimpleCached(property.PropertyType, out var castAction))
+                    {
+                        // ReSharper disable once PossibleNullReferenceException
+                        writer = (CastAction<XmlWriter>)typeof(AttributeAction)
+                                                        .GetMethod(nameof(CreateCached), BindingFlags.Static | BindingFlags.NonPublic)
+                                                        .MakeGenericMethod(property.ReflectedType, property.PropertyType)
+                                                        .Invoke(null, new object[] { name, property.CreateGetter(), castAction });
+                        return true;
+                    }
+
                     // ReSharper disable once PossibleNullReferenceException
                     writer = (CastAction<XmlWriter>)typeof(AttributeAction)
                                               .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
@@ -260,10 +264,20 @@
                 return false;
             }
 
-            internal static bool TryCreate(FieldInfo field, out CastAction<XmlWriter> writer)
+            internal static bool TryCreate(FieldInfo field, XmlWriterActions actions, out CastAction<XmlWriter> writer)
             {
                 if (TryGetName(field, out var name))
                 {
+                    if (actions.TryGetSimpleCached(field.FieldType, out var castAction))
+                    {
+                        // ReSharper disable once PossibleNullReferenceException
+                        writer = (CastAction<XmlWriter>)typeof(AttributeAction)
+                                                        .GetMethod(nameof(CreateCached), BindingFlags.Static | BindingFlags.NonPublic)
+                                                        .MakeGenericMethod(field.ReflectedType, field.FieldType)
+                                                        .Invoke(null, new object[] { name, field.CreateGetter(), castAction });
+                        return true;
+                    }
+
                     // ReSharper disable once PossibleNullReferenceException
                     writer = (CastAction<XmlWriter>)typeof(AttributeAction)
                                          .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
@@ -278,30 +292,36 @@
 
             private static CastAction<XmlWriter> Create<TSource, TValue>(string name, Func<TSource, TValue> getter)
             {
-                // Caching via closure here.
-                Action<TextWriter, TValue> cachedWriter = null;
-
                 return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
                 {
                     if (getter(source) is TValue value)
                     {
-                        if (cachedWriter != null ||
-                            writer.TryGetSimple(value, out cachedWriter))
+                        if (writer.TryGetSimple(value, out var valueWriter))
                         {
                             var textWriter = writer.TextWriter;
                             textWriter.WriteMany(" ", name, "=\"");
-                            cachedWriter(textWriter, value);
+                            valueWriter.Invoke(textWriter, value);
                             textWriter.Write("\"");
-                            if (!typeof(TValue).IsSealed)
-                            {
-                                // We can't cache it as we are not sure it is the same type.
-                                cachedWriter = null;
-                            }
                         }
                         else
                         {
                             throw new InvalidOperationException($"Could not find an Action<TextWriter, {nameof(TValue)}> for {value} of type {value.GetType()}");
                         }
+                    }
+                });
+            }
+
+            private static CastAction<XmlWriter> CreateCached<TSource, TValue>(string name, Func<TSource, TValue> getter, CastAction<TextWriter> castAction)
+            {
+                var valueWriter = castAction.Get<TValue>();
+                return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
+                {
+                    if (getter(source) is TValue value)
+                    {
+                        var textWriter = writer.TextWriter;
+                        textWriter.WriteMany(" ", name, "=\"");
+                        valueWriter.Invoke(textWriter, value);
+                        textWriter.Write("\"");
                     }
                 });
             }

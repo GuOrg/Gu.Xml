@@ -100,7 +100,7 @@
         internal bool TryGetWriteMap<T>(T value, out WriteMap map)
         {
             if (value?.GetType() is Type type &&
-                this.actions.GetOrAdd(type, x => WriteMap.Create(x)) is WriteMap match)
+                this.actions.GetOrAdd(type, x => Create(x)) is WriteMap match)
             {
                 map = match;
                 return true;
@@ -108,6 +108,8 @@
 
             map = null;
             return false;
+
+            WriteMap Create(Type x) => WriteMap.Create(x, this);
         }
 
         /// <summary>
@@ -120,13 +122,15 @@
         {
             map = null;
             if (type.IsSealed &&
-                this.actions.GetOrAdd(type, x => WriteMap.Create(x)) is WriteMap match)
+                this.actions.GetOrAdd(type, x => Create(x)) is WriteMap match)
             {
                 map = match;
                 return true;
             }
 
             return false;
+
+            WriteMap Create(Type x) => WriteMap.Create(x, this);
         }
 
         internal XmlWriterActions RegisterSimple<T>(Action<TextWriter, T> action)
