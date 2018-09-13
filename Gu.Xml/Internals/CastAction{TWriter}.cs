@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.IO;
 
     /// <summary>
     /// A wrapper for Action{TWriter, TValue} that allows getting a casting action for boxed values.
@@ -24,6 +25,19 @@
             return new CastAction<TWriter>(
                 action,
                 (writer, value) => action(writer, (T)value));
+        }
+
+        internal static CastAction<TextWriter> CreateNullable<T>(Action<TextWriter, T> action)
+            where T : struct
+        {
+            return CastAction<TextWriter>.Create(new Action<TextWriter, T?>(
+                (writer, value) =>
+                {
+                    if (value is T notNull)
+                    {
+                        action(writer, notNull);
+                    }
+                }));
         }
 
         internal Action<TWriter, T> Get<T>()

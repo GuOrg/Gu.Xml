@@ -7,7 +7,7 @@
     {
         internal static bool IsAnonymous(this Type type) => type.Name.StartsWith("<>f__AnonymousType");
 
-        internal static bool IsNullable(this Type type) => type.FullName.StartsWith("System.Nullable`1");
+        internal static bool IsNullable(this Type type) => type.FullName?.StartsWith("System.Nullable`1") == true;
 
         internal static bool IsGenericEnumerable(this Type type, out Type enumerable)
         {

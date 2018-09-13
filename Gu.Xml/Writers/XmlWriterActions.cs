@@ -8,6 +8,7 @@
 
     internal class XmlWriterActions
     {
+        // Using <Type, object> here as an optimization. Hopefully we can refactor to something nicer.
         private readonly ConcurrentDictionary<Type, object> actions = new ConcurrentDictionary<Type, object>();
 
         /// <summary>
@@ -122,27 +123,21 @@
             return false;
         }
 
-        internal XmlWriterActions SimpleClass<T>(Action<TextWriter, T> action)
-            where T : class
+        internal XmlWriterActions RegisterSimple<T>(Action<TextWriter, T> action)
         {
             this.actions[typeof(T)] = CastAction<TextWriter>.Create(action);
-            return this;
-        }
-
-        internal XmlWriterActions SimpleStruct<T>(Action<TextWriter, T> action)
-            where T : struct
-        {
-            this.actions[typeof(T)] = CastAction<TextWriter>.Create(action);
-            if (!this.actions.ContainsKey(typeof(T?)))
+            if (typeof(T).IsValueType &&
+                !typeof(T).IsNullable())
             {
-                this.actions[typeof(T?)] = CastAction<TextWriter>.Create(new Action<TextWriter, T?>((writer, value) =>
+                var nullableType = typeof(Nullable<>).MakeGenericType(typeof(T));
+                if (!this.actions.ContainsKey(nullableType))
                 {
-                    if (value.HasValue)
-                    {
-                        // Using GetValueOrDefault() here as it is a little faster.
-                        action(writer, value.GetValueOrDefault());
-                    }
-                }));
+                    // ReSharper disable once PossibleNullReferenceException
+                    this.actions[nullableType] = typeof(CastAction<TextWriter>)
+                                                 .GetMethod(nameof(CastAction<TextWriter>.CreateNullable), BindingFlags.Static | BindingFlags.NonPublic)
+                                                 .MakeGenericMethod(typeof(T))
+                                                 .Invoke(null, new[] { action });
+                }
             }
 
             return this;
@@ -151,7 +146,7 @@
         private void RegisterEnum<T>()
             where T : struct, Enum
         {
-            this.SimpleStruct<T>((writer, value) => EnumWriter<T>.Default.Write(writer, value));
+            this.RegisterSimple<T>((writer, value) => EnumWriter<T>.Default.Write(writer, value));
         }
     }
 }
