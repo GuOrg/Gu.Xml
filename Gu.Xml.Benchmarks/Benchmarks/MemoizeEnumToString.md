@@ -9,7 +9,7 @@ Frequency=3410074 Hz, Resolution=293.2488 ns, Timer=TSC
 
 
 ```
-|        Method |      Mean |     Error |    StdDev | Scaled |  Gen 0 | Allocated |
-|-------------- |----------:|----------:|----------:|-------:|-------:|----------:|
-|    EnumFormat | 490.07 ns | 0.6540 ns | 0.5797 ns |   1.00 | 0.0334 |     216 B |
-| CacheGetOrAdd |  16.83 ns | 0.5159 ns | 0.4574 ns |   0.03 |      - |       0 B |
+|        Method |      Mean |     Error |     StdDev |    Median | Scaled |  Gen 0 | Allocated |
+|-------------- |----------:|----------:|-----------:|----------:|-------:|-------:|----------:|
+|    EnumFormat | 489.33 ns | 9.7809 ns | 22.6686 ns | 476.16 ns |   1.00 | 0.0334 |     216 B |
+| CacheGetOrAdd |  17.40 ns | 0.4211 ns |  0.5475 ns |  17.17 ns |   0.04 |      - |       0 B |

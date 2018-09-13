@@ -170,6 +170,16 @@
 
             private static bool TryCreate(FieldOrProperty fieldOrProperty, string name, XmlWriterActions actions, out CastAction<XmlWriter> castAction)
             {
+                if (actions.TryGetWriteMapCached(fieldOrProperty.ValueType, out var map))
+                {
+                    // ReSharper disable once PossibleNullReferenceException
+                    castAction = (CastAction<XmlWriter>)typeof(ElementAction)
+                                                        .GetMethod(nameof(CreateComplexCached), BindingFlags.Static | BindingFlags.NonPublic)
+                                                        .MakeGenericMethod(fieldOrProperty.SourceType, fieldOrProperty.ValueType)
+                                                        .Invoke(null, new object[] { name, fieldOrProperty.CreateGetter(), map });
+                    return true;
+                }
+
                 if (actions.TryGetSimpleCached(fieldOrProperty.ValueType, out var valueAction))
                 {
                     // ReSharper disable once PossibleNullReferenceException
@@ -196,6 +206,18 @@
                     if (getter(source) is TValue value)
                     {
                         writer.WriteElement(name, value, action);
+                        writer.WriteLine();
+                    }
+                });
+            }
+
+            private static CastAction<XmlWriter> CreateComplexCached<TSource, TValue>(string name, Func<TSource, TValue> getter, WriteMap map)
+            {
+                return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
+                {
+                    if (getter(source) is TValue value)
+                    {
+                        writer.WriteElement(name, value, map);
                         writer.WriteLine();
                     }
                 });

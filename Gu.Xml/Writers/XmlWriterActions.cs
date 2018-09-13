@@ -121,7 +121,9 @@
         internal bool TryGetWriteMapCached(Type type, out WriteMap map)
         {
             map = null;
-            if (type.IsSealed &&
+            if (!typeof(IEnumerable).IsAssignableFrom(type) &&
+                !type.IsEnum &&
+                type.IsSealed &&
                 this.actions.GetOrAdd(type, x => Create(x)) is WriteMap match)
             {
                 map = match;
