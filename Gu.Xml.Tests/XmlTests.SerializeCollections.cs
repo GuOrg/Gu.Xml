@@ -75,7 +75,7 @@
             [Test]
             public void ArrayOfString()
             {
-                var value = new [] { "abc", "cde" };
+                var value = new[] { "abc", "cde" };
                 var actual = Xml.Serialize(value);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<ArrayOfString>" + Environment.NewLine +
