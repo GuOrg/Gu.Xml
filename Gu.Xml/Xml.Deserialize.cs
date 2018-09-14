@@ -10,14 +10,27 @@ namespace Gu.Xml
 
     public static partial class Xml
     {
-        public static T Deserialize<T>(Stream stream, XSerializer serializer = null)
+        private static readonly ReadMaps Maps = new ReadMaps();
+
+        public static T Deserialize<T>(string xml)
         {
-            return Deserialize<T>(XmlReader.Create(stream), serializer);
+            using (var reader = XmlReader.Create(new StringReader(xml)))
+            {
+                return Deserialize<T>(reader);
+            }
         }
 
-        private static T Deserialize<T>(XmlReader reader, XSerializer serializer = null)
+        public static T Deserialize<T>(Stream stream)
         {
-            serializer = serializer ?? XSerializer.Default;
+            return Deserialize<T>(XmlReader.Create(stream));
+        }
+
+        public static T Deserialize<T>(XmlReader reader)
+        {
+            if (Maps.TryGet<T>(out var map))
+            {
+
+            }
 
             // first, attempt to find a constructor
             // so far we'll assume there's a single constructor

@@ -11,8 +11,8 @@
     {
         private static readonly Graph Value = new Graph
         {
-            Number = 1, 
-            Text = "abc", 
+            Number = 1,
+            Text = "abc",
             KeyValuePair = new KeyValuePair<int, double>(1, 1.1),
             Node = new Node
             {
