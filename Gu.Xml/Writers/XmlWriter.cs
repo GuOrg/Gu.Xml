@@ -191,6 +191,11 @@
 
         internal void WriteIndentation()
         {
+            if (this.indentLevel > 1000)
+            {
+                throw new InvalidOperationException("Indent level > 1000, reference loop?");
+            }
+
             for (var i = 0; i < this.indentLevel; i++)
             {
                 this.TextWriter.Write("  ");

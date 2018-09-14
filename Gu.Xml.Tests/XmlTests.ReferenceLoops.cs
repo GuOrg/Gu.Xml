@@ -28,6 +28,15 @@
                 Assert.AreEqual(expected, actual);
             }
 
+            [Test]
+            public void Infinite()
+            {
+                var list = new LinkedList();
+                list.Next = list;
+                var exception = Assert.Throws<InvalidOperationException>(() => Xml.Serialize(list));
+                Assert.AreEqual("Indent level > 1000, reference loop?", exception.Message);
+            }
+
             public class LinkedList
             {
                 public LinkedList Next { get; set; }
