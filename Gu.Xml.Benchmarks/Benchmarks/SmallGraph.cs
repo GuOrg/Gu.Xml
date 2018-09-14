@@ -1,15 +1,27 @@
 ﻿namespace Gu.Xml.Benchmarks
 {
-    using System.Globalization;
+    using System.Collections.Generic;
     using System.IO;
     using System.Text;
     using System.Xml.Serialization;
     using BenchmarkDotNet.Attributes;
     using Newtonsoft.Json;
 
-    public class WithSingleEnumProperty
+    public class SmallGraph
     {
-        private static readonly WithCultureTypes Value = new WithCultureTypes { CultureTypes = CultureTypes.AllCultures };
+        private static readonly Graph Value = new Graph
+        {
+            Number = 1, 
+            Text = "abc", 
+            KeyValuePair = new KeyValuePair<int, double>(1, 1.1),
+            Node = new Node
+            {
+                Number = 2,
+                Text = "cde",
+                KeyValuePair = new KeyValuePair<int, double>(3, 2.1),
+            },
+        };
+
         private static readonly XmlSerializer XmlSerializer = new XmlSerializer(Value.GetType());
         private static readonly StringBuilder StringBuilder = new StringBuilder(Xml.Serialize(Value));
 
@@ -40,9 +52,24 @@
             return JsonConvert.SerializeObject(Value);
         }
 
-        public sealed class WithCultureTypes
+        public sealed class Graph
         {
-            public CultureTypes CultureTypes { get; set; }
+            public int Number { get; set; }
+
+            public string Text { get; set; }
+
+            public KeyValuePair<int, double> KeyValuePair { get; set; }
+
+            public Node Node { get; set; }
+        }
+
+        public sealed class Node
+        {
+            public int Number { get; set; }
+
+            public string Text { get; set; }
+
+            public KeyValuePair<int, double> KeyValuePair { get; set; }
         }
     }
 }

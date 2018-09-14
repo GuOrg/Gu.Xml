@@ -13,9 +13,9 @@ namespace Gu.Xml.Benchmarks
     {
         public static void Main()
         {
-            if (false)
+            if (true)
             {
-                CopyResult(BenchmarkRunner.Run<CollectionOfSimpleTypes>());
+                CopyResult(BenchmarkRunner.Run<SmallGraph>());
             }
             else
             {

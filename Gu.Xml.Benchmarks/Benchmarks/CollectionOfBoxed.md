@@ -1,17 +1,17 @@
 ``` ini
 
-BenchmarkDotNet=v0.11.1, OS=Windows 10.0.17134.285 (1803/April2018Update/Redstone4)
-Intel Core i7-7500U CPU 2.70GHz (Max: 0.80GHz) (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
-Frequency=2835934 Hz, Resolution=352.6175 ns, Timer=TSC
+BenchmarkDotNet=v0.11.1, OS=Windows 10.0.17134.228 (1803/April2018Update/Redstone4)
+Intel Xeon CPU E5-2637 v4 3.50GHz (Max: 3.49GHz), 1 CPU, 8 logical and 4 physical cores
+Frequency=3410074 Hz, Resolution=293.2488 ns, Timer=TSC
 .NET Core SDK=2.1.402
-  [Host]     : .NET Core 2.1.4 (CoreCLR 4.6.26814.03, CoreFX 4.6.26814.02), 64bit RyuJIT
-  DefaultJob : .NET Core 2.1.4 (CoreCLR 4.6.26814.03, CoreFX 4.6.26814.02), 64bit RyuJIT
+  [Host]     : .NET Core 2.0.9 (CoreCLR 4.6.26614.01, CoreFX 4.6.26614.01), 64bit RyuJIT
+  DefaultJob : .NET Core 2.0.9 (CoreCLR 4.6.26614.01, CoreFX 4.6.26614.01), 64bit RyuJIT
 
 
 ```
-|                     Method |      Mean |     Error |     StdDev |    Median | Scaled | ScaledSD |     Gen 0 |     Gen 1 |    Gen 2 | Allocated |
-|--------------------------- |----------:|----------:|-----------:|----------:|-------:|---------:|----------:|----------:|---------:|----------:|
-|             GuXmlSerialize | 37.696 ms | 0.6485 ms |  0.5063 ms | 37.764 ms |   1.00 |     0.00 | 1923.0769 |   76.9231 |  76.9231 |   8.36 MB |
-|      StringBuilderToString |  2.025 ms | 0.1072 ms |  0.3160 ms |  2.108 ms |   0.05 |     0.01 |  238.2813 |  238.2813 | 238.2813 |   4.56 MB |
-|     XmlSerializerSerialize | 88.497 ms | 6.0390 ms | 17.8060 ms | 88.994 ms |   2.35 |     0.47 | 3125.0000 | 1250.0000 | 375.0000 |  25.55 MB |
-| JsonConvertSerializeObject | 19.192 ms | 2.0336 ms |  5.9961 ms | 16.688 ms |   0.51 |     0.16 |  437.5000 |  218.7500 |        - |   2.26 MB |
+|                     Method |      Mean |     Error |    StdDev |    Median | Scaled | ScaledSD |     Gen 0 |     Gen 1 |    Gen 2 | Allocated |
+|--------------------------- |----------:|----------:|----------:|----------:|-------:|---------:|----------:|----------:|---------:|----------:|
+|             GuXmlSerialize | 38.742 ms | 0.7719 ms | 1.8936 ms | 37.597 ms |   1.00 |     0.00 |  642.8571 |   71.4286 |  71.4286 |   8.36 MB |
+|      StringBuilderToString |  3.419 ms | 0.0907 ms | 0.2647 ms |  3.421 ms |   0.09 |     0.01 |  195.3125 |  195.3125 | 195.3125 |   4.56 MB |
+|     XmlSerializerSerialize | 69.721 ms | 1.4337 ms | 4.2273 ms | 68.862 ms |   1.80 |     0.14 | 3142.8571 | 1428.5714 | 428.5714 |  25.55 MB |
+| JsonConvertSerializeObject | 15.877 ms | 0.0390 ms | 0.0304 ms | 15.881 ms |   0.41 |     0.02 |  156.2500 |   62.5000 |        - |   2.26 MB |

@@ -1,7 +1,6 @@
 ﻿namespace Gu.Xml
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -12,7 +11,7 @@
 
         internal readonly IReadOnlyList<CastAction<XmlWriter>> Elements;
 
-        internal ComplexWriteMap(IReadOnlyList<CastAction<XmlWriter>> attributes, IReadOnlyList<CastAction<XmlWriter>> elements)
+        private ComplexWriteMap(IReadOnlyList<CastAction<XmlWriter>> attributes, IReadOnlyList<CastAction<XmlWriter>> elements)
         {
             this.Attributes = attributes;
             this.Elements = elements;
