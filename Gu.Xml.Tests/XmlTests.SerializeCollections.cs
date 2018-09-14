@@ -130,7 +130,6 @@
                                "    <Value>3</Value>" + Environment.NewLine +
                                "  </Foo>" + Environment.NewLine +
                                "</ArrayOfFoo>";
-                Dump.XmlAsCode(actual);
                 Assert.AreEqual(expected, actual);
             }
 
@@ -151,7 +150,6 @@
                                "    <Value>3</Value>" + Environment.NewLine +
                                "  </SealedFoo>" + Environment.NewLine +
                                "</ArrayOfSealedFoo>";
-                Dump.XmlAsCode(actual);
                 Assert.AreEqual(expected, actual);
             }
 

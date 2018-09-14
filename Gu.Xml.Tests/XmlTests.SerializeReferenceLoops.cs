@@ -21,7 +21,6 @@ namespace Gu.Xml.Tests
             public void LinkedListRootOneNode()
             {
                 var actual = Xml.Serialize(new LinkedList { Next = new LinkedList() });
-                Dump.XmlAsCode(actual);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<LinkedList>" + Environment.NewLine +
                                "  <Next />" + Environment.NewLine +

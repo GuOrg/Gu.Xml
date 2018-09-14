@@ -245,7 +245,6 @@ namespace Gu.Xml.Tests
             {
                 var with = new WithMutable<object> { Value = value };
                 var actual = Xml.Serialize(with);
-                Dump.XmlAsCode(actual);
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<WithMutableOfObject>" + Environment.NewLine +
                               $"  <Value>{text}</Value>" + Environment.NewLine +
