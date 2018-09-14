@@ -6,7 +6,7 @@ namespace Gu.Xml.Tests
 
     public partial class XmlTests
     {
-        public class ReferenceLoops
+        public class SerializeReferenceLoops
         {
             [Test]
             public void LinkedListRootOnly()

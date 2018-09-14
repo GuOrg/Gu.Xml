@@ -11,6 +11,8 @@ namespace Gu.Xml.Tests
 
     public class Dump
     {
+        public static void Xml(string text) => Console.Write(text);
+
         public static void XmlAsCode(string text)
         {
             var lines = Lines().ToArray();
