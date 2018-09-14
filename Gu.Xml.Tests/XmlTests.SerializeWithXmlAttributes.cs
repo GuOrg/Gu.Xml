@@ -110,14 +110,14 @@ namespace Gu.Xml.Tests
             public class WithXmlArrayOfIntAndXmlArrayItemAttribute
             {
                 [XmlArray(ElementName = "Numbers")]
-                [XmlArrayItem(ElementName = "Int32")]
+                [XmlArrayItem(ElementName = "Number")]
                 public int[] Values { get; set; }
             }
 
             public class WithXmlArrayOfObjectAndXmlArrayItemAttribute
             {
                 [XmlArray(ElementName = "Numbers")]
-                [XmlArrayItem(ElementName = "Int32")]
+                [XmlArrayItem(ElementName = "Number")]
                 public object[] Values { get; set; }
             }
 

@@ -4,49 +4,49 @@
     using System.Diagnostics;
     using System.Reflection;
 
-    [DebuggerDisplay("{this.SourceType}{this.member.Name} ({this.ValueType})")]
+    [DebuggerDisplay("{this.SourceType}{this.MemberInfo.Name} ({this.ValueType})")]
     internal struct FieldOrProperty
     {
-        private readonly MemberInfo member;
+        internal readonly MemberInfo MemberInfo;
 
-        public FieldOrProperty(FieldInfo member)
+        internal FieldOrProperty(FieldInfo memberInfo)
         {
-            this.member = member;
+            this.MemberInfo = memberInfo;
         }
 
-        public FieldOrProperty(PropertyInfo member)
+        internal FieldOrProperty(PropertyInfo memberInfo)
         {
-            this.member = member;
+            this.MemberInfo = memberInfo;
         }
 
-        public Type SourceType => this.member.ReflectedType;
+        internal Type SourceType => this.MemberInfo.ReflectedType;
 
-        public Type ValueType
+        internal Type ValueType
         {
             get
             {
-                switch (this.member)
+                switch (this.MemberInfo)
                 {
                     case FieldInfo field:
                         return field.FieldType;
                     case PropertyInfo property:
                         return property.PropertyType;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(this.member), "Never getting here.");
+                        throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here.");
                 }
             }
         }
 
         public Delegate CreateGetter()
         {
-            switch (this.member)
+            switch (this.MemberInfo)
             {
                 case FieldInfo field:
                     return field.CreateGetter();
                 case PropertyInfo property:
                     return property.CreateGetter();
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(this.member), "Never getting here.");
+                    throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here.");
             }
         }
     }

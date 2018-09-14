@@ -21,7 +21,26 @@
             this.Write = write;
         }
 
-        internal static ItemsWriteMap Create(Type type, WriteMaps maps, string elementName)
+        internal static bool TryCreate(FieldOrProperty member, WriteMaps maps, out ItemsWriteMap map)
+        {
+            if (typeof(IEnumerable).IsAssignableFrom(member.ValueType))
+            {
+                if (member.MemberInfo.TryGetCustomAttribute<System.Xml.Serialization.XmlArrayItemAttribute>(
+                        out var attribute) &&
+                    attribute.ElementName is string elementName &&
+                    !string.IsNullOrEmpty(elementName))
+                {
+                    return TryCreate(member.ValueType, maps, elementName, out map);
+                }
+
+                return TryCreate(member.ValueType, maps, null, out map);
+            }
+
+            map = null;
+            return false;
+        }
+
+        internal static ItemsWriteMap Create(Type type, WriteMaps maps)
         {
             if (type.IsArray &&
                 type.GetArrayRank() > 1)
@@ -29,13 +48,25 @@
                 throw new NotSupportedException("Multidimensional arrays are not yet supported. Issue #26.");
             }
 
-            if (DictionaryMap.TryCreate(type, maps, elementName, out var map) ||
-                EnumerableMap.TryCreate(type, maps, elementName, out map))
+            if (TryCreate(type, maps, null, out var map))
             {
                 return map;
             }
 
             throw new InvalidOperationException("Failed creating ItemsWriteMap. Bug in Gu.Xml.");
+        }
+
+        private static bool TryCreate(Type type, WriteMaps maps, string elementName, out ItemsWriteMap map)
+        {
+            if (type.IsArray &&
+                type.GetArrayRank() > 1)
+            {
+                map = null;
+                return false;
+            }
+
+            return DictionaryMap.TryCreate(type, maps, elementName, out map) ||
+                   EnumerableMap.TryCreate(type, maps, elementName, out map);
         }
 
         private static ItemsWriteMap Create<T>(Action<XmlWriter, T> writeItems)

@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -188,6 +189,16 @@
                     return true;
                 }
 
+                if (ItemsWriteMap.TryCreate(fieldOrProperty, maps, out var itemsMap))
+                {
+                    // ReSharper disable once PossibleNullReferenceException
+                    castAction = (CastAction<XmlWriter>)typeof(ElementAction)
+                                                        .GetMethod(nameof(CreateItemsCached), BindingFlags.Static | BindingFlags.NonPublic)
+                                                        .MakeGenericMethod(fieldOrProperty.SourceType, fieldOrProperty.ValueType)
+                                                        .Invoke(null, new object[] { name, fieldOrProperty.CreateGetter(), itemsMap });
+                    return true;
+                }
+
                 // ReSharper disable once PossibleNullReferenceException
                 castAction = (CastAction<XmlWriter>)typeof(ElementAction)
                                                        .GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)
@@ -209,6 +220,18 @@
             }
 
             private static CastAction<XmlWriter> CreateComplexCached<TSource, TValue>(string name, Func<TSource, TValue> getter, ComplexWriteMap writeMap)
+            {
+                return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
+                {
+                    if (getter(source) is TValue value)
+                    {
+                        writer.WriteElement(name, value, writeMap);
+                        writer.WriteLine();
+                    }
+                });
+            }
+
+            private static CastAction<XmlWriter> CreateItemsCached<TSource, TValue>(string name, Func<TSource, TValue> getter, ItemsWriteMap writeMap)
             {
                 return CastAction<XmlWriter>.Create<TSource>((writer, source) =>
                 {

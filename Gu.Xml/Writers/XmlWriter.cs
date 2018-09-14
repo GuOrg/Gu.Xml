@@ -86,26 +86,7 @@
                         simple.WriteElement(this, name, value);
                         break;
                     case ItemsWriteMap items:
-                        this.WriteIndentation();
-                        this.TextWriter.Write("<");
-                        this.TextWriter.Write(name);
-                        this.pendingCloseStartElement = true;
-
-                        this.indentLevel++;
-                        items.Write.Invoke(this, value);
-                        this.indentLevel--;
-
-                        if (this.pendingCloseStartElement)
-                        {
-                            this.TextWriter.Write(" />");
-                            this.pendingCloseStartElement = false;
-                        }
-                        else
-                        {
-                            this.WriteIndentation();
-                            this.TextWriter.WriteMany("</", name, ">");
-                        }
-
+                        this.WriteElement(name, value, items);
                         break;
                     case ComplexWriteMap complex:
                         this.WriteElement(name, value, complex);
@@ -134,6 +115,30 @@
             {
                 this.TextWriter.WriteLine(">");
                 this.pendingCloseStartElement = false;
+            }
+        }
+
+        internal void WriteElement<T>(string name, T value, ItemsWriteMap items)
+        {
+            this.ClosePendingStart();
+            this.WriteIndentation();
+            this.TextWriter.Write("<");
+            this.TextWriter.Write(name);
+            this.pendingCloseStartElement = true;
+
+            this.indentLevel++;
+            items.Write.Invoke(this, value);
+            this.indentLevel--;
+
+            if (this.pendingCloseStartElement)
+            {
+                this.TextWriter.Write(" />");
+                this.pendingCloseStartElement = false;
+            }
+            else
+            {
+                this.WriteIndentation();
+                this.TextWriter.WriteMany("</", name, ">");
             }
         }
 
