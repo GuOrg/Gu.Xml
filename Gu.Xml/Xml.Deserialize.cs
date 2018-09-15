@@ -32,7 +32,7 @@ namespace Gu.Xml
         {
             if (Maps.TryGet<T>(out var map))
             {
-
+                return map.ReadElement<T>(reader);
             }
 
             // first, attempt to find a constructor

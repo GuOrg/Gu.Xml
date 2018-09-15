@@ -118,22 +118,22 @@
                 case PropertyInfo property:
                     return property.CreateGetter();
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here.");
+                    throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here. Bug in Gu.Xml.");
             }
         }
 
-        //internal Delegate CreateSetter()
-        //{
-        //    switch (this.MemberInfo)
-        //    {
-        //        case FieldInfo field:
-        //            return field.CreateSetter();
-        //        case PropertyInfo property:
-        //            return property.CreateSetter();
-        //        default:
-        //            throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here.");
-        //    }
-        //}
+        internal bool TryCreateSetter(out Delegate setter)
+        {
+            switch (this.MemberInfo)
+            {
+                case FieldInfo field:
+                    return field.TryCreateSetter(out setter);
+                case PropertyInfo property:
+                    return property.TryCreateSetter(out setter);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here. Bug in Gu.Xml.");
+            }
+        }
 
         private static bool TryGetNameFromAttribute<TAttribute>(MemberInfo member, Func<TAttribute, string> getName, out string name)
             where TAttribute : Attribute
