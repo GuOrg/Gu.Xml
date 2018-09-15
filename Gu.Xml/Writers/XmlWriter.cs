@@ -14,7 +14,6 @@
 #pragma warning restore SA1401 // Fields should be private
 
         private static readonly WriteMaps DefaultMaps = new WriteMaps()
-            .RegisterSimple<string>((writer, value) => writer.Write(value))
             .RegisterSimple<bool>((writer, value) => writer.Write(value ? "true" : "false"))
             .RegisterSimple<byte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
             .RegisterSimple<char>((writer, value) => writer.Write((int)value))
@@ -28,6 +27,7 @@
             .RegisterSimple<IntPtr>((writer, value) => writer.Write(value.ToString()))
             .RegisterSimple<long>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
             .RegisterSimple<short>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))
+            .RegisterSimple<string>((writer, value) => writer.Write(value))
             .RegisterSimple<TimeSpan>((writer, value) => writer.Write(value.ToString("c", NumberFormatInfo.InvariantInfo)))
             .RegisterSimple<sbyte>((writer, value) => writer.Write(value.ToString(NumberFormatInfo.InvariantInfo)))
             .RegisterSimple<ulong>((writer, value) => writer.Write(value.ToString(null, NumberFormatInfo.InvariantInfo)))

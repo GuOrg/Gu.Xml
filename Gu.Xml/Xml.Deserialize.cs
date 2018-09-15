@@ -3,6 +3,7 @@ namespace Gu.Xml
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -10,7 +11,9 @@ namespace Gu.Xml
 
     public static partial class Xml
     {
-        private static readonly ReadMaps Maps = new ReadMaps();
+        private static readonly ReadMaps Maps = new ReadMaps()
+            .RegisterSimple(x => bool.Parse(x))
+            .RegisterSimple(x => byte.Parse(x, NumberFormatInfo.InvariantInfo));
 
         public static T Deserialize<T>(string xml)
         {
