@@ -122,6 +122,19 @@
             }
         }
 
+        //internal Delegate CreateSetter()
+        //{
+        //    switch (this.MemberInfo)
+        //    {
+        //        case FieldInfo field:
+        //            return field.CreateSetter();
+        //        case PropertyInfo property:
+        //            return property.CreateSetter();
+        //        default:
+        //            throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here.");
+        //    }
+        //}
+
         private static bool TryGetNameFromAttribute<TAttribute>(MemberInfo member, Func<TAttribute, string> getName, out string name)
             where TAttribute : Attribute
         {

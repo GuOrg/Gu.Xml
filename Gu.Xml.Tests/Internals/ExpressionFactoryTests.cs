@@ -1,4 +1,5 @@
-﻿namespace Gu.Xml.Tests.Internals
+﻿// ReSharper disable AssignNullToNotNullAttribute
+namespace Gu.Xml.Tests.Internals
 {
     using System.Linq.Expressions;
     using System.Reflection;
@@ -7,6 +8,15 @@
     public class ExpressionFactoryTests
     {
         private readonly int value;
+
+        [Test]
+        public void RefParameter()
+        {
+            var parameter = ExpressionFactory.RefParameter.Invoke(typeof(string), "x");
+            Assert.AreEqual(true, parameter.IsByRef);
+            Assert.AreEqual(typeof(string), parameter.Type);
+            Assert.AreEqual("x", parameter.Name);
+        }
 
         [Test]
         public void AssignReadonly()

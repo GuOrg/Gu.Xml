@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml
 {
     using System;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -22,6 +23,26 @@
                                  Expression.Field(parameter, field),
                                  parameter)
                              .Compile();
+        }
+
+        internal static bool TryCreateSetter(this FieldInfo field, out Delegate setter)
+        {
+            // ReSharper disable once PossibleNullReferenceException
+            var sourceParameter = ExpressionFactory.RefParameter(field.ReflectedType, "source");
+            var valueParameter = Expression.Parameter(field.FieldType, "value");
+            if (!field.IsInitOnly)
+            {
+                setter = Expression.Lambda(
+                                       typeof(SetAction<,>).MakeGenericType(field.ReflectedType, field.FieldType),
+                                       Expression.Assign(Expression.Field(sourceParameter, field), valueParameter),
+                                       sourceParameter,
+                                       valueParameter)
+                                   .Compile();
+                return true;
+            }
+
+            setter = null;
+            return false;
         }
     }
 }
