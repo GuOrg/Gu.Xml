@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Reflection;
 
     internal class ReadMaps
     {
@@ -21,7 +22,7 @@
             ReadMap Create(Type t)
             {
                 // ReSharper disable once PossibleNullReferenceException
-                return (ReadMap)typeof(ReadMap).GetMethod(nameof(ReadMap.CreateComplex))
+                return (ReadMap)typeof(ReadMap).GetMethod(nameof(ReadMap.CreateComplex), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                .MakeGenericMethod(t)
                                                .Invoke(null, new object[] { this });
             }

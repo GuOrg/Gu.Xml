@@ -1,4 +1,5 @@
 group Analyzers
   Gu.Analyzers
   IDisposableAnalyzers
+  ReflectionAnalyzers
   StyleCop.Analyzers
