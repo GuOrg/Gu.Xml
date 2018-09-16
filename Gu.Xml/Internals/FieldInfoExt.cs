@@ -27,7 +27,7 @@
         internal static bool TryCreateSetter(this FieldInfo field, out Delegate setter)
         {
             // ReSharper disable once PossibleNullReferenceException
-            var sourceParameter = ExpressionFactory.RefParameter(field.ReflectedType, "source");
+            var sourceParameter = Expression.Parameter(field.ReflectedType.MakeByRefType(), "source");
             var valueParameter = Expression.Parameter(field.FieldType, "value");
             if (!field.IsInitOnly)
             {

@@ -10,15 +10,6 @@ namespace Gu.Xml.Tests.Internals
         private readonly int value;
 
         [Test]
-        public void RefParameter()
-        {
-            var parameter = ExpressionFactory.RefParameter.Invoke(typeof(string), "x");
-            Assert.AreEqual(true, parameter.IsByRef);
-            Assert.AreEqual(typeof(string), parameter.Type);
-            Assert.AreEqual("x", parameter.Name);
-        }
-
-        [Test]
         public void AssignReadonly()
         {
             var member = Expression.Field(Expression.Constant(this), typeof(ExpressionFactoryTests).GetField(nameof(this.value), BindingFlags.NonPublic | BindingFlags.Instance));

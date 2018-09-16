@@ -33,7 +33,7 @@
         internal static bool TryCreateSetter(this PropertyInfo property, out Delegate setter)
         {
             // ReSharper disable once PossibleNullReferenceException
-            var sourceParameter = ExpressionFactory.RefParameter(property.ReflectedType, "source");
+            var sourceParameter = Expression.Parameter(property.ReflectedType.MakeByRefType(), "source");
             var valueParameter = Expression.Parameter(property.PropertyType, "value");
             if (property.SetMethod != null)
             {
