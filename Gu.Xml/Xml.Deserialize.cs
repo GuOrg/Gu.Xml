@@ -62,7 +62,7 @@ namespace Gu.Xml
                     {
                         isOptional = true;
                         replacementValue = typeof(Enumerable)
-                            .GetMethod(nameof(Enumerable.Empty), BindingFlags.Static | BindingFlags.Public)
+                            .GetMethod(nameof(Enumerable.Empty), BindingFlags.Public | BindingFlags.Static)
                             .MakeGenericMethod(new Type[] { parameter.ParameterType.GetGenericArguments().Single() })
                             .Invoke(null, Array.Empty<object>());
                     }

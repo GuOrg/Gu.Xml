@@ -111,14 +111,14 @@
                     if (maps.TryGetComplexCached(entryType, out var map))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        result = (ItemsWriteMap)typeof(EnumerableMap).GetMethod(nameof(EnumerableMap.CreateCachedComplex), BindingFlags.Static | BindingFlags.NonPublic)
+                        result = (ItemsWriteMap)typeof(EnumerableMap).GetMethod(nameof(EnumerableMap.CreateCachedComplex), BindingFlags.NonPublic | BindingFlags.Static)
                                                                                     .MakeGenericMethod(type, entryType)
                                                                                     .Invoke(null, new object[] { elementName ?? "Entry", map });
                         return true;
                     }
 
                     // ReSharper disable once PossibleNullReferenceException
-                    result = (ItemsWriteMap)typeof(DictionaryMap).GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                    result = (ItemsWriteMap)typeof(DictionaryMap).GetMethod(nameof(Create), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                                                 .MakeGenericMethod(type, entryType.GenericTypeArguments[0], entryType.GenericTypeArguments[1])
                                                                                 .Invoke(null, new object[] { elementName });
                     return true;
@@ -180,7 +180,7 @@
                     {
                         // ReSharper disable once PossibleNullReferenceException
                         result = (ItemsWriteMap)typeof(EnumerableMap)
-                                                .GetMethod(nameof(CreateCachedSimple), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                                                .GetMethod(nameof(CreateCachedSimple), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                 .MakeGenericMethod(type, elementType)
                                                 .Invoke(null, new object[] { elementName ?? RootName.Get(elementType), simpleMap });
                         return true;
@@ -190,7 +190,7 @@
                     {
                         // ReSharper disable once PossibleNullReferenceException
                         result = (ItemsWriteMap)typeof(EnumerableMap)
-                                                .GetMethod(nameof(CreateCachedComplex), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                                                .GetMethod(nameof(CreateCachedComplex), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                 .MakeGenericMethod(type, elementType)
                                                 .Invoke(null, new object[] { elementName ?? RootName.Get(elementType), complexMap });
                         return true;
@@ -198,7 +198,7 @@
 
                     // ReSharper disable once PossibleNullReferenceException
                     result = (ItemsWriteMap)typeof(EnumerableMap)
-                                            .GetMethod(nameof(CreateGeneric), BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                                            .GetMethod(nameof(CreateGeneric), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                             .MakeGenericMethod(type, elementType)
                                             .Invoke(null, new object[] { elementName });
                     return true;

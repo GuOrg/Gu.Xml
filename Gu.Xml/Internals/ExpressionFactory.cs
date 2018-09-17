@@ -16,7 +16,7 @@
             return Expression.Lambda<Func<MemberExpression, ParameterExpression, BinaryExpression>>(
                                  Expression.New(
                                      typeof(BinaryExpression).Assembly.GetType("System.Linq.Expressions.AssignBinaryExpression", throwOnError: true)
-                                                             .GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(Expression), typeof(Expression) }, null),
+                                                             .GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(Expression), typeof(Expression) }, null),
                                      left,
                                      right),
                                  left,

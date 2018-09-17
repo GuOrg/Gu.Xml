@@ -18,7 +18,7 @@
         internal static bool TryGetCustomAttribute<T>(this MemberInfo member, out T attribute)
             where T : Attribute
         {
-            attribute = (T)Attribute.GetCustomAttribute(member, typeof(T));
+            attribute = member.GetCustomAttribute<T>();
             return attribute != null;
         }
     }

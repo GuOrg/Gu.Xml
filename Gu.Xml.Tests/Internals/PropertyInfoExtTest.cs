@@ -3,6 +3,7 @@
 namespace Gu.Xml.Tests.Internals
 {
     using System;
+    using System.Reflection;
     using NUnit.Framework;
 
     public class PropertyInfoExtTest
@@ -10,34 +11,34 @@ namespace Gu.Xml.Tests.Internals
         [Test]
         public void CreateGenericGetter()
         {
-            var getter = typeof(Struct).GetProperty(nameof(Struct.ReadOnlyProperty)).CreateGetter<Struct, int>();
+            var getter = typeof(Struct).GetProperty(nameof(Struct.ReadOnlyProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).CreateGetter<Struct, int>();
             Assert.AreEqual(3, getter(new Struct(3)));
         }
 
         [Test]
         public void CreateGetterStruct()
         {
-            var getter = (Func<Struct, int>)typeof(Struct).GetProperty(nameof(Struct.ReadOnlyProperty)).CreateGetter();
+            var getter = (Func<Struct, int>)typeof(Struct).GetProperty(nameof(Struct.ReadOnlyProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).CreateGetter();
             Assert.AreEqual(3, getter(new Struct(3)));
 
-            getter = (Func<Struct, int>)typeof(Struct).GetProperty(nameof(Struct.MutableProperty)).CreateGetter();
+            getter = (Func<Struct, int>)typeof(Struct).GetProperty(nameof(Struct.MutableProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).CreateGetter();
             Assert.AreEqual(3, getter(new Struct(0) { MutableProperty = 3 }));
         }
 
         [Test]
         public void CreateGetterClass()
         {
-            var getter = (Func<Class, int>)typeof(Class).GetProperty(nameof(Class.ReadOnlyProperty)).CreateGetter();
+            var getter = (Func<Class, int>)typeof(Class).GetProperty(nameof(Class.ReadOnlyProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).CreateGetter();
             Assert.AreEqual(3, getter(new Class(3)));
 
-            getter = (Func<Class, int>)typeof(Class).GetProperty(nameof(Class.MutableProperty)).CreateGetter();
+            getter = (Func<Class, int>)typeof(Class).GetProperty(nameof(Class.MutableProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).CreateGetter();
             Assert.AreEqual(3, getter(new Class(0) { MutableProperty = 3 }));
         }
 
         [Test]
         public void TryCreateSetterStructMutableProperty()
         {
-            Assert.AreEqual(true, typeof(Struct).GetProperty(nameof(Struct.MutableProperty)).TryCreateSetter(out var @delegate));
+            Assert.AreEqual(true, typeof(Struct).GetProperty(nameof(Struct.MutableProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).TryCreateSetter(out var @delegate));
             var setter = (SetAction<Struct, int>)@delegate;
             var foo = new Struct(0);
             setter.Invoke(ref foo, 3);
@@ -47,7 +48,7 @@ namespace Gu.Xml.Tests.Internals
         [Test]
         public void TryCreateSetterClassMutableProperty()
         {
-            Assert.AreEqual(true, typeof(Class).GetProperty(nameof(Class.MutableProperty)).TryCreateSetter(out var @delegate));
+            Assert.AreEqual(true, typeof(Class).GetProperty(nameof(Class.MutableProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).TryCreateSetter(out var @delegate));
             var setter = (SetAction<Class, int>)@delegate;
             var foo = new Class(3);
             setter.Invoke(ref foo, 3);
@@ -57,13 +58,13 @@ namespace Gu.Xml.Tests.Internals
         [Test]
         public void TryCreateSetterStructReadOnlyProperty()
         {
-            Assert.AreEqual(false, typeof(Struct).GetProperty(nameof(Struct.ReadOnlyProperty)).TryCreateSetter(out _));
+            Assert.AreEqual(false, typeof(Struct).GetProperty(nameof(Struct.ReadOnlyProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).TryCreateSetter(out _));
         }
 
         [Test]
         public void TryCreateSetterClassReadOnlyProperty()
         {
-            Assert.AreEqual(false, typeof(Class).GetProperty(nameof(Class.ReadOnlyProperty)).TryCreateSetter(out _));
+            Assert.AreEqual(false, typeof(Class).GetProperty(nameof(Class.ReadOnlyProperty), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).TryCreateSetter(out _));
         }
 
         private struct Struct
