@@ -5,7 +5,7 @@ NUGET
   remote: https://api.nuget.org/v3/index.json
     Gu.Analyzers (1.2.18.1-dev)
     IDisposableAnalyzers (2.0.3.3)
-    ReflectionAnalyzers (0.1.3-dev)
+    ReflectionAnalyzers (0.1.6.1-dev)
     StyleCop.Analyzers (1.1.0-beta009)
 
 GROUP Benchmark
@@ -92,7 +92,7 @@ NUGET
       NETStandard.Library (>= 1.6.1) - restriction: || (>= dnxcore50) (&& (< monoandroid) (< monotouch) (< net45) (>= netstandard1.3) (< netstandard2.0) (< win8) (< wpa81) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (&& (< monoandroid) (< net45) (>= netstandard1.0) (< netstandard1.3) (< win8) (< wp8) (< wpa81))
       System.Dynamic.Runtime (>= 4.3) - restriction: || (>= dnxcore50) (&& (< monoandroid) (< monotouch) (< net45) (>= netstandard1.3) (< netstandard2.0) (< win8) (< wpa81) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (&& (< monoandroid) (< net45) (>= netstandard1.0) (< netstandard1.3) (< win8) (< wp8) (< wpa81))
       System.Reflection.TypeExtensions (>= 4.4) - restriction: || (>= dnxcore50) (&& (< monoandroid) (< monotouch) (< net45) (>= netstandard1.3) (< netstandard2.0) (< win8) (< wpa81) (< xamarinmac) (< xamarintvos) (< xamarinwatchos))
-    Microsoft.Diagnostics.Tracing.TraceEvent (2.0.25) - restriction: || (>= net46) (>= netstandard2.0)
+    Microsoft.Diagnostics.Tracing.TraceEvent (2.0.26) - restriction: || (>= net46) (>= netstandard2.0)
     Microsoft.DotNet.InternalAbstractions (1.0) - restriction: || (>= net46) (>= netstandard2.0)
       System.AppContext (>= 4.1) - restriction: && (< net451) (>= netstandard1.3)
       System.Collections (>= 4.0.11) - restriction: && (< net451) (>= netstandard1.3)
