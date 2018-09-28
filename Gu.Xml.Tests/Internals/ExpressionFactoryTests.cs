@@ -7,7 +7,9 @@ namespace Gu.Xml.Tests.Internals
 
     public class ExpressionFactoryTests
     {
+#pragma warning disable CS0649
         private readonly int value;
+#pragma warning restore CS0649
 
         [Test]
         public void AssignReadonly()

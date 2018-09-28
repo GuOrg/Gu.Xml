@@ -114,7 +114,7 @@
                         // ReSharper disable once PossibleNullReferenceException
                         this.maps[underlying] = new SimpleWriteMap(
                             (CastAction<TextWriter>)typeof(CastAction<TextWriter>)
-                                                    .GetMethod(nameof(CastAction<TextWriter>.CreateUnderlying), BindingFlags.NonPublic | BindingFlags.Static)
+                                                    .GetMethod(nameof(CastAction<TextWriter>.CreateUnderlying), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                     .MakeGenericMethod(underlying)
                                                     .Invoke(null, new object[] { action }));
                     }
@@ -127,7 +127,7 @@
                         // ReSharper disable once PossibleNullReferenceException
                         this.maps[nullableType] = new SimpleWriteMap(
                             (CastAction<TextWriter>)typeof(CastAction<TextWriter>)
-                                        .GetMethod(nameof(CastAction<TextWriter>.CreateNullable), BindingFlags.NonPublic | BindingFlags.Static)
+                                        .GetMethod(nameof(CastAction<TextWriter>.CreateNullable), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                         .MakeGenericMethod(typeof(T))
                                         .Invoke(null, new object[] { action }));
                     }
@@ -190,7 +190,7 @@
                 // ReSharper disable once PossibleNullReferenceException
                 // ReSharper disable once AssignmentIsFullyDiscarded
                 _ = typeof(WriteMaps)
-                    .GetMethod(nameof(this.RegisterEnum), BindingFlags.NonPublic | BindingFlags.Instance)
+                    .GetMethod(nameof(this.RegisterEnum), BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                     .MakeGenericMethod(type)
                     .Invoke(this, null);
                 return this.TryGetSimpleCached(type, out map);

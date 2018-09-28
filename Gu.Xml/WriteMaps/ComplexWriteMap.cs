@@ -34,7 +34,7 @@
                 {
                     // ReSharper disable once PossibleNullReferenceException
                     return (CastAction<XmlWriter>)typeof(ElementAction)
-                                                        .GetMethod(nameof(CreateSimpleCached), BindingFlags.NonPublic | BindingFlags.Static)
+                                                        .GetMethod(nameof(CreateSimpleCached), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                         .MakeGenericMethod(fieldOrProperty.SourceType, fieldOrProperty.ValueType)
                                                         .Invoke(null, new object[] { fieldOrProperty.ElementName(), fieldOrProperty.CreateGetter(), valueAction });
                 }
@@ -43,7 +43,7 @@
                 {
                     // ReSharper disable once PossibleNullReferenceException
                     return (CastAction<XmlWriter>)typeof(ElementAction)
-                                                        .GetMethod(nameof(CreateComplexCached), BindingFlags.NonPublic | BindingFlags.Static)
+                                                        .GetMethod(nameof(CreateComplexCached), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                         .MakeGenericMethod(fieldOrProperty.SourceType, fieldOrProperty.ValueType)
                                                         .Invoke(null, new object[] { fieldOrProperty.ElementName(), fieldOrProperty.CreateGetter(), map });
                 }
@@ -52,14 +52,14 @@
                 {
                     // ReSharper disable once PossibleNullReferenceException
                    return (CastAction<XmlWriter>)typeof(ElementAction)
-                                                        .GetMethod(nameof(CreateItemsCached), BindingFlags.NonPublic | BindingFlags.Static)
+                                                        .GetMethod(nameof(CreateItemsCached), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                         .MakeGenericMethod(fieldOrProperty.SourceType, fieldOrProperty.ValueType)
                                                         .Invoke(null, new object[] { fieldOrProperty.ElementName(), fieldOrProperty.CreateGetter(), itemsMap });
                 }
 
                 // ReSharper disable once PossibleNullReferenceException
                 return (CastAction<XmlWriter>)typeof(ElementAction)
-                                                       .GetMethod(nameof(CreateDefault), BindingFlags.NonPublic | BindingFlags.Static)
+                                                       .GetMethod(nameof(CreateDefault), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                        .MakeGenericMethod(fieldOrProperty.SourceType, fieldOrProperty.ValueType)
                                                        .Invoke(null, new object[] { fieldOrProperty.ElementName(), fieldOrProperty.CreateGetter() });
             }
@@ -121,14 +121,14 @@
                 {
                     // ReSharper disable once PossibleNullReferenceException
                     return (CastAction<XmlWriter>)typeof(AttributeAction)
-                                                    .GetMethod(nameof(CreateCached), BindingFlags.NonPublic | BindingFlags.Static)
+                                                    .GetMethod(nameof(CreateCached), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                     .MakeGenericMethod(member.SourceType, member.ValueType)
                                                     .Invoke(null, new object[] { member.AttributeName(), member.CreateGetter(), map });
                 }
 
                 // ReSharper disable once PossibleNullReferenceException
                 return (CastAction<XmlWriter>)typeof(AttributeAction)
-                                                .GetMethod(nameof(CreateDefault), BindingFlags.NonPublic | BindingFlags.Static)
+                                                .GetMethod(nameof(CreateDefault), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                 .MakeGenericMethod(member.SourceType, member.ValueType)
                                                 .Invoke(null, new object[] { member.AttributeName(), member.CreateGetter() });
             }

@@ -111,7 +111,7 @@
                     if (maps.TryGetComplexCached(entryType, out var map))
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        result = (ItemsWriteMap)typeof(EnumerableMap).GetMethod(nameof(EnumerableMap.CreateCachedComplex), BindingFlags.NonPublic | BindingFlags.Static)
+                        result = (ItemsWriteMap)typeof(EnumerableMap).GetMethod(nameof(EnumerableMap.CreateCachedComplex), BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)
                                                                                     .MakeGenericMethod(type, entryType)
                                                                                     .Invoke(null, new object[] { elementName ?? "Entry", map });
                         return true;
