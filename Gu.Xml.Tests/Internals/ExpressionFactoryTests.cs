@@ -14,7 +14,7 @@ namespace Gu.Xml.Tests.Internals
         [Test]
         public void AssignReadonly()
         {
-            var member = Expression.Field(Expression.Constant(this), typeof(ExpressionFactoryTests).GetField(nameof(this.value), BindingFlags.NonPublic | BindingFlags.Instance));
+            var member = Expression.Field(Expression.Constant(this), typeof(ExpressionFactoryTests).GetField(nameof(this.value), BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
             var parameter = Expression.Parameter(typeof(int), "value");
             var assign = ExpressionFactory.AssignReadonly.Invoke(member, parameter);
             Assert.AreEqual(member, assign.Left);

@@ -112,4 +112,7 @@
     <Rule Id="SA1651" Action="None" />
     <Rule Id="SA1401" Action="None" />
   </Rules>
+  <Rules AnalyzerId="ReflectionAnalyzers" RuleNamespace="ReflectionAnalyzers">
+    <Rule Id="REFL007" Action="Warning" />
+  </Rules>
 </RuleSet>
