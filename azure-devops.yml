@@ -2,17 +2,21 @@ resources:
 - repo: self
 
 steps:
+- task: DotNetCoreInstaller@0
+  displayName: 'Use .NET Core sdk 2.2'
+  inputs:
+    version: 2.2.100
+
 - task: DotNetCoreCLI@2
   displayName: Restore
   inputs:
     command: restore
-    
-- task: DotNetCoreCLI@2
+
+- task: VSBuild@1
   displayName: Build
   inputs:
-    command: build
-    
-- task: DotNetCoreCLI@2
+   configuration: Release
+   msbuildArgs: verbosity minimal
+
+- task: VSTest@2
   displayName: Test
-  inputs:
-    command: test       
