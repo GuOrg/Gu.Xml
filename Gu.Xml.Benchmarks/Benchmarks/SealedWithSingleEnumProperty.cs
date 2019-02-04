@@ -10,7 +10,7 @@
     public class SealedWithSingleEnumProperty
     {
         private static readonly WithCultureTypes Value = new WithCultureTypes { CultureTypes = CultureTypes.AllCultures };
-        private static readonly XmlSerializer XmlSerializer = new XmlSerializer(Value.GetType());
+        private static readonly XmlSerializer XmlSerializer = new XmlSerializer(typeof(WithCultureTypes));
         private static readonly StringBuilder StringBuilder = new StringBuilder(Xml.Serialize(Value));
 
         [Benchmark(Baseline = true)]

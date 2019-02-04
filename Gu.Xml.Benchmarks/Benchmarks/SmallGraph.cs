@@ -22,7 +22,7 @@
             },
         };
 
-        private static readonly XmlSerializer XmlSerializer = new XmlSerializer(Value.GetType());
+        private static readonly XmlSerializer XmlSerializer = new XmlSerializer(typeof(Graph));
         private static readonly StringBuilder StringBuilder = new StringBuilder(Xml.Serialize(Value));
 
         [Benchmark(Baseline = true)]

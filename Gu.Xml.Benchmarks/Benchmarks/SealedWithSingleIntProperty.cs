@@ -9,7 +9,7 @@
     public class SealedWithSingleIntProperty
     {
         private static readonly WithInt Value = new WithInt { Number = 1 };
-        private static readonly XmlSerializer XmlSerializer = new XmlSerializer(Value.GetType());
+        private static readonly XmlSerializer XmlSerializer = new XmlSerializer(typeof(WithInt));
         private static readonly StringBuilder StringBuilder = new StringBuilder(Xml.Serialize(Value));
 
         [Benchmark(Baseline = true)]

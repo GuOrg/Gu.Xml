@@ -40,7 +40,7 @@ namespace Gu.Xml.Tests
                 new TestCaseData(new With<WithXmlEnumAttribute> { Value = WithXmlEnumAttribute.Two }),
                 new TestCaseData(new WithXmlArrayOfIntAndXmlArrayItemAttribute { Values = new[] { 1, 2, 3 } }),
                 new TestCaseData(new WithXmlArrayOfObjectAndXmlArrayItemAttribute { Values = new object[] { 1, 2, 3 } }),
-                //new TestCaseData(new WithXmlArrayOfObjectAndXmlArrayItemAttribute { Values = new object[] { "abc", null, 3 } }),
+                // new TestCaseData(new WithXmlArrayOfObjectAndXmlArrayItemAttribute { Values = new object[] { "abc", null, 3 } }),
             };
 
             [TestCaseSource(nameof(TestCases))]
