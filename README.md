@@ -2,6 +2,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Gitter](https://badges.gitter.im/JoinChat.svg)](https://gitter.im/GuOrg/Gu.Xml?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build status](https://ci.appveyor.com/api/projects/status/m3b1yj38ke9odxfd/branch/master?svg=true)](https://ci.appveyor.com/project/JohanLarsson/gu-xml/branch/master)
+[![Build Status](https://dev.azure.com/guorg/Gu.Xml/_apis/build/status/GuOrg.Gu.Xml?branchName=master)](https://dev.azure.com/guorg/Gu.Xml/_build/latest?definitionId=3&branchName=master)
 
 # Roadmap
 
