@@ -65,7 +65,7 @@ namespace Gu.Xml.Tests
             [Test]
             public void WithEmptyStruct()
             {
-                var value = new With<EmptyStruct> { Value = default(EmptyStruct) };
+                var value = new With<EmptyStruct> { Value = default };
                 var expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<WithOfEmptyStruct>" + Environment.NewLine +
                                "  <Value />" + Environment.NewLine +
