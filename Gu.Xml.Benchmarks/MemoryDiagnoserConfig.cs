@@ -1,4 +1,5 @@
 ﻿[assembly: BenchmarkDotNet.Attributes.Config(typeof(Gu.Xml.Benchmarks.MemoryDiagnoserConfig))]
+
 namespace Gu.Xml.Benchmarks
 {
     using BenchmarkDotNet.Configs;
