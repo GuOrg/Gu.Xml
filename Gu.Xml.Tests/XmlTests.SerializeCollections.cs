@@ -703,7 +703,7 @@
 
                 public int Value { get; }
 
-                public int CompareTo(Foo other) => this.Value.CompareTo(other.Value);
+                public int CompareTo(Foo? other) => this.Value.CompareTo(other.Value);
             }
 
             public sealed class SealedFoo : IComparable<SealedFoo>

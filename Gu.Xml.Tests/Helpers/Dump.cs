@@ -50,11 +50,11 @@ namespace Gu.Xml.Tests
                                        .Where(x => typeof(IEnumerable).IsAssignableFrom(x) &&
                                                    !x.IsInterface &&
                                                    !x.IsAbstract &&
-                                                   !x.Name.Contains("Builder") &&
+                                                   !x.Name.Contains("Builder", StringComparison.Ordinal) &&
                                                    x.Namespace == source.Namespace)
                                        .OrderBy(x => x.Name))
             {
-                Console.WriteLine("- [ ] `" + type.ToString().Replace("`1[T]", "<T>").Replace("`2[TKey,TValue]", "<TKey, TValue>") + "`");
+                Console.WriteLine("- [ ] `" + type.ToString().Replace("`1[T]", "<T>", StringComparison.Ordinal).Replace("`2[TKey,TValue]", "<TKey, TValue>", StringComparison.Ordinal) + "`");
             }
         }
     }

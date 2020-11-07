@@ -9,7 +9,7 @@ namespace Gu.Xml.Tests
 
     public partial class XmlTests
     {
-        public class SerializeComplexTypes
+        public sealed class SerializeComplexTypes
         {
             private static readonly TestCaseData[] TestCases =
             {
