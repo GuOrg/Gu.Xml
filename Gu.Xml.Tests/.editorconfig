@@ -16,3 +16,6 @@ dotnet_diagnostic.CA1051.severity = none
 
 # CA1034: Nested types should not be visible
 dotnet_diagnostic.CA1034.severity = none
+
+# SA1401: Fields should be private
+dotnet_diagnostic.SA1401.severity = none
