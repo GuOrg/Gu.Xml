@@ -1,9 +1,0 @@
-group Analyzers
-  Gu.Analyzers
-  IDisposableAnalyzers
-  ReflectionAnalyzers
-  StyleCop.Analyzers
-
-group Benchmark
-  BenchmarkDotNet.Diagnostics.Windows
-  Newtonsoft.Json
