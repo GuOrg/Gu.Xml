@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".sln", ".sln", "{11F7E132-B
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
+		azure-pipelines.yml = azure-pipelines.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Xml", "Gu.Xml\Gu.Xml.csproj", "{3D727659-3365-4ED4-B8AA-E853DFE8177B}"
@@ -14,6 +15,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Xml.Tests", "Gu.Xml.Tests\Gu.Xml.Tests.csproj", "{F4E1E8D1-04ED-4CFA-A0A7-D664ABAD280F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Xml.Benchmarks", "Gu.Xml.Benchmarks\Gu.Xml.Benchmarks.csproj", "{BCAAF91E-D6D5-44FF-9696-38A7EF4B43C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{B3D64A1F-281F-48CD-A90E-D8C608D5E853}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
