@@ -1,1 +1,18 @@
-﻿
+﻿Gu.Xml.EnumFormatter<T>
+Gu.Xml.EnumFormatter<T>.Write(System.IO.TextWriter writer, T value) -> void
+Gu.Xml.SetAction<TSource, TValue>
+Gu.Xml.Xml
+Gu.Xml.XmlWriter
+Gu.Xml.XmlWriter.Dispose() -> void
+Gu.Xml.XmlWriter.WriteElement<T>(string name, T value) -> void
+Gu.Xml.XmlWriter.WriteLine() -> void
+Gu.Xml.XmlWriter.WriteRootElement<T>(T value) -> void
+Gu.Xml.XmlWriter.WriteXmlDeclaration() -> void
+Gu.Xml.XmlWriter.XmlWriter(System.IO.TextWriter writer) -> void
+static Gu.Xml.Xml.Deserialize<T>(string xml) -> T
+static Gu.Xml.Xml.Deserialize<T>(System.IO.Stream stream) -> T
+static Gu.Xml.Xml.Deserialize<T>(System.Xml.XmlReader reader) -> T
+static Gu.Xml.Xml.Serialize<T>(T value) -> string
+static readonly Gu.Xml.EnumFormatter<T>.Default -> Gu.Xml.EnumFormatter<T>
+static readonly Gu.Xml.EnumFormatter<T>.Integer -> Gu.Xml.EnumFormatter<T>
+static readonly Gu.Xml.EnumFormatter<T>.String -> Gu.Xml.EnumFormatter<T>

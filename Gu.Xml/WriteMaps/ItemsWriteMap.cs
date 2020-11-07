@@ -248,41 +248,39 @@
                 return Create<TEnumerable>((writer, enumerable) =>
                 {
                     var textWriter = writer.TextWriter;
-                    using (var enumerator = enumerable.GetEnumerator())
+                    using var enumerator = enumerable.GetEnumerator();
+                    if (enumerator.MoveNext())
                     {
-                        if (enumerator.MoveNext())
+                        if (enumerator.Current == null)
                         {
-                            if (enumerator.Current == null)
-                            {
-                                writer.WriteEmptyElement(Null);
-                                writer.WriteLine();
-                            }
-                            else
-                            {
-                                writer.ClosePendingStart();
-                                writer.WriteIndentation();
-                                textWriter.WriteMany("<", elementName, ">");
-                                cachedWrite.Invoke(textWriter, enumerator.Current);
-                                textWriter.WriteMany("</", elementName, ">");
-                                textWriter.WriteLine();
-                            }
+                            writer.WriteEmptyElement(Null);
+                            writer.WriteLine();
                         }
-
-                        while (enumerator.MoveNext())
+                        else
                         {
-                            if (enumerator.Current == null)
-                            {
-                                writer.WriteEmptyElement(Null);
-                                writer.WriteLine();
-                            }
-                            else
-                            {
-                                writer.WriteIndentation();
-                                textWriter.WriteMany("<", elementName, ">");
-                                cachedWrite(textWriter, enumerator.Current);
-                                textWriter.WriteMany("</", elementName, ">");
-                                textWriter.WriteLine();
-                            }
+                            writer.ClosePendingStart();
+                            writer.WriteIndentation();
+                            textWriter.WriteMany("<", elementName, ">");
+                            cachedWrite.Invoke(textWriter, enumerator.Current);
+                            textWriter.WriteMany("</", elementName, ">");
+                            textWriter.WriteLine();
+                        }
+                    }
+
+                    while (enumerator.MoveNext())
+                    {
+                        if (enumerator.Current == null)
+                        {
+                            writer.WriteEmptyElement(Null);
+                            writer.WriteLine();
+                        }
+                        else
+                        {
+                            writer.WriteIndentation();
+                            textWriter.WriteMany("<", elementName, ">");
+                            cachedWrite(textWriter, enumerator.Current);
+                            textWriter.WriteMany("</", elementName, ">");
+                            textWriter.WriteLine();
                         }
                     }
                 });

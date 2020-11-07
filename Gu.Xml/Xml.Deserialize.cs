@@ -17,10 +17,8 @@ namespace Gu.Xml
 
         public static T Deserialize<T>(string xml)
         {
-            using (var reader = XmlReader.Create(new StringReader(xml)))
-            {
-                return Deserialize<T>(reader);
-            }
+            using var reader = XmlReader.Create(new StringReader(xml));
+            return Deserialize<T>(reader);
         }
 
         public static T Deserialize<T>(Stream stream)

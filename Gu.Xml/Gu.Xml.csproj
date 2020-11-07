@@ -30,12 +30,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="PublicAPI.Unshipped.txt" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<AdditionalFiles Include="PublicAPI.Shipped.txt" />
 		<AdditionalFiles Include="PublicAPI.Unshipped.txt" />
+		<AdditionalFiles Include="stylecop.json" />
 	</ItemGroup>
 
 	<ItemGroup>
