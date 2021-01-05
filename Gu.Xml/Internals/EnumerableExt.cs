@@ -78,9 +78,11 @@ namespace Gu.Xml
 
             for (var i = 0; i < source.Length; i++)
             {
+#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
                 if (source[i] is TResult item)
+#pragma warning restore CA1508 // Avoid dead conditional code
                 {
-                    for (int j = i + 1; j < source.Length; j++)
+                    for (var j = i + 1; j < source.Length; j++)
                     {
                         if (source[j] is TResult)
                         {
@@ -217,7 +219,9 @@ namespace Gu.Xml
 
             for (var i = 0; i < source.Length; i++)
             {
+#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
                 if (source[i] is TResult item)
+#pragma warning restore CA1508 // Avoid dead conditional code
                 {
                     result = item;
                     return true;
@@ -330,7 +334,9 @@ namespace Gu.Xml
 
             for (var i = source.Length - 1; i >= 0; i--)
             {
+#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
                 if (source[i] is TResult item)
+#pragma warning restore CA1508 // Avoid dead conditional code
                 {
                     result = item;
                     return true;
@@ -470,9 +476,11 @@ namespace Gu.Xml
 
             for (var i = 0; i < source.Count; i++)
             {
+#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
                 if (source[i] is TResult item)
+#pragma warning restore CA1508 // Avoid dead conditional code
                 {
-                    for (int j = i + 1; j < source.Count; j++)
+                    for (var j = i + 1; j < source.Count; j++)
                     {
                         if (source[j] is TResult)
                         {
@@ -608,7 +616,9 @@ namespace Gu.Xml
 
             for (var i = 0; i < source.Count; i++)
             {
+#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
                 if (source[i] is TResult item)
+#pragma warning restore CA1508 // Avoid dead conditional code
                 {
                     result = item;
                     return true;
@@ -721,7 +731,9 @@ namespace Gu.Xml
 
             for (var i = source.Count - 1; i >= 0; i--)
             {
+#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
                 if (source[i] is TResult item)
+#pragma warning restore CA1508 // Avoid dead conditional code
                 {
                     result = item;
                     return true;
@@ -797,7 +809,7 @@ namespace Gu.Xml
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="source"/></typeparam>
         /// <param name="source">The source collection, can be null.</param>
-        /// <param name="before">The item to retuns before <paramref name="source"/>.</param>
+        /// <param name="before">The item to returns before <paramref name="source"/>.</param>
         /// <returns>An <see cref="IEnumerable{T}"/>.</returns>
         internal static IEnumerable<T> Prepend<T>(this IEnumerable<T> source, T before)
         {
@@ -889,7 +901,9 @@ namespace Gu.Xml
             using var e = source.GetEnumerator();
             if (e.MoveNext())
             {
+#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
                 if (e.Current is TResult item)
+#pragma warning restore CA1508 // Avoid dead conditional code
                 {
                     while (e.MoveNext())
                     {
@@ -1037,7 +1051,9 @@ namespace Gu.Xml
 
             using var e = source.GetEnumerator();
             if (e.MoveNext() &&
+#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
                 e.Current is TResult item)
+#pragma warning restore CA1508 // Avoid dead conditional code
             {
                 result = item;
                 return true;
@@ -1201,7 +1217,9 @@ namespace Gu.Xml
             var found = false;
             do
             {
+#pragma warning disable CA1508 // Avoid dead conditional code, broken analyzer
                 if (e.Current is TResult item)
+#pragma warning restore CA1508 // Avoid dead conditional code
                 {
                     result = item;
                     found = true;
