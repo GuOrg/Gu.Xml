@@ -78,7 +78,7 @@
         {
             internal static ItemsWriteMap CreateDefault(string elementName)
             {
-                elementName = elementName ?? Entry;
+                elementName ??= Entry;
                 return Create<IDictionary>((writer, dictionary) =>
                 {
                     foreach (var item in dictionary)

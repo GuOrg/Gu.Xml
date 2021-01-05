@@ -12,11 +12,9 @@
         public void IntegerWrite(StringComparison stringComparison, string text)
         {
             var sb = new StringBuilder();
-            using (var writer = new StringWriter(sb))
-            {
-                EnumFormatter<StringComparison>.Integer.Write(writer, stringComparison);
-                Assert.AreEqual(text, sb.ToString());
-            }
+            using var writer = new StringWriter(sb);
+            EnumFormatter<StringComparison>.Integer.Write(writer, stringComparison);
+            Assert.AreEqual(text, sb.ToString());
         }
 
         [TestCase(StringComparison.Ordinal, "Ordinal")]
@@ -24,11 +22,9 @@
         public void StringWrite(StringComparison stringComparison, string text)
         {
             var sb = new StringBuilder();
-            using (var writer = new StringWriter(sb))
-            {
-                EnumFormatter<StringComparison>.String.Write(writer, stringComparison);
-                Assert.AreEqual(text, sb.ToString());
-            }
+            using var writer = new StringWriter(sb);
+            EnumFormatter<StringComparison>.String.Write(writer, stringComparison);
+            Assert.AreEqual(text, sb.ToString());
         }
     }
 }

@@ -31,12 +31,10 @@ namespace Gu.Xml.Tests
 
             IEnumerable<string> Lines()
             {
-                using (var reader = new StringReader(text))
+                using var reader = new StringReader(text);
+                while (reader.ReadLine() is { } line)
                 {
-                    while (reader.ReadLine() is string line)
-                    {
-                        yield return line;
-                    }
+                    yield return line;
                 }
             }
         }
