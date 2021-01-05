@@ -14,13 +14,13 @@
         [Benchmark(Baseline = true)]
         public string EnumFormat()
         {
-            return Enum.Format(typeof(CultureTypes), CultureTypes, "G").Replace(",", string.Empty);
+            return Enum.Format(typeof(CultureTypes), CultureTypes, "G").Replace(",", string.Empty, StringComparison.Ordinal);
         }
 
         [Benchmark]
         public string CacheGetOrAdd()
         {
-            return Cache.GetOrAdd(CultureTypes, x => Enum.Format(typeof(CultureTypes), CultureTypes, "G").Replace(",", string.Empty));
+            return Cache.GetOrAdd(CultureTypes, x => Enum.Format(typeof(CultureTypes), CultureTypes, "G").Replace(",", string.Empty, StringComparison.Ordinal));
         }
     }
 }

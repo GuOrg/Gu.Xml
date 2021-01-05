@@ -154,7 +154,7 @@
                 {
                     if (getter(source) is TValue value)
                     {
-                        if (writer.TryGetSimple(value, out var map))
+                        if (XmlWriter.TryGetSimple(value, out var map))
                         {
                             map.WriteAttribute(writer.TextWriter, name, value);
                         }

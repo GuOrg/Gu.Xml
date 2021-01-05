@@ -31,7 +31,7 @@ namespace Gu.Xml.Tests
             public void Serialize(object value)
             {
                 var expected = Reference.DataContractSerializer(value)
-                                        .Replace("XmlTests.SerializeWithDataContractAttributes.", string.Empty);
+                                        .Replace("XmlTests.SerializeWithDataContractAttributes.", string.Empty, StringComparison.Ordinal);
                 var actual = Xml.Serialize(value);
                 if (actual == expected)
                 {

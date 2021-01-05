@@ -109,6 +109,11 @@
 #pragma warning restore IDISP007 // Don't dispose injected.
         }
 
+        internal static bool TryGetSimple<TValue>(TValue value, out SimpleWriteMap map)
+        {
+            return DefaultMaps.TryGetSimple(value, out map);
+        }
+
         internal void ClosePendingStart()
         {
             if (this.pendingCloseStartElement)
@@ -200,11 +205,6 @@
             {
                 this.TextWriter.Write("  ");
             }
-        }
-
-        internal bool TryGetSimple<TValue>(TValue value, out SimpleWriteMap map)
-        {
-            return DefaultMaps.TryGetSimple(value, out map);
         }
     }
 }

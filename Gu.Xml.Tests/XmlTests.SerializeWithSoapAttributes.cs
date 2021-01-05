@@ -35,7 +35,7 @@ namespace Gu.Xml.Tests
             [TestCaseSource(nameof(TestCases))]
             public void Serialize(object value)
             {
-                var expected = Reference.XmlSerializerSoap(value).Replace(" xsi:type=\"WithSoapEnumAttribute\"", string.Empty);
+                var expected = Reference.XmlSerializerSoap(value).Replace(" xsi:type=\"WithSoapEnumAttribute\"", string.Empty, StringComparison.Ordinal);
                 var actual = Xml.Serialize(value);
                 if (actual == expected)
                 {
