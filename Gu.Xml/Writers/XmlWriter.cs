@@ -74,7 +74,7 @@
         public void WriteElement<T>(string name, T value)
         {
             this.ClosePendingStart();
-            if (value == null)
+            if (value is null)
             {
                 this.WriteEmptyElement(name);
             }

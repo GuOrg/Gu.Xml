@@ -83,7 +83,7 @@
                 {
                     foreach (var item in dictionary)
                     {
-                        if (item == null)
+                        if (item is null)
                         {
                             writer.WriteEmptyElement(Null);
                             writer.WriteLine();
@@ -124,7 +124,7 @@
                     return true;
                 }
 
-                result = elementName == null ? DefaultDictionaryMap : CreateDefault(elementName);
+                result = elementName is null ? DefaultDictionaryMap : CreateDefault(elementName);
                 return true;
             }
 
@@ -151,7 +151,7 @@
                 {
                     foreach (var item in enumerable)
                     {
-                        if (item == null)
+                        if (item is null)
                         {
                             writer.WriteEmptyElement(Null);
                             writer.WriteLine();
@@ -204,7 +204,7 @@
                     return true;
                 }
 
-                result = elementName == null ? DefaultEnumerableMap : CreateDefault(elementName);
+                result = elementName is null ? DefaultEnumerableMap : CreateDefault(elementName);
                 return true;
             }
 
@@ -221,7 +221,7 @@
                 {
                     foreach (var item in enumerable)
                     {
-                        if (item == null)
+                        if (item is null)
                         {
                             writer.WriteEmptyElement(Null);
                             writer.WriteLine();
@@ -251,7 +251,7 @@
                     using var enumerator = enumerable.GetEnumerator();
                     if (enumerator.MoveNext())
                     {
-                        if (enumerator.Current == null)
+                        if (enumerator.Current is null)
                         {
                             writer.WriteEmptyElement(Null);
                             writer.WriteLine();
@@ -269,7 +269,7 @@
 
                     while (enumerator.MoveNext())
                     {
-                        if (enumerator.Current == null)
+                        if (enumerator.Current is null)
                         {
                             writer.WriteEmptyElement(Null);
                             writer.WriteLine();
@@ -293,7 +293,7 @@
                 {
                     foreach (var item in enumerable)
                     {
-                        if (item == null)
+                        if (item is null)
                         {
                             writer.WriteEmptyElement(Null);
                             writer.WriteLine();

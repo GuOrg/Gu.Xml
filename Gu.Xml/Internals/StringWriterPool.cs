@@ -28,18 +28,16 @@
 
         internal class Item
         {
-            public Item()
+            internal Item()
             {
                 this.Writer = new XmlWriter(new StringWriter(this.Builder, CultureInfo.InvariantCulture));
             }
 
             internal StringBuilder Builder { get; } = new StringBuilder();
 
-#pragma warning disable IDISP002 // Dispose member.
 #pragma warning disable IDISP006 // Implement IDisposable.
             internal XmlWriter Writer { get; }
 #pragma warning restore IDISP006 // Implement IDisposable.
-#pragma warning restore IDISP002 // Dispose member.
         }
     }
 }

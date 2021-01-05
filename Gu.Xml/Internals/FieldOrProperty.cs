@@ -63,7 +63,7 @@
                 return true;
             }
 
-            if (name == null)
+            if (name is null)
             {
                 if (member.MemberInfo.TryGetCustomAttribute<System.Xml.Serialization.XmlIgnoreAttribute>(out _) ||
                     member.MemberInfo.TryGetCustomAttribute<System.Xml.Serialization.XmlAttributeAttribute>(out _) ||

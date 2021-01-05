@@ -20,7 +20,7 @@ namespace Gu.Xml
         internal static bool TryElementAt<T>(this T[] source, int index, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -45,7 +45,7 @@ namespace Gu.Xml
         internal static bool TrySingle<T>(this T[] source, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -71,7 +71,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -109,7 +109,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -147,7 +147,7 @@ namespace Gu.Xml
         internal static bool TrySingle<T>(this T[] source, Func<T, bool> predicate, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -184,7 +184,7 @@ namespace Gu.Xml
         internal static bool TryFirst<T>(this T[] source, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -210,7 +210,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -240,7 +240,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -269,7 +269,7 @@ namespace Gu.Xml
         internal static bool TryFirst<T>(this T[] source, Func<T, bool> predicate, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -296,7 +296,7 @@ namespace Gu.Xml
         internal static bool TryLast<T>(this T[] source, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -323,7 +323,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -353,7 +353,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -382,7 +382,7 @@ namespace Gu.Xml
         internal static bool TryLast<T>(this T[] source, Func<T, bool> predicate, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -412,7 +412,7 @@ namespace Gu.Xml
         internal static bool TryElementAt<T>(this IReadOnlyList<T> source, int index, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -437,7 +437,7 @@ namespace Gu.Xml
         internal static bool TrySingle<T>(this IReadOnlyList<T> source, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -463,7 +463,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -501,7 +501,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -539,7 +539,7 @@ namespace Gu.Xml
         internal static bool TrySingle<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -575,7 +575,7 @@ namespace Gu.Xml
         internal static bool TryFirst<T>(this IReadOnlyList<T> source, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -601,7 +601,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -631,7 +631,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -660,7 +660,7 @@ namespace Gu.Xml
         internal static bool TryFirst<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -687,7 +687,7 @@ namespace Gu.Xml
         internal static bool TryLast<T>(this IReadOnlyList<T> source, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -714,7 +714,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -744,7 +744,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -773,7 +773,7 @@ namespace Gu.Xml
         internal static bool TryLast<T>(this IReadOnlyList<T> source, Func<T, bool> predicate, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -819,7 +819,7 @@ namespace Gu.Xml
         internal static bool TryElementAt<T>(this IEnumerable<T> source, int index, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -850,7 +850,7 @@ namespace Gu.Xml
         internal static bool TrySingle<T>(this IEnumerable<T> source, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -881,7 +881,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -923,7 +923,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -963,7 +963,7 @@ namespace Gu.Xml
         internal static bool TrySingle<T>(this IEnumerable<T> source, Func<T, bool> predicate, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -1003,7 +1003,7 @@ namespace Gu.Xml
         internal static bool TryFirst<T>(this IEnumerable<T> source, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -1030,7 +1030,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -1059,7 +1059,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -1088,7 +1088,7 @@ namespace Gu.Xml
         /// <returns>True if an element was found.</returns>
         internal static bool TryFirst<T>(this IEnumerable<T> source, Func<T, bool> predicate, out T result)
         {
-            if (source == null)
+            if (source is null)
             {
                 result = default;
                 return false;
@@ -1120,7 +1120,7 @@ namespace Gu.Xml
         internal static bool TryLast<T>(this IEnumerable<T> source, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -1150,7 +1150,7 @@ namespace Gu.Xml
         internal static bool TryLast<T>(this IEnumerable<T> source, Func<T, bool> predicate, out T result)
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -1187,7 +1187,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }
@@ -1224,7 +1224,7 @@ namespace Gu.Xml
             where TResult : T
         {
             result = default;
-            if (source == null)
+            if (source is null)
             {
                 return false;
             }

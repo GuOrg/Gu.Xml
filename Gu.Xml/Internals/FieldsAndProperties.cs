@@ -65,9 +65,8 @@
 
         private static bool TryCreateElement(PropertyInfo property, out FieldOrProperty fieldOrProperty)
         {
-            if (property.GetMethod is MethodInfo getMethod &&
+            if (property.GetMethod is { IsStatic: false } getMethod &&
                 property.GetIndexParameters().Length == 0 &&
-                !getMethod.IsStatic &&
                 !IsIgnoredAccessibility() &&
                 !IsIgnoredCalculated() &&
                 new FieldOrProperty(property) is var candidate &&
@@ -96,7 +95,7 @@
 
             bool IsIgnoredCalculated()
             {
-                return property.SetMethod == null &&
+                return property.SetMethod is null &&
                        !property.GetMethod.TryGetCustomAttribute<System.Runtime.CompilerServices.CompilerGeneratedAttribute>(out _) &&
                        !property.GetMethod.TryGetCustomAttribute<System.Xml.Serialization.XmlElementAttribute>(out _) &&
                        !property.DeclaringType.IsAnonymous() &&
@@ -149,12 +148,12 @@
                     return 0;
                 }
 
-                if (xType == null)
+                if (xType is null)
                 {
                     return -1;
                 }
 
-                if (yType == null)
+                if (yType is null)
                 {
                     return 1;
                 }
