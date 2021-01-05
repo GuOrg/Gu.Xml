@@ -25,15 +25,12 @@
         {
             get
             {
-                switch (this.MemberInfo)
+                return this.MemberInfo switch
                 {
-                    case FieldInfo field:
-                        return field.FieldType;
-                    case PropertyInfo property:
-                        return property.PropertyType;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here.");
-                }
+                    FieldInfo field => field.FieldType,
+                    PropertyInfo property => property.PropertyType,
+                    _ => throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here."),
+                };
             }
         }
 
@@ -111,28 +108,22 @@
 
         internal Delegate CreateGetter()
         {
-            switch (this.MemberInfo)
+            return this.MemberInfo switch
             {
-                case FieldInfo field:
-                    return field.CreateGetter();
-                case PropertyInfo property:
-                    return property.CreateGetter();
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here. Bug in Gu.Xml.");
-            }
+                FieldInfo field => field.CreateGetter(),
+                PropertyInfo property => property.CreateGetter(),
+                _ => throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here. Bug in Gu.Xml."),
+            };
         }
 
         internal bool TryCreateSetter(out Delegate setter)
         {
-            switch (this.MemberInfo)
+            return this.MemberInfo switch
             {
-                case FieldInfo field:
-                    return field.TryCreateSetter(out setter);
-                case PropertyInfo property:
-                    return property.TryCreateSetter(out setter);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here. Bug in Gu.Xml.");
-            }
+                FieldInfo field => field.TryCreateSetter(out setter),
+                PropertyInfo property => property.TryCreateSetter(out setter),
+                _ => throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here. Bug in Gu.Xml."),
+            };
         }
 
         private static bool TryGetNameFromAttribute<TAttribute>(MemberInfo member, Func<TAttribute, string> getName, out string name)

@@ -131,7 +131,7 @@
             private static ItemsWriteMap Create<TDictionary, TKey, TValue>(string elementName)
                 where TDictionary : ICollection<KeyValuePair<TKey, TValue>>
             {
-                elementName = elementName ?? Entry;
+                elementName ??= Entry;
                 return Create<TDictionary>((writer, dictionary) =>
                 {
                     foreach (var item in dictionary)
