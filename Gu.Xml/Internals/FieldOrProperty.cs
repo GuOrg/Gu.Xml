@@ -21,18 +21,13 @@
 
         internal Type SourceType => this.MemberInfo.ReflectedType;
 
-        internal Type ValueType
-        {
-            get
+        internal Type ValueType =>
+            this.MemberInfo switch
             {
-                return this.MemberInfo switch
-                {
-                    FieldInfo field => field.FieldType,
-                    PropertyInfo property => property.PropertyType,
-                    _ => throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here."),
-                };
-            }
-        }
+                FieldInfo field => field.FieldType,
+                PropertyInfo property => property.PropertyType,
+                _ => throw new ArgumentOutOfRangeException(nameof(this.MemberInfo), "Never getting here."),
+            };
 
         internal static bool TryGetAttributeName(FieldOrProperty member, out string name)
         {
