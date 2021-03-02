@@ -505,29 +505,29 @@ namespace Gu.Xml.Tests
 
                 public int Number2 { get; set; }
 
-                public string Text1 { get; set; }
+                public string? Text1 { get; set; }
 
-                public string Text2 { get; set; }
+                public string? Text2 { get; set; }
 
                 public int Number3 { get; set; }
 
                 public int Number4 { get; set; }
 
-                public string Text3 { get; set; }
+                public string? Text3 { get; set; }
 
-                public string Text4 { get; set; }
+                public string? Text4 { get; set; }
 
                 public KeyValuePair<int, double> KeyValuePair1 { get; set; }
 
                 public KeyValuePair<int, double> KeyValuePair2 { get; set; }
 
-                public SealedNode Node1 { get; set; }
+                public SealedNode? Node1 { get; set; }
 
-                public SealedNode Node2 { get; set; }
+                public SealedNode? Node2 { get; set; }
 
-                public SealedNode Node3 { get; set; }
+                public SealedNode? Node3 { get; set; }
 
-                public SealedNode Node4 { get; set; }
+                public SealedNode? Node4 { get; set; }
 
                 public sealed class SealedNode
                 {
@@ -535,17 +535,17 @@ namespace Gu.Xml.Tests
 
                     public int Number2 { get; set; }
 
-                    public string Text1 { get; set; }
+                    public string? Text1 { get; set; }
 
-                    public string Text2 { get; set; }
+                    public string? Text2 { get; set; }
 
                     public int Number3 { get; set; }
 
                     public int Number4 { get; set; }
 
-                    public string Text3 { get; set; }
+                    public string? Text3 { get; set; }
 
-                    public string Text4 { get; set; }
+                    public string? Text4 { get; set; }
 
                     public KeyValuePair<int, double> KeyValuePair1 { get; set; }
 
@@ -559,29 +559,29 @@ namespace Gu.Xml.Tests
 
                 public int Number2 { get; set; }
 
-                public string Text1 { get; set; }
+                public string? Text1 { get; set; }
 
-                public string Text2 { get; set; }
+                public string? Text2 { get; set; }
 
                 public int Number3 { get; set; }
 
                 public int Number4 { get; set; }
 
-                public string Text3 { get; set; }
+                public string? Text3 { get; set; }
 
-                public string Text4 { get; set; }
+                public string? Text4 { get; set; }
 
                 public KeyValuePair<int, double> KeyValuePair1 { get; set; }
 
                 public KeyValuePair<int, double> KeyValuePair2 { get; set; }
 
-                public Node Node1 { get; set; }
+                public Node? Node1 { get; set; }
 
-                public Node Node2 { get; set; }
+                public Node? Node2 { get; set; }
 
-                public Node Node3 { get; set; }
+                public Node? Node3 { get; set; }
 
-                public Node Node4 { get; set; }
+                public Node? Node4 { get; set; }
 
                 public class Node
                 {
@@ -589,17 +589,17 @@ namespace Gu.Xml.Tests
 
                     public int Number2 { get; set; }
 
-                    public string Text1 { get; set; }
+                    public string? Text1 { get; set; }
 
-                    public string Text2 { get; set; }
+                    public string? Text2 { get; set; }
 
                     public int Number3 { get; set; }
 
                     public int Number4 { get; set; }
 
-                    public string Text3 { get; set; }
+                    public string? Text3 { get; set; }
 
-                    public string Text4 { get; set; }
+                    public string? Text4 { get; set; }
 
                     public KeyValuePair<int, double> KeyValuePair1 { get; set; }
 
@@ -609,55 +609,55 @@ namespace Gu.Xml.Tests
 
             public class BoxingVirtualGraphClass
             {
-                public virtual object Number1 { get; set; }
+                public virtual object? Number1 { get; set; }
 
-                public virtual object Number2 { get; set; }
+                public virtual object? Number2 { get; set; }
 
-                public virtual object Text1 { get; set; }
+                public virtual object? Text1 { get; set; }
 
-                public virtual object Text2 { get; set; }
+                public virtual object? Text2 { get; set; }
 
-                public virtual object Number3 { get; set; }
+                public virtual object? Number3 { get; set; }
 
-                public virtual object Number4 { get; set; }
+                public virtual object? Number4 { get; set; }
 
-                public virtual object Text3 { get; set; }
+                public virtual object? Text3 { get; set; }
 
-                public virtual object Text4 { get; set; }
+                public virtual object? Text4 { get; set; }
 
-                public virtual object KeyValuePair1 { get; set; }
+                public virtual object? KeyValuePair1 { get; set; }
 
-                public virtual object KeyValuePair2 { get; set; }
+                public virtual object? KeyValuePair2 { get; set; }
 
-                public virtual object Node1 { get; set; }
+                public virtual object? Node1 { get; set; }
 
-                public virtual object Node2 { get; set; }
+                public virtual object? Node2 { get; set; }
 
-                public virtual object Node3 { get; set; }
+                public virtual object? Node3 { get; set; }
 
-                public virtual object Node4 { get; set; }
+                public virtual object? Node4 { get; set; }
 
                 public class Node
                 {
-                    public virtual object Number1 { get; set; }
+                    public virtual object? Number1 { get; set; }
 
-                    public virtual object Number2 { get; set; }
+                    public virtual object? Number2 { get; set; }
 
-                    public virtual object Text1 { get; set; }
+                    public virtual object? Text1 { get; set; }
 
-                    public virtual object Text2 { get; set; }
+                    public virtual object? Text2 { get; set; }
 
-                    public virtual object Number3 { get; set; }
+                    public virtual object? Number3 { get; set; }
 
-                    public virtual object Number4 { get; set; }
+                    public virtual object? Number4 { get; set; }
 
-                    public virtual object Text3 { get; set; }
+                    public virtual object? Text3 { get; set; }
 
-                    public virtual object Text4 { get; set; }
+                    public virtual object? Text4 { get; set; }
 
-                    public virtual object KeyValuePair1 { get; set; }
+                    public virtual object? KeyValuePair1 { get; set; }
 
-                    public virtual object KeyValuePair2 { get; set; }
+                    public virtual object? KeyValuePair2 { get; set; }
                 }
             }
         }

@@ -68,17 +68,17 @@ namespace Gu.Xml.Tests
 
             public class LinkedList
             {
-                public LinkedList Next { get; set; }
+                public LinkedList? Next { get; set; }
             }
 
             public class Parent
             {
-                public Child Child { get; set; }
+                public Child? Child { get; set; }
             }
 
             public class Child
             {
-                public Parent Parent { get; set; }
+                public Parent? Parent { get; set; }
             }
         }
     }

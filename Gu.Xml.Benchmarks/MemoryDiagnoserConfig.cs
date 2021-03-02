@@ -9,7 +9,7 @@ namespace Gu.Xml.Benchmarks
     {
         public MemoryDiagnoserConfig()
         {
-            this.Add(MemoryDiagnoser.Default);
+            this.AddDiagnoser(MemoryDiagnoser.Default);
         }
     }
 }

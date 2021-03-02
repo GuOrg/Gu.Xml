@@ -146,7 +146,7 @@ namespace Gu.Xml.Tests
 
             public class With<T>
             {
-                public T Value { get; set; }
+                public T? Value { get; set; }
             }
 
             public enum WithSoapEnumAttribute

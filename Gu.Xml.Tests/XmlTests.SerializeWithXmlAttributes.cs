@@ -111,14 +111,14 @@ namespace Gu.Xml.Tests
             {
                 [XmlArray(ElementName = "Numbers")]
                 [XmlArrayItem(ElementName = "Number")]
-                public int[] Values { get; set; }
+                public int[]? Values { get; set; }
             }
 
             public class WithXmlArrayOfObjectAndXmlArrayItemAttribute
             {
                 [XmlArray(ElementName = "Numbers")]
                 [XmlArrayItem(ElementName = "Number")]
-                public object[] Values { get; set; }
+                public object[]? Values { get; set; }
             }
 
             public interface IValue
@@ -168,7 +168,7 @@ namespace Gu.Xml.Tests
 
             public class WithArrayWithFieldsWithXmlAttributeAttributeExplicitName
             {
-                public FieldsWithXmlAttributeAttributeExplicitName[] Items { get; set; }
+                public FieldsWithXmlAttributeAttributeExplicitName[]? Items { get; set; }
             }
 
             public class PropertyWithXmlIgnoreAttribute
@@ -185,7 +185,7 @@ namespace Gu.Xml.Tests
 
             public class With<T>
             {
-                public T Value { get; set; }
+                public T? Value { get; set; }
             }
 
             public enum WithXmlEnumAttribute

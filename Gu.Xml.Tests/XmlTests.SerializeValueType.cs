@@ -129,7 +129,7 @@ namespace Gu.Xml.Tests
             public class With<T>
             {
                 // ReSharper disable once UnusedAutoPropertyAccessor.Global
-                public T Value { get; set; }
+                public T? Value { get; set; }
             }
         }
     }

@@ -23,7 +23,7 @@
         public class WithMutable<T>
         {
             // ReSharper disable once UnusedAutoPropertyAccessor.Global
-            public T Value { get; set; }
+            public T? Value { get; set; }
         }
     }
 }

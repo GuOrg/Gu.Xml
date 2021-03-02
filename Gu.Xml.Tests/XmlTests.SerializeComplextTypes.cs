@@ -158,7 +158,7 @@ namespace Gu.Xml.Tests
 
             public class GenericWithPublicMutableProperty<T>
             {
-                public T Value { get; set; }
+                public T? Value { get; set; }
             }
 
             public class WithTwoPublicMutableProperties
