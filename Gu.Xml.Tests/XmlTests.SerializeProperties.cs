@@ -173,7 +173,9 @@ namespace Gu.Xml.Tests
                 public static int StaticValue { get; set; }
 
                 // ReSharper disable once UnusedAutoPropertyAccessor.Local
+#pragma warning disable IDE0052 // Remove unread private members
                 private int PrivateValue { get; }
+#pragma warning restore IDE0052 // Remove unread private members
 
                 protected int ProtectedValue { get; }
             }
