@@ -2,7 +2,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>Enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
